@@ -1,0 +1,8 @@
+{
+  "runtimeOptions": {
+    "additionalProbingPaths": [
+      "C:\\Users\\vreku\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\vreku\\.nuget\\packages"
+    ]
+  }
+}

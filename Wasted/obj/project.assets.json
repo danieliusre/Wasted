@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\vreku\\desktop\\Wasted\\Wasted\\Wasted\\Wasted.csproj",
+      "projectUniqueName": "C:\\Users\\vreku\\Desktop\\wasted\\wasted\\Wasted.csproj",
       "projectName": "Wasted",
-      "projectPath": "C:\\Users\\vreku\\desktop\\Wasted\\Wasted\\Wasted\\Wasted.csproj",
+      "projectPath": "C:\\Users\\vreku\\Desktop\\wasted\\wasted\\Wasted.csproj",
       "packagesPath": "C:\\Users\\vreku\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\vreku\\desktop\\Wasted\\Wasted\\Wasted\\obj\\",
+      "outputPath": "C:\\Users\\vreku\\Desktop\\wasted\\wasted\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\vreku\\AppData\\Roaming\\NuGet\\NuGet.Config"

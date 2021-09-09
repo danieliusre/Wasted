@@ -13,70 +13,70 @@ namespace Wasted.Shared
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Components;
 #nullable restore
-#line 1 "c:\Users\vreku\Desktop\Wasted\Wasted\Wasted\_Imports.razor"
+#line 1 "C:\Users\vreku\Desktop\Wasted\wasted\_Imports.razor"
 using System.Net.Http;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 2 "c:\Users\vreku\Desktop\Wasted\Wasted\Wasted\_Imports.razor"
+#line 2 "C:\Users\vreku\Desktop\Wasted\wasted\_Imports.razor"
 using Microsoft.AspNetCore.Authorization;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 3 "c:\Users\vreku\Desktop\Wasted\Wasted\Wasted\_Imports.razor"
+#line 3 "C:\Users\vreku\Desktop\Wasted\wasted\_Imports.razor"
 using Microsoft.AspNetCore.Components.Authorization;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 4 "c:\Users\vreku\Desktop\Wasted\Wasted\Wasted\_Imports.razor"
+#line 4 "C:\Users\vreku\Desktop\Wasted\wasted\_Imports.razor"
 using Microsoft.AspNetCore.Components.Forms;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 5 "c:\Users\vreku\Desktop\Wasted\Wasted\Wasted\_Imports.razor"
+#line 5 "C:\Users\vreku\Desktop\Wasted\wasted\_Imports.razor"
 using Microsoft.AspNetCore.Components.Routing;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 6 "c:\Users\vreku\Desktop\Wasted\Wasted\Wasted\_Imports.razor"
+#line 6 "C:\Users\vreku\Desktop\Wasted\wasted\_Imports.razor"
 using Microsoft.AspNetCore.Components.Web;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 7 "c:\Users\vreku\Desktop\Wasted\Wasted\Wasted\_Imports.razor"
+#line 7 "C:\Users\vreku\Desktop\Wasted\wasted\_Imports.razor"
 using Microsoft.AspNetCore.Components.Web.Virtualization;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 8 "c:\Users\vreku\Desktop\Wasted\Wasted\Wasted\_Imports.razor"
+#line 8 "C:\Users\vreku\Desktop\Wasted\wasted\_Imports.razor"
 using Microsoft.JSInterop;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 9 "c:\Users\vreku\Desktop\Wasted\Wasted\Wasted\_Imports.razor"
+#line 9 "C:\Users\vreku\Desktop\Wasted\wasted\_Imports.razor"
 using Wasted;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 10 "c:\Users\vreku\Desktop\Wasted\Wasted\Wasted\_Imports.razor"
+#line 10 "C:\Users\vreku\Desktop\Wasted\wasted\_Imports.razor"
 using Wasted.Shared;
 
 #line default
@@ -90,7 +90,7 @@ using Wasted.Shared;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 12 "c:\Users\vreku\Desktop\Wasted\Wasted\Wasted\Shared\SurveyPrompt.razor"
+#line 12 "C:\Users\vreku\Desktop\Wasted\wasted\Shared\SurveyPrompt.razor"
        
     // Demonstrates how a parent component can supply parameters
     [Parameter]
