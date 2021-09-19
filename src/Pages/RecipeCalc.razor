@@ -11,12 +11,9 @@
 
 <button class="btn btn-primary" @onclick="SaveList">Save list</button>
 
-<p><br>Current list length: @currentCount</p>
-
 <hr>
 
 @code {
-    private int currentCount = 0;
     string itemTextField = "";
     string leftTextField = "";
     string unitTextField = "";
@@ -65,7 +62,7 @@
 
 <div>
     <input type = "text" size="10" @bind="@itemTextField" @oninput="(e) => { itemTextField = e.Value ==null? string.Empty:(string)e.Value;}"/> <b>&emsp;&emsp;&emsp;&emsp;</b>
-    <input type = "number" max="9999" @bind="@leftTextField" @oninput="(e) => { leftTextField = e.Value ==null? string.Empty:(string)e.Value;}"/> <b>&emsp;&emsp;</b>
+    <input type = "number" @bind="@leftTextField" @oninput="(e) => { leftTextField = e.Value ==null? string.Empty:(string)e.Value;}"/> <b>&emsp;&emsp;</b>
     <select @bind="@unitTextField" @oninput="(e) => { unitTextField = e.Value ==null? string.Empty:(string)e.Value;}" name="unit" id="unit">
                         <option value="grams">g</option>
                         <option value="kilograms">kg</option>
