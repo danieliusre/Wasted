@@ -22,7 +22,6 @@
 <p> 
     <input class="form-control tac" type="password" placeholder="Password" @bind="@PasswordBox"/>
 </p>
-
 </form>
 
 <button class="buttonSub" @onclick="AddUserData"> Submit</button>
@@ -71,9 +70,10 @@
          }
          else
          {
-          todos.Clear();   
+            todos.Clear();   
          }
     }
+
     public bool newEmail(string email)
     {
         bool newEmail = true;
@@ -88,28 +88,19 @@
     }
 
     public void CreateUserList()
+    {
+        string[] lines = System.IO.File.ReadAllLines(@"UserData.txt");   
+        foreach(string line in lines) 
         {
-            string[] lines = System.IO.File.ReadAllLines(@"UserData.txt");   
-            foreach(string line in lines) 
-            {
 
-                string[] userData = line.Split(',');
-                users.Add(new User()
-                {   Name = userData[0],
-                    Lastname = userData[1],
-                    Email = userData[2],
-                    Password = userData[3]
-                });
-            } 
-        }
+            string[] userData = line.Split(',');
+            users.Add(new User()
+            {   Name = userData[0],
+                Lastname = userData[1],
+                Email = userData[2],
+                Password = userData[3]
+            });
+        } 
+    }
    
 }
-
-
-
-
-
-
-
-
-
