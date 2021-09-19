@@ -4,7 +4,32 @@
     margin: auto;
 }
 
+.box-shape {
+    border-radius:12px;
+}
+.buttonSub {
+    border: 0;
+    width:100%;
+    font-size: large;
+    padding: 1%;
+    display: inline-block;
+    border-radius: 10px;
+    cursor:pointer;
+    background-color: rgba(80, 59, 216, 0.644);
 
+}
+
+.inline {
+    display: inline-block; 
+}
+
+.registrationMessage
+{
+    list-style: none;
+    font-size: 24px;
+    color:blue;
+    margin-top: 20px;
+}
 
 
 

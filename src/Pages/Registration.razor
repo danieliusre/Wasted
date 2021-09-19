@@ -1,0 +1,115 @@
+@page "/registration"
+
+<h1 class="tac">Registration</h1>
+@code{
+
+}
+<style>
+    @@import "css/Utils.css"
+</style>
+
+
+<form method="post">
+<p> 
+    <input class="form-control tac" type="text"  placeholder="Name" @bind="@NameBox"/>
+</p>
+<p> 
+    <input class="form-control tac" type="text"   placeholder="Last name" @bind="@LastNameBox"/>
+</p>
+<p> 
+    <input class="form-control tac" type="email"  placeholder="Email" @bind="@EmailBox"/>
+</p>
+<p> 
+    <input class="form-control tac" type="password" placeholder="Password" @bind="@PasswordBox"/>
+</p>
+
+</form>
+
+<button class="buttonSub" @onclick="AddUserData"> Submit</button>
+
+<ul class="registrationMessage tac">
+    @foreach (string todo in todos)
+    {
+        <li>@todo</li>
+    }
+</ul>
+
+@code
+{  
+    private List<string> todos = new List<string>();
+    static string NameBox = "";
+    static string LastNameBox ;
+    static string EmailBox ; 
+    static string PasswordBox ;
+    static List<User> users = new List<User>();
+        
+    public void AddUserData()
+    {
+        @using System.IO
+        CreateUserList();
+        if( !(string.IsNullOrEmpty(NameBox) || string.IsNullOrEmpty(LastNameBox) || string.IsNullOrEmpty(EmailBox) || string.IsNullOrEmpty(PasswordBox)))
+        {
+            if(newEmail(EmailBox))
+            {
+                users.Add(new User(){
+                    Name = NameBox,
+                    Lastname = LastNameBox,
+                    Email = EmailBox,
+                    Password = PasswordBox
+                });
+                File.AppendAllText(@"UserData.txt", NameBox + "," + LastNameBox + "," + EmailBox + "," + PasswordBox + Environment.NewLine);
+                users.Clear();
+                CreateUserList(); 
+                todos.Clear();
+                todos.Add("Success! Welcome to the Wasted family!");
+            }
+            else
+            {
+                todos.Clear();
+                todos.Add("User with this email already exists");
+            }
+         }
+         else
+         {
+          todos.Clear();   
+         }
+    }
+    public bool newEmail(string email)
+    {
+        bool newEmail = true;
+        foreach(User regUser in users)
+        {
+            if(String.Equals(email, regUser.Email))
+            {
+                newEmail = false;
+            }
+        }
+        return newEmail;
+    }
+
+    public void CreateUserList()
+        {
+            string[] lines = System.IO.File.ReadAllLines(@"UserData.txt");   
+            foreach(string line in lines) 
+            {
+
+                string[] userData = line.Split(',');
+                users.Add(new User()
+                {   Name = userData[0],
+                    Lastname = userData[1],
+                    Email = userData[2],
+                    Password = userData[3]
+                });
+            } 
+        }
+   
+}
+
+
+
+
+
+
+
+
+
