@@ -1,0 +1,7 @@
+Apple;Fruit;kg;158
+Troat;Fish;kg;284
+Orange;Fruit;g;120
+Blackberry;Berry;kg;262
+Cheese;Dairy;kg;352
+Bass;Fish;kg;271
+Buttermilk;Dairy;l;175
