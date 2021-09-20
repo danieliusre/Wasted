@@ -11,21 +11,22 @@
 
 
 <form method="post">
-<p> 
-    <input class="form-control tac" type="text"  placeholder="Name" @bind="@NameBox"/>
-</p>
-<p> 
-    <input class="form-control tac" type="text"   placeholder="Last name" @bind="@LastNameBox"/>
-</p>
-<p> 
-    <input class="form-control tac" type="email"  placeholder="Email" @bind="@EmailBox"/>
-</p>
-<p> 
-    <input class="form-control tac" type="password" placeholder="Password" @bind="@PasswordBox"/>
-</p>
+<div > 
+    <input class="form-control tac regField" type="text"  placeholder="Name" @bind="@NameBox"/>
+</div>
+<div> 
+    <input class="form-control tac regField" type="text"   placeholder="Last name" @bind="@LastNameBox"/>
+</div>
+<div> 
+    <input class="form-control tac regField" type="email"  placeholder="Email" @bind="@EmailBox"/>
+</div>
+<div> 
+    <input class="form-control tac regField" type="password" placeholder="Password" @bind="@PasswordBox"/>
+</div>
 </form>
-
-<button class="buttonSub" @onclick="AddUserData"> Submit</button>
+<div>
+    <button class="buttonSub" @onclick="AddUserData"> Submit</button>
+</div>
 
 <ul class="registrationMessage tac">
     @foreach (string ErrorMesage in ErrorMesages)

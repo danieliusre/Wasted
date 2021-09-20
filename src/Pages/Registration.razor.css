@@ -5,3 +5,14 @@
     color:blue;
     margin-top: 20px;
 }
+div{
+    text-align: center;
+    margin: 50px 25px;
+}
+.regField
+{
+    border-radius: 20px;
+    width: 50%;
+    font-size: 20 px;
+    
+}
