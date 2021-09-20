@@ -1,5 +1,7 @@
 @page "/registration"
 @using System.IO
+@using System.Text.RegularExpressions;
+@using System.Net.Mail
 
 <h1 class="tac">Registration</h1>
 @code{
@@ -13,21 +15,14 @@
 <form method="post">
 <div > 
     <input class="form-control tac regField" type="text"  placeholder="Name" @bind="@NameBox"/>
-</div>
-<div> 
     <input class="form-control tac regField" type="text"   placeholder="Last name" @bind="@LastNameBox"/>
-</div>
-<div> 
-    <input class="form-control tac regField" type="email"  placeholder="Email" @bind="@EmailBox"/>
-</div>
-<div> 
+    <input class="form-control tac regField" type="email"  placeholder="Email"  @bind="@EmailBox"/>
     <input class="form-control tac regField" type="password" placeholder="Password" @bind="@PasswordBox"/>
 </div>
-</form>
 <div>
-    <button class="buttonSub" @onclick="AddUserData"> Submit</button>
+    <input class="buttonSub" type="submit" @onclick="AddUserData"> Submit</input>
 </div>
-
+</form>
 <ul class="registrationMessage tac">
     @foreach (string ErrorMesage in ErrorMesages)
     {
@@ -49,7 +44,7 @@
         CreateUserList();
         if( !(string.IsNullOrEmpty(NameBox) || string.IsNullOrEmpty(LastNameBox) || string.IsNullOrEmpty(EmailBox) || string.IsNullOrEmpty(PasswordBox)))
         {
-            if(newEmail(EmailBox))
+            if(newEmail(EmailBox) && emailValid(EmailBox))
             {
                 users.Add(new User(){
                     Name = NameBox,
@@ -66,7 +61,7 @@
             else
             {
                 ErrorMesages.Clear();
-                ErrorMesages.Add("User with this email already exists");
+                ErrorMesages.Add("Mistake in email field!");
             }
          }
          else
@@ -87,6 +82,19 @@
         }
         return newEmail;
     }
+    public bool emailValid(String email)
+    {
+        try
+    {
+        MailAddress m = new MailAddress(email);
+
+        return true;
+    }
+    catch (FormatException)
+    {
+        return false;
+    }
+    }
 
     public void CreateUserList()
     {
@@ -103,5 +111,25 @@
             });
         } 
     }
+    //Function prepared for further work with password validation
+            public bool validPasswordProvided(string password)
+        {
+            var hasNumber = new Regex(@"[0-9]+");
+            var hasUpperChar = new Regex(@"[A-Z]+");
+            var hasMiniMaxChars = new Regex(@".{8,15}");
+            var hasLowerChar = new Regex(@"[a-z]+");
+            var hasSymbols = new Regex(@"[!@#$%^&*()_+=\[{\]};:<>|./?,-]");
+            
+            if(   !hasLowerChar.IsMatch(password)
+                ||!hasUpperChar.IsMatch(password)
+                ||!hasMiniMaxChars.IsMatch(password)
+                ||!hasLowerChar.IsMatch(password)
+                ||!hasSymbols.IsMatch(password)
+                )
+                {
+                    return false;
+                }
+            else return true;
+        }
    
 }
