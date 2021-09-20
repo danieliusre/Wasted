@@ -4,15 +4,13 @@
 @using System.Net.Mail
 
 <h1 class="tac">Registration</h1>
-@code{
 
-}
 <style>
     @@import "css/Utils.css"
 </style>
 
-
-<form method="post">
+<iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
+<form method="post" action="submitscrip.php" target="dummyframe">
 <div > 
     <input class="form-control tac regField" type="text"  placeholder="Name" @bind="@NameBox"/>
     <input class="form-control tac regField" type="text"   placeholder="Last name" @bind="@LastNameBox"/>
@@ -129,7 +127,7 @@
                 {
                     return false;
                 }
-            else return true;
+            return true;
         }
    
 }

@@ -14,11 +14,4 @@ Rytis,Cicinas,ryciukas@gmail.com,fjeiufi
 Tomas,Grinius,tomas.grinius@gmail.com,tomas123
 Tadas,Kurpavicius,tadas.k@gmail.com,tadas123
 Kajus,Orsauskas,kajus@outlook.com,iseufvbieub
-asvaerv,afvd,adf,adf
-ersva,erve,erve,esrfves
-ersesv,ser,ervesr,svfesr
-stbsrfbrs,stvsrbsr,aervserbvbse,sevservser
-erverg,sevevre,esves,sfvsvr
-wrtgvev,esrgver,sfves,aervesvf
-serverv,ervesrve,sefrve,ewrveawrg
-servrg,ergverg,servergv,ergerg
+Inga,Rudokiene,inga123@gmail.com,iuehvbkj

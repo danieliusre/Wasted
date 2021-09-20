@@ -8,8 +8,8 @@
     border-radius:12px;
 }
 .buttonSub {
-    border: 1;
-    border-color: rgb(111, 110, 110);
+    border:1px solid;
+    border-color: rgb(124, 29, 29);
     width:50%;
     font-size: large;
     color: white;
