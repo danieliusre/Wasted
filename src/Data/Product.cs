@@ -10,6 +10,6 @@ namespace Wasted.Data
 
         public string MeasurementUnits { get; set; }
 
-        public string EnergyValue { get; set; }
+        public int EnergyValue { get; set; }
     }
 }
