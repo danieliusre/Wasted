@@ -15,3 +15,4 @@ Tomas,Grinius,tomas.grinius@gmail.com,tomas123
 Tadas,Kurpavicius,tadas.k@gmail.com,tadas123
 Kajus,Orsauskas,kajus@outlook.com,iseufvbieub
 Inga,Rudokiene,inga123@gmail.com,iuehvbkj
+Danielius,Rekus,danielius.rekus@gmail.com,danius123
