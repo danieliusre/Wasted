@@ -1,0 +1,64 @@
+﻿@page "/productList"
+
+@using Wasted.Data
+@inject ProductService ProductService
+
+<h1>Product List</h1>
+
+<p>You can search for your favourite products here</p>
+
+@if (products == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="form-group">
+        <input class="form-control" type="text" placeholder="Filter..."
+            @bind="Filter"
+            @bind:event="oninput">
+    </div>
+    <table class="table table-striped">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col">Product name</th>
+                <th scope="col">Type</th>
+                <th scope="col">Measurement units</th>
+                <th scope="col">Energy value (kcal/g)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in products)
+            {
+                if (!IsVisible(product))
+                    continue;
+                <tr>
+                    <td>@product.Name</td>
+                    <td>@product.Type</td>
+                    <td>@product.MeasurementUnits</td>
+                    <td>@product.EnergyValue</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+}
+
+@code {
+    private List<Product> products;
+     
+    public string Filter { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        products = await ProductService.GetProducts();
+    }
+
+    public bool IsVisible(Product product)
+    {
+        return 
+            string.IsNullOrEmpty(Filter) ||
+            product.Name.Contains(Filter, StringComparison.OrdinalIgnoreCase) ||
+            product.Type.Contains(Filter, StringComparison.OrdinalIgnoreCase);
+    }
+}
