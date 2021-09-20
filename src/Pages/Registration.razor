@@ -1,4 +1,5 @@
 @page "/registration"
+@using System.IO
 
 <h1 class="tac">Registration</h1>
 @code{
@@ -27,15 +28,15 @@
 <button class="buttonSub" @onclick="AddUserData"> Submit</button>
 
 <ul class="registrationMessage tac">
-    @foreach (string todo in todos)
+    @foreach (string ErrorMesage in ErrorMesages)
     {
-        <li>@todo</li>
+        <li>@ErrorMesage</li>
     }
 </ul>
 
 @code
 {  
-    private List<string> todos = new List<string>();
+    private List<string> ErrorMesages = new List<string>();
     static string NameBox = "";
     static string LastNameBox ;
     static string EmailBox ; 
@@ -44,7 +45,6 @@
         
     public void AddUserData()
     {
-        @using System.IO
         CreateUserList();
         if( !(string.IsNullOrEmpty(NameBox) || string.IsNullOrEmpty(LastNameBox) || string.IsNullOrEmpty(EmailBox) || string.IsNullOrEmpty(PasswordBox)))
         {
@@ -59,18 +59,18 @@
                 File.AppendAllText(@"UserData.txt", NameBox + "," + LastNameBox + "," + EmailBox + "," + PasswordBox + Environment.NewLine);
                 users.Clear();
                 CreateUserList(); 
-                todos.Clear();
-                todos.Add("Success! Welcome to the Wasted family!");
+                ErrorMesages.Clear();
+                ErrorMesages.Add("Success! Welcome to the Wasted family!");
             }
             else
             {
-                todos.Clear();
-                todos.Add("User with this email already exists");
+                ErrorMesages.Clear();
+                ErrorMesages.Add("User with this email already exists");
             }
          }
          else
          {
-            todos.Clear();   
+            ErrorMesages.Clear();   
          }
     }
 
