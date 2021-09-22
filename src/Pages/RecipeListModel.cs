@@ -1,4 +1,4 @@
-public class Model
+public class RecipeModel
     {
         public string Item {get;set;}
         public int Left {get;set;}

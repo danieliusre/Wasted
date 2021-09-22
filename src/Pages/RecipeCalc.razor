@@ -1,4 +1,7 @@
 @page "/recipecalc"
+@using System.IO
+@using System.Text.RegularExpressions;
+@using System.Net.Mail
 
 <h1><font color=rbg(0,15,128)><br>RECIPE CALCULATOR</font></h1>
 
@@ -7,9 +10,11 @@
 <p style="font-size:20px;">Using this page you will be able to enter (or upload) the produce, and we will provide you with endless recipes, where you can use them!</p>
 <hr><hr>
 
-<button class="btn btn-primary" @onclick="AddProduct">Add new product</button>
-
 <button class="btn btn-primary" @onclick="SaveList">Save list</button>
+
+<button class="btn btn-primary" @onclick="LoadList">Load list</button>
+
+<button class="btn btn-primary" @onclick="FindRecipe">Find a recipe!</button>
 
 <hr>
 
@@ -18,21 +23,39 @@
     string leftTextField = "";
     string unitTextField = "";
     string dateTextField = "";
-    List<Model> models = new()
-    {
-        new Model(){Item="Test", Left = 1, Unit = "grams", Date = "2000-01-02"},
-    };
+    List<RecipeModel> models = new();
 
     private void AddProduct()
     {
         if(!(string.IsNullOrEmpty(itemTextField)&&string.IsNullOrEmpty(leftTextField)&&string.IsNullOrEmpty(unitTextField)&&string.IsNullOrEmpty(dateTextField)))
-        models.Add(new Model(){Item = itemTextField, Left = Int32.Parse(leftTextField), Unit = unitTextField, Date = dateTextField});
+        models.Add(new RecipeModel(){Item = itemTextField, Left = Int32.Parse(leftTextField), Unit = unitTextField, Date = dateTextField});
     }
 
     private void SaveList()
     {
-        ;
+        File.WriteAllText("RecipeList.txt", String.Empty);
+        foreach (var model in models)
+        {
+            File.AppendAllText(@"RecipeList.txt", model.Item.ToLower() + " " + model.Left + " " + model.Unit + " " + model.Date + Environment.NewLine);
+        };
     } 
+
+    private void LoadList()
+    {
+        string[] lines = System.IO.File.ReadAllLines(@"RecipeList.txt");
+        models.Clear();
+        foreach (string line in lines)
+        {
+            string[] products = line.Split(' ');
+            string ItemName = products[0];
+            models.Add(new RecipeModel(){Item = string.Concat(ItemName[0].ToString().ToUpper(), ItemName.AsSpan(1)), Left = Int32.Parse(products[1]), Unit = products[2], Date =  products[3]});
+        }
+    }
+
+    private void FindRecipe()
+    {
+        ;
+    }
 }
 
 <table class="table">
@@ -41,7 +64,7 @@
         <th>Left</th>
         <th>Measurement</th>
         <th>Best until</th>
-        <th>Delete</th>
+        <th>Add/Remove</th>
     </tr>
 
 @foreach (var model in models)
@@ -61,17 +84,18 @@
 </table>
 
 <div>
-    <input type = "text" size="10" @bind="@itemTextField" @oninput="(e) => { itemTextField = e.Value ==null? string.Empty:(string)e.Value;}"/> <b>&emsp;&emsp;&emsp;&emsp;</b>
+    <input type = "text" size="10" @bind="@itemTextField" @oninput="(e) => { itemTextField = e.Value ==null? string.Empty:(string)e.Value;}"/> <b>&emsp;&emsp;</b>
     <input type = "number" @bind="@leftTextField" @oninput="(e) => { leftTextField = e.Value ==null? string.Empty:(string)e.Value;}"/> <b>&emsp;&emsp;</b>
     <select @bind="@unitTextField" @oninput="(e) => { unitTextField = e.Value ==null? string.Empty:(string)e.Value;}" name="unit" id="unit">
-                        <option value="grams">g</option>
-                        <option value="kilograms">kg</option>
-                        <option value="liters">l</option>
-                        <option value="milliliters">ml</option>
-                        <option value="ounces">oz</option>
+                        <option value="g">g</option>
+                        <option value="kg">kg</option>
+                        <option value="l">l</option>
+                        <option value="ml">ml</option>
+                        <option value="oz">oz</option>
                         <option value="units"></option>
-                        </select>   <b>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</b>
-    <input @oninput="(e) => { dateTextField = e.Value ==null? string.Empty:(string)e.Value;}" type="date" id="bestuntilday" name="bestuntilday" size="1">
+                        </select>   <b>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</b>
+    <input @oninput="(e) => { dateTextField = e.Value ==null? string.Empty:(string)e.Value;}" type="date" id="bestuntilday" name="bestuntilday" size="1"> <b>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</b>
+    <button class="btn btn-primary" @onclick="AddProduct">Add new product</button>
 </div>
 
 
