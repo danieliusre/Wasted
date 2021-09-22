@@ -1,7 +1,5 @@
 @page "/recipecalc"
 @using System.IO
-@using System.Text.RegularExpressions;
-@using System.Net.Mail
 
 <h1><font color=rbg(0,15,128)><br>RECIPE CALCULATOR</font></h1>
 
@@ -24,6 +22,10 @@
     string unitTextField = "";
     string dateTextField = "";
     List<RecipeModel> models = new();
+    List<RecipeModel> ingredients = new();
+
+    List<String> dishes = new();
+
 
     private void AddProduct()
     {
@@ -36,7 +38,14 @@
         File.WriteAllText("RecipeList.txt", String.Empty);
         foreach (var model in models)
         {
-            File.AppendAllText(@"RecipeList.txt", model.Item.ToLower() + " " + model.Left + " " + model.Unit + " " + model.Date + Environment.NewLine);
+            if(model.Unit == "kg")
+                File.AppendAllText(@"RecipeList.txt", model.Item.ToLower() + " " + model.Left * 1000 + " g " + model.Date + Environment.NewLine);
+            else if(model.Unit == "l")
+            {
+                File.AppendAllText(@"RecipeList.txt", model.Item.ToLower() + " " + model.Left * 1000 + " ml " + model.Date + Environment.NewLine);
+            }
+            else
+                File.AppendAllText(@"RecipeList.txt", model.Item.ToLower() + " " + model.Left + " " + model.Unit + " " + model.Date + Environment.NewLine);
         };
     } 
 
@@ -54,7 +63,35 @@
 
     private void FindRecipe()
     {
-        ;
+        System.IO.StreamReader RecipeFile = new System.IO.StreamReader(@"Recipes.txt");
+        dishes.Clear();
+        do
+        {
+            string Recipe = RecipeFile.ReadLine();
+            int Need = Int32.Parse(RecipeFile.ReadLine());
+            ingredients.Clear();
+            for (int i = 0; i<Need; i++)
+            {
+            string[] item = RecipeFile.ReadLine().Split(' ');
+            ingredients.Add(new RecipeModel(){Item = item[0], Left = Int32.Parse(item[1]), Unit = item[2]});
+            }
+            foreach (var ingredient in ingredients)
+            {
+                foreach(var model in models)
+                {
+                    if(ingredient.Item.Equals(model.Item.ToLower()) && ingredient.Left <= model.Left)
+                    {
+                        Need--;
+                    }
+                }   
+            }
+            if(Need == 0)
+            {
+                dishes.Add("SVEIKINAME GALITE PASIGAMINTI " + Recipe.ToUpper());
+            }
+        }while(RecipeFile.ReadLine() != null);
+        if(!dishes.Any())
+            dishes.Add("You can't make anything");
     }
 }
 
@@ -98,9 +135,16 @@
     <button class="btn btn-primary" @onclick="AddProduct">Add new product</button>
 </div>
 
+<ul class="Recipes" >
+    @foreach (string dish in dishes)
+    {
+        <li style="color:red;font-size:50px;">@dish</li>
+    }
+</ul>
+
 
 <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-<h3><font color=rbg(24,28,92)><br>font1</font></h3>
+
 
 <h3><font color="#3a0647"><br>font2</font></h3>
 

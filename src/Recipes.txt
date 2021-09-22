@@ -1,0 +1,14 @@
+Pancakes
+5
+flour 300 g
+sugar 30 g
+milk 250 ml
+eggs 1 units
+butter 50 g
+
+Chocolate Cake
+4
+flour 230 g
+cocoa 75 g
+sugar 410 g
+eggs 2 units
