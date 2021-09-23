@@ -44,6 +44,10 @@
             {
                 File.AppendAllText(@"RecipeList.txt", model.Item.ToLower() + " " + model.Left * 1000 + " ml " + model.Date + Environment.NewLine);
             }
+            else if(model.Unit == "oz")
+            {
+                File.AppendAllText(@"RecipeList.txt", model.Item.ToLower() + " " + model.Left * 28 + " g " + model.Date + Environment.NewLine);
+            }
             else
                 File.AppendAllText(@"RecipeList.txt", model.Item.ToLower() + " " + model.Left + " " + model.Unit + " " + model.Date + Environment.NewLine);
         };
@@ -90,6 +94,7 @@
                 dishes.Add("SVEIKINAME GALITE PASIGAMINTI " + Recipe.ToUpper());
             }
         }while(RecipeFile.ReadLine() != null);
+
         if(!dishes.Any())
             dishes.Add("You can't make anything");
     }
@@ -138,7 +143,7 @@
 <ul class="Recipes" >
     @foreach (string dish in dishes)
     {
-        <li style="color:red;font-size:50px;">@dish</li>
+        <li style="color:#3a0647;font-size:50px;">@dish</li>
     }
 </ul>
 
