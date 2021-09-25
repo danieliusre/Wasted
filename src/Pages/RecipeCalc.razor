@@ -21,7 +21,7 @@
     string leftTextField = "";
     string unitTextField = "";
     string dateTextField = "";
-    List<RecipeModel> models = new();
+    List<RecipeModel> products = new();
     List<RecipeModel> ingredients = new();
 
     List<String> dishes = new();
@@ -30,38 +30,38 @@
     private void AddProduct()
     {
         if(!(string.IsNullOrEmpty(itemTextField)&&string.IsNullOrEmpty(leftTextField)&&string.IsNullOrEmpty(unitTextField)&&string.IsNullOrEmpty(dateTextField)))
-        models.Add(new RecipeModel(){Item = itemTextField, Left = Int32.Parse(leftTextField), Unit = unitTextField, Date = dateTextField});
+        products.Add(new RecipeModel(){Item = itemTextField, Left = Int32.Parse(leftTextField), Unit = unitTextField, Date = dateTextField});
     }
 
     private void SaveList()
     {
         File.WriteAllText("RecipeList.txt", String.Empty);
-        foreach (var model in models)
+        foreach (var product in products)
         {
-            if(model.Unit == "kg")
-                File.AppendAllText(@"RecipeList.txt", model.Item.ToLower() + " " + model.Left * 1000 + " g " + model.Date + Environment.NewLine);
-            else if(model.Unit == "l")
+            if(product.Unit == "kg")
+                File.AppendAllText(@"RecipeList.txt", product.Item.ToLower() + " " + product.Left * 1000 + " g " + product.Date + Environment.NewLine);
+            else if(product.Unit == "l")
             {
-                File.AppendAllText(@"RecipeList.txt", model.Item.ToLower() + " " + model.Left * 1000 + " ml " + model.Date + Environment.NewLine);
+                File.AppendAllText(@"RecipeList.txt", product.Item.ToLower() + " " + product.Left * 1000 + " ml " + product.Date + Environment.NewLine);
             }
-            else if(model.Unit == "oz")
+            else if(product.Unit == "oz")
             {
-                File.AppendAllText(@"RecipeList.txt", model.Item.ToLower() + " " + model.Left * 28 + " g " + model.Date + Environment.NewLine);
+                File.AppendAllText(@"RecipeList.txt", product.Item.ToLower() + " " + product.Left * 28 + " g " + product.Date + Environment.NewLine);
             }
             else
-                File.AppendAllText(@"RecipeList.txt", model.Item.ToLower() + " " + model.Left + " " + model.Unit + " " + model.Date + Environment.NewLine);
+                File.AppendAllText(@"RecipeList.txt", product.Item.ToLower() + " " + product.Left + " " + product.Unit + " " + product.Date + Environment.NewLine);
         };
     } 
 
     private void LoadList()
     {
         string[] lines = System.IO.File.ReadAllLines(@"RecipeList.txt");
-        models.Clear();
+        products.Clear();
         foreach (string line in lines)
         {
-            string[] products = line.Split(' ');
-            string ItemName = products[0];
-            models.Add(new RecipeModel(){Item = string.Concat(ItemName[0].ToString().ToUpper(), ItemName.AsSpan(1)), Left = Int32.Parse(products[1]), Unit = products[2], Date =  products[3]});
+            string[] items = line.Split(' ');
+            string ItemName = items[0];
+            products.Add(new RecipeModel(){Item = string.Concat(ItemName[0].ToString().ToUpper(), ItemName.AsSpan(1)), Left = Int32.Parse(items[1]), Unit = items[2], Date =  items[3]});
         }
     }
 
@@ -81,9 +81,9 @@
             }
             foreach (var ingredient in ingredients)
             {
-                foreach(var model in models)
+                foreach(var product in products)
                 {
-                    if(ingredient.Item.Equals(model.Item.ToLower()) && ingredient.Left <= model.Left)
+                    if(ingredient.Item.Equals(product.Item.ToLower()) && ingredient.Left <= product.Left)
                     {
                         Need--;
                     }
@@ -91,7 +91,7 @@
             }
             if(Need == 0)
             {
-                dishes.Add("SVEIKINAME GALITE PASIGAMINTI " + Recipe.ToUpper());
+                dishes.Add(Recipe.ToUpper());
             }
         }while(RecipeFile.ReadLine() != null);
 
@@ -109,15 +109,15 @@
         <th>Add/Remove</th>
     </tr>
 
-@foreach (var model in models)
+@foreach (var product in products)
 {
     <tr>
-        <td>@model.Item</td>
-        <td>@model.Left</td>
-        <td>@model.Unit</td> 
-        <td>@model.Date</td> 
+        <td>@product.Item</td>
+        <td>@product.Left</td>
+        <td>@product.Unit</td> 
+        <td>@product.Date</td> 
         <td>
-            <button @onclick="() => models.Remove(model)">
+            <button @onclick="() => products.Remove(product)">
                 <span class="oi oi-trash" aria-hidden="true"></span>
             </button>  
         </td>
@@ -140,17 +140,11 @@
     <button class="btn btn-primary" @onclick="AddProduct">Add new product</button>
 </div>
 
-<ul class="Recipes" >
+<h1><font color=#3a0647><br>Here's what you can make:</font></h1>
+<dl class="Recipes" >
     @foreach (string dish in dishes)
     {
-        <li style="color:#3a0647;font-size:50px;">@dish</li>
+        <dt style="color:#3a0647;font-size:30px;">@dish</dt>
+        <dd>You will need: (coming soon)</dd>
     }
-</ul>
-
-
-<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-
-
-<h3><font color="#3a0647"><br>font2</font></h3>
-
-<h3><font color="purple"><br>font3<br></font></h3>
+</dl>
