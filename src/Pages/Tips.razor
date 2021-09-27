@@ -1,19 +1,40 @@
 @page "/tips"
+@using System.IO
 
-<h1><font color=rbg(0,15,128)><br>TIPS</font></h1>
+<h1><font color=rbg(0,15,128)><br>TIPS</font>
+
+<button>
+	<i class="btn btn-outline-success" @onclick="ReadList"></i>
+	✓
+</button>
+</h1>
+
 
 <p style="font-size:20px;">The best way to predict the future is to create it!</p>
 <hr><hr>
 
 <h2><font color=rbg(24,28,92)><br>Shop Smart</font></h2>
 
-<button class="dislike">
-	<i class="fa fa-thumbs-o-down" aria-hidden="true"></i>
+<button>
+	<i class="btn btn-outline-success" @onclick="likeTipOne"></i>
+	LIKE
+	@likeOne
 </button>
 
-<button class="like">
-	<i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
+<button>
+	<i class="btn btn-outline-danger" @onclick="dislikeTipOne"></i>
+	DISLIKE
+	@dislikeOne
 </button>
+
+<br> 
+
+<div class="progress">
+  <div class="progress-bar" role="progressbar" aria-valuenow="70"
+  aria-valuemin="0" aria-valuemax="100" style="width:@likeOne%">
+    <span class="sr-only">Complete</span>
+  </div>
+</div>
 
 <br>
 
@@ -25,13 +46,26 @@
 
 <h2><font color="#3a0647"><br>Store Food Correctly</font></h2>
 
-<button class="dislike">
-	<i class="fa fa-thumbs-o-down" aria-hidden="true"></i>
+<button>
+	<i class="btn btn-outline-success" @onclick="likeTipTwo"></i>
+	LIKE
+	@likeTwo
 </button>
 
-<button class="like">
-	<i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
+<button>
+	<i class="btn btn-outline-danger" @onclick="dislikeTipTwo"></i>
+	DISLIKE
+	@dislikeTwo
 </button>
+
+<br> 
+
+<div class="progress">
+  <div class="progress-bar" role="progressbar" aria-valuenow="70"
+  aria-valuemin="0" aria-valuemax="100" style="width:@likeTwo%">
+    <span class="sr-only">Complete</span>
+  </div>
+</div>
 
 <br>
 
@@ -44,13 +78,26 @@
 
 <h3><font color="purple"><br>Learn to Preserve<br></font></h3>
 
-<button class="dislike">
-	<i class="fa fa-thumbs-o-down" aria-hidden="true"></i>
+<button>
+	<i class="btn btn-outline-success" @onclick="likeTipThree"></i>
+	LIKE
+	@likeThree
 </button>
 
-<button class="like">
-	<i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
+<button>
+	<i class="btn btn-outline-danger" @onclick="dislikeTipThree"></i>
+	DISLIKE
+	@dislikeThree
 </button>
+
+<br> 
+
+<div class="progress">
+  <div class="progress-bar" role="progressbar" aria-valuenow="70"
+  aria-valuemin="0" aria-valuemax="100" style="width:@likeThree%">
+    <span class="sr-only">Complete</span>
+  </div>
+</div>
 
 <br>
 
@@ -59,3 +106,58 @@
 <button class="learnmore" onclick=" window.open('https://www.masterclass.com/articles/a-guide-to-home-food-preservation-how-to-pickle-can-ferment-dry-and-preserve-at-home','_blank');">
 	I want to learn more
 </button>
+
+@code {
+    private int likeOne = 0;
+	private int dislikeOne = 0;
+	private int likeTwo = 0;
+	private int dislikeTwo = 0;
+	private int likeThree = 0;
+	List<LikeDislikeModel> likes = new();
+
+	private void ReadList()
+		{
+			using (TextReader reader = File.OpenText("LikeDislikeList.txt"))
+			{
+			likeOne = int.Parse(reader.ReadLine());
+			dislikeOne = int.Parse(reader.ReadLine());
+			likeTwo = int.Parse(reader.ReadLine());
+			dislikeTwo = int.Parse(reader.ReadLine());
+			likeThree = int.Parse(reader.ReadLine());
+			dislikeThree = int.Parse(reader.ReadLine());
+			}
+		}
+
+    private void likeTipOne()
+    {
+        likeOne++;
+    }
+
+    private void dislikeTipOne()
+    {
+        dislikeOne++;
+    }	
+
+    private void likeTipTwo()
+    {
+        likeTwo++;
+    }
+
+    private void dislikeTipTwo()
+    {
+        dislikeTwo++;
+    }
+	
+    private void likeTipThree()
+    {
+        likeThree++;
+    }
+	private int dislikeThree = 0;
+
+    private void dislikeTipThree()
+    {
+        dislikeThree++;
+    }
+
+	
+}
