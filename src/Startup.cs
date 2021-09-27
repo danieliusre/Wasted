@@ -30,6 +30,7 @@ namespace Wasted
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
             services.AddSingleton<ProductService>();
+            services.AddSingleton<RegistrationService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

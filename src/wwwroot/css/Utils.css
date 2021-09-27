@@ -10,6 +10,7 @@
 .buttonSub {
     border:1px solid;
     border-color: rgb(124, 29, 29);
+    background-color: rgb(73, 3, 90);
     width:50%;
     font-size: large;
     color: white;
@@ -17,9 +18,7 @@
     display: inline-block;
     text-align: center;
     border-radius: 25px;
-    cursor:pointer;
-    background-color: rgb(175, 39, 118)
-
+    cursor:pointer
 }
 
 .inline {
