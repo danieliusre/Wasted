@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Wasted.Data;
+using Serilog;
 
 namespace Wasted
 {
@@ -18,6 +19,12 @@ namespace Wasted
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+
+            Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Debug()
+            .WriteTo.File("logs/logs.txt", rollingInterval: RollingInterval.Day)
+            .CreateLogger();
+            
         }
 
         public IConfiguration Configuration { get; }
@@ -30,6 +37,7 @@ namespace Wasted
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
             services.AddSingleton<ProductService>();
+            services.AddSingleton<JsonFileService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,7 +56,7 @@ namespace Wasted
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+            
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
