@@ -1,5 +1,8 @@
 @page "/recipecalc"
 @using System.IO
+@using Wasted.Data
+@* @inject RecipeCalcService RecipeCalcService *@
+ 
 
 <h1><font color=rbg(0,15,128)><br>RECIPE CALCULATOR</font></h1>
 
@@ -22,34 +25,52 @@
     string unitTextField = "";
     string dateTextField = "";
     List<RecipeModel> products = new();
+    //private List<RecipeCalcProduct> products = new();
     List<RecipeModel> ingredients = new();
 
     List<String> dishes = new();
 
+    List<String> badProducts = new();
+
 
     private void AddProduct()
     {
+        //in case of same items being entered twice
+        foreach (var product in products)
+        {
+            if(itemTextField.ToLower().Trim() == product.Item.ToLower())
+            {
+                if(unitTextField == "kg" || unitTextField == "l")
+                {product.Left += Int32.Parse(leftTextField) * 1000;}
+                else
+                {product.Left += Int32.Parse(leftTextField);} //adds what's left and deletes the new item
+                itemTextField = "";
+                leftTextField = "";
+                unitTextField = "";
+                dateTextField = "";
+            }
+        }
         if(!(string.IsNullOrEmpty(itemTextField)&&string.IsNullOrEmpty(leftTextField)&&string.IsNullOrEmpty(unitTextField)&&string.IsNullOrEmpty(dateTextField)))
-        products.Add(new RecipeModel(){Item = itemTextField, Left = Int32.Parse(leftTextField), Unit = unitTextField, Date = dateTextField});
+        products.Add(new RecipeModel(){Item = itemTextField.Trim(), Left = Int32.Parse(leftTextField), Unit = unitTextField, Date = dateTextField});
     }
 
     private void SaveList()
     {
-        File.WriteAllText("RecipeList.txt", String.Empty);
+        File.WriteAllText("RecipeList.txt", String.Empty); //saving list to file, converting all measurements into g and ml
         foreach (var product in products)
         {
             if(product.Unit == "kg")
-                File.AppendAllText(@"RecipeList.txt", product.Item.ToLower() + " " + product.Left * 1000 + " g " + product.Date + Environment.NewLine);
+                File.AppendAllText(@"RecipeList.txt", product.Item.ToLower() + ";" + product.Left * 1000 + ";g;" + product.Date + Environment.NewLine);
             else if(product.Unit == "l")
             {
-                File.AppendAllText(@"RecipeList.txt", product.Item.ToLower() + " " + product.Left * 1000 + " ml " + product.Date + Environment.NewLine);
+                File.AppendAllText(@"RecipeList.txt", product.Item.ToLower() + ";" + product.Left * 1000 + ";ml;" + product.Date + Environment.NewLine);
             }
             else if(product.Unit == "oz")
             {
-                File.AppendAllText(@"RecipeList.txt", product.Item.ToLower() + " " + product.Left * 28 + " g " + product.Date + Environment.NewLine);
+                File.AppendAllText(@"RecipeList.txt", product.Item.ToLower() + ";" + product.Left * 28 + ";g;" + product.Date + Environment.NewLine);
             }
             else
-                File.AppendAllText(@"RecipeList.txt", product.Item.ToLower() + " " + product.Left + " " + product.Unit + " " + product.Date + Environment.NewLine);
+                File.AppendAllText(@"RecipeList.txt", product.Item.ToLower() + ";" + product.Left + ";" + product.Unit + ";" + product.Date + Environment.NewLine);
         };
     } 
 
@@ -59,9 +80,13 @@
         products.Clear();
         foreach (string line in lines)
         {
-            string[] items = line.Split(' ');
+            string[] items = line.Split(';');
             string ItemName = items[0];
             products.Add(new RecipeModel(){Item = string.Concat(ItemName[0].ToString().ToUpper(), ItemName.AsSpan(1)), Left = Int32.Parse(items[1]), Unit = items[2], Date =  items[3]});
+            if((DateTime.Parse(items[3]) - DateTime.Today).TotalDays < 3)
+            {
+                badProducts.Add(ItemName);
+            }
         }
     }
 
@@ -69,6 +94,7 @@
     {
         System.IO.StreamReader RecipeFile = new System.IO.StreamReader(@"Recipes.txt");
         dishes.Clear();
+        badProducts.Clear();
         do
         {
             string Recipe = RecipeFile.ReadLine();
@@ -76,7 +102,7 @@
             ingredients.Clear();
             for (int i = 0; i<Need; i++)
             {
-            string[] item = RecipeFile.ReadLine().Split(' ');
+            string[] item = RecipeFile.ReadLine().Split(';');
             ingredients.Add(new RecipeModel(){Item = item[0], Left = Int32.Parse(item[1]), Unit = item[2]});
             }
             foreach (var ingredient in ingredients)
@@ -140,7 +166,7 @@
     <button class="btn btn-primary" @onclick="AddProduct">Add new product</button>
 </div>
 
-<h1><font color=#3a0647><br>Here's what you can make:</font></h1>
+@if(dishes.Any()){<h1><font color=#3a0647><br>Here's what you can make:</font></h1>}
 <dl class="Recipes" >
     @foreach (string dish in dishes)
     {
@@ -148,3 +174,11 @@
         <dd>You will need: (coming soon)</dd>
     }
 </dl>
+
+@if(badProducts.Any()){<h1><font style="color:red;font-size:30px;"><br>Be careful! These products have 3 or less days left, before they expire:</font></h1>}
+<ul class="Expired" >
+    @foreach (string badProduct in badProducts)
+    {
+        <li style="color:red;font-size:30px;">@badProduct</li>
+    }
+</ul>
