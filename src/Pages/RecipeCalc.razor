@@ -1,7 +1,8 @@
 @page "/recipecalc"
 @using System.IO
 @using Wasted.Data
-@* @inject RecipeCalcService RecipeCalcService *@
+@using Newtonsoft.Json
+@inject RecipeCalcService RecipeCalcService
  
 
 <h1><font color=rbg(0,15,128)><br>RECIPE CALCULATOR</font></h1>
@@ -25,7 +26,6 @@
     string unitTextField = "";
     string dateTextField = "";
     List<RecipeModel> products = new();
-    //private List<RecipeCalcProduct> products = new();
     List<RecipeModel> ingredients = new();
 
     List<String> dishes = new();
@@ -56,48 +56,40 @@
 
     private void SaveList()
     {
-        File.WriteAllText("RecipeList.txt", String.Empty); //saving list to file, converting all measurements into g and ml
-        foreach (var product in products)
+        foreach(var product in products)
         {
             if(product.Unit == "kg")
-                File.AppendAllText(@"RecipeList.txt", product.Item.ToLower() + ";" + product.Left * 1000 + ";g;" + product.Date + Environment.NewLine);
+            {product.Left = product.Left * 1000; product.Unit = "g";}
             else if(product.Unit == "l")
-            {
-                File.AppendAllText(@"RecipeList.txt", product.Item.ToLower() + ";" + product.Left * 1000 + ";ml;" + product.Date + Environment.NewLine);
-            }
+            {product.Left = product.Left * 1000; product.Unit = "ml";}
             else if(product.Unit == "oz")
-            {
-                File.AppendAllText(@"RecipeList.txt", product.Item.ToLower() + ";" + product.Left * 28 + ";g;" + product.Date + Environment.NewLine);
-            }
-            else
-                File.AppendAllText(@"RecipeList.txt", product.Item.ToLower() + ";" + product.Left + ";" + product.Unit + ";" + product.Date + Environment.NewLine);
-        };
+            {product.Left = product.Left * 28; product.Unit = "g";}
+        } 
+        File.WriteAllText("RecipeList.json", JsonConvert.SerializeObject(products));
     } 
 
     private void LoadList()
     {
-        string[] lines = System.IO.File.ReadAllLines(@"RecipeList.txt");
         products.Clear();
-        foreach (string line in lines)
+        badProducts.Clear();
+        products = RecipeCalcService.GetProducts();
+        foreach (var product in products)
         {
-            string[] items = line.Split(';');
-            string ItemName = items[0];
-            products.Add(new RecipeModel(){Item = string.Concat(ItemName[0].ToString().ToUpper(), ItemName.AsSpan(1)), Left = Int32.Parse(items[1]), Unit = items[2], Date =  items[3]});
-            if((DateTime.Parse(items[3]) - DateTime.Today).TotalDays < 3)
+            product.Item = char.ToUpper(product.Item[0]) + product.Item.Substring(1);
+            if((DateTime.Parse(product.Date) - DateTime.Today).TotalDays < 3)
             {
-                badProducts.Add(ItemName);
+                badProducts.Add(product.Item);
             }
-        }
+        } 
     }
 
     private void FindRecipe()
     {
         System.IO.StreamReader RecipeFile = new System.IO.StreamReader(@"Recipes.txt");
         dishes.Clear();
-        badProducts.Clear();
         do
         {
-            string Recipe = RecipeFile.ReadLine();
+            string dishName = RecipeFile.ReadLine();
             int Need = Int32.Parse(RecipeFile.ReadLine());
             ingredients.Clear();
             for (int i = 0; i<Need; i++)
@@ -117,7 +109,7 @@
             }
             if(Need == 0)
             {
-                dishes.Add(Recipe.ToUpper());
+                dishes.Add(dishName.ToUpper());
             }
         }while(RecipeFile.ReadLine() != null);
 
