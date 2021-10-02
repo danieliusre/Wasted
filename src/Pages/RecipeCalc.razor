@@ -5,7 +5,7 @@
 @inject RecipeCalcService RecipeCalcService
  
 
-<h1><font color=rbg(0,15,128)><br>RECIPE CALCULATOR</font></h1>
+<h1>RECIPE CALCULATOR</h1>
 
 <p style="font-size:20px;">Reduce food waste by using leftover products!</p>
 
@@ -114,7 +114,7 @@
         }while(RecipeFile.ReadLine() != null);
 
         if(!dishes.Any())
-            dishes.Add("You can't make anything");
+            dishes.Add("Nothing");
     }
 }
 
@@ -144,8 +144,8 @@
 </table>
 
 <div>
-    <input type = "text" size="10" @bind="@itemTextField" @oninput="(e) => { itemTextField = e.Value ==null? string.Empty:(string)e.Value;}"/> <b>&emsp;&emsp;</b>
-    <input type = "number" @bind="@leftTextField" @oninput="(e) => { leftTextField = e.Value ==null? string.Empty:(string)e.Value;}"/> <b>&emsp;&emsp;</b>
+    <input type = "text" size="10" id="itemfieldid" @bind="@itemTextField" @oninput="(e) => { itemTextField = e.Value ==null? string.Empty:(string)e.Value;}"/> 
+    <input type = "number" id="leftfieldid" @bind="@leftTextField" @oninput="(e) => { leftTextField = e.Value ==null? string.Empty:(string)e.Value;}"/> 
     <select @bind="@unitTextField" @oninput="(e) => { unitTextField = e.Value ==null? string.Empty:(string)e.Value;}" name="unit" id="unit">
                         <option value="g">g</option>
                         <option value="kg">kg</option>
@@ -153,8 +153,8 @@
                         <option value="ml">ml</option>
                         <option value="oz">oz</option>
                         <option value="units"></option>
-                        </select>   <b>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</b>
-    <input @oninput="(e) => { dateTextField = e.Value ==null? string.Empty:(string)e.Value;}" type="date" id="bestuntilday" name="bestuntilday" size="1"> <b>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</b>
+                        </select>
+    <input @oninput="(e) => { dateTextField = e.Value ==null? string.Empty:(string)e.Value;}" type="date" id="bestuntilday" name="bestuntilday" size="1">
     <button class="btn btn-primary" @onclick="AddProduct">Add new product</button>
 </div>
 
