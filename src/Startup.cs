@@ -37,6 +37,7 @@ namespace Wasted
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
             services.AddSingleton<ProductService>();
+            services.AddSingleton<RecipeCalcService>();
             services.AddSingleton<RegistrationService>();
             services.AddSingleton<JsonFileService>();
         }

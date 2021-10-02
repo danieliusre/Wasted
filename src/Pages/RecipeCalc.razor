@@ -26,19 +26,16 @@
     string unitTextField = "";
     string dateTextField = "";
     List<RecipeModel> products = new();
-    List<RecipeModel> ingredients = new();
-
-    List<String> dishes = new();
-
     List<String> badProducts = new();
-
-
+    List<String> dishes = new();
+    List<RecipeModel> ingredients = new();
     private void AddProduct()
     {
+        bool allFilled = (!string.IsNullOrEmpty(itemTextField)&&!string.IsNullOrEmpty(leftTextField)&&!string.IsNullOrEmpty(unitTextField)&&!string.IsNullOrEmpty(dateTextField));
         //in case of same items being entered twice
         foreach (var product in products)
         {
-            if(itemTextField.ToLower().Trim() == product.Item.ToLower())
+            if(itemTextField.ToLower().Trim() == product.Item.ToLower() && allFilled)
             {
                 if(unitTextField == "kg" || unitTextField == "l")
                 {product.Left += Int32.Parse(leftTextField) * 1000;}
@@ -48,10 +45,13 @@
                 leftTextField = "";
                 unitTextField = "";
                 dateTextField = "";
+                allFilled = false;
             }
         }
-        if(!(string.IsNullOrEmpty(itemTextField)&&string.IsNullOrEmpty(leftTextField)&&string.IsNullOrEmpty(unitTextField)&&string.IsNullOrEmpty(dateTextField)))
-        products.Add(new RecipeModel(){Item = itemTextField.Trim(), Left = Int32.Parse(leftTextField), Unit = unitTextField, Date = dateTextField});
+        if(allFilled)
+        {
+            products.Add(new RecipeModel(){Item = itemTextField.Trim(), Left = Int32.Parse(leftTextField), Unit = unitTextField, Date = dateTextField});
+        }
     }
 
     private void SaveList()
@@ -167,10 +167,10 @@
     }
 </dl>
 
-@if(badProducts.Any()){<h1><font style="color:red;font-size:30px;"><br>Be careful! These products have 3 or less days left, before they expire:</font></h1>}
+@if(badProducts.Any()){<h1><font style="color:red;font-size:25px;"><br>Be careful! These products have 3 or less days left, before they expire:</font></h1>}
 <ul class="Expired" >
     @foreach (string badProduct in badProducts)
     {
-        <li style="color:red;font-size:30px;">@badProduct</li>
+        <li style="color:red;font-size:25px;">@badProduct</li>
     }
 </ul>
