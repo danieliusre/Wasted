@@ -3,21 +3,19 @@ using System.IO;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Net.Mail;
-using System.Text.Json;
+using Newtonsoft.Json;
+
 
 namespace Wasted.Data
 {
+    
     public class RegistrationService
-    {
+    { 
         public List<string> ErrMsg = new List<string> ();
         public List<User> AddUserData(string NameBox, string LastNameBox, string EmailBox, string PasswordBox, List<User> users, List<string> ErrorMessages)
         {
             
-            if( dataValid (NameBox, LastNameBox, EmailBox, PasswordBox, ErrorMessages) 
-                           && !(string.IsNullOrEmpty(NameBox) 
-                           || string.IsNullOrEmpty(LastNameBox) 
-                           || string.IsNullOrEmpty(EmailBox) 
-                           || string.IsNullOrEmpty(PasswordBox)))
+            if( dataValid (NameBox, LastNameBox, EmailBox, PasswordBox, ErrorMessages))
             {
                 if(newEmail(EmailBox, users) && emailValid(EmailBox))
                 {
@@ -28,16 +26,10 @@ namespace Wasted.Data
                         Email = EmailBox,
                         Password = PasswordBox
                     });
-                    //working with both files for now, will transfer to json only
-                    string json1 = JsonSerializer.Serialize(users);
-                    File.WriteAllText(@"UserData.json", json1);
-                    File.AppendAllText(@"UserData.txt", NameBox + "," + LastNameBox + "," + EmailBox + "," + PasswordBox + Environment.NewLine);
-                    users.Clear();
-                    users = CreateUserList(users); 
+                    writeToFile("UserData.json", users);git 
                     ErrorMessages.Clear();
                     ErrorMessages.Add("Success! Welcome to the Wasted family!");
                     ErrMsg = ErrorMessages;
-                    FormatJson();
                 }
                 else
                 {
@@ -89,18 +81,15 @@ namespace Wasted.Data
 
         public List<User> CreateUserList(List<User> users)
         {
-            string[] lines = System.IO.File.ReadAllLines(@"UserData.txt");   
-            foreach(string line in lines) 
+           string json = File.ReadAllText(@"UserData.json");
+            try 
             {
-
-                string[] userData = line.Split(',');
-                users.Add(new User()
-                {   Name = userData[0],
-                    Lastname = userData[1],
-                    Email = userData[2],
-                    Password = userData[3]
-                });
-            } 
+                users = JsonConvert.DeserializeObject<List<User>>(json);
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine("Problem: {0}", e);
+            }
             return users;
         }
 
@@ -111,6 +100,10 @@ namespace Wasted.Data
 
         public bool dataValid (string NameBox, string LastNameBox, string EmailBox, string PasswordBox, List<string> ErrorMessages)
         {
+            if ( string.IsNullOrEmpty(NameBox) || string.IsNullOrEmpty(LastNameBox) || string.IsNullOrEmpty(EmailBox) || string.IsNullOrEmpty(PasswordBox))
+            {
+                return false;
+            }
             var hasNumber = new Regex(@"[0-9]+");
             var hasUpperChar = new Regex(@"[A-Z]+");
             var hasMiniMaxChars = new Regex(@".{8,15}");
@@ -151,46 +144,22 @@ namespace Wasted.Data
                 ErrMsg = ErrorMessages;
                 return false;
             }
+
             return true;
         }
-    //function for further work
-        public void FormatJson()
+        public void writeToFile(string filePath, List<User> users)
         {
-            string jsonString = File.ReadAllText("UserData.json"); 
-            var writerOptions = new JsonWriterOptions
+            try
             {
-                Indented = true
-            };
-
-            var documentOptions = new JsonDocumentOptions
-            {
-                CommentHandling = JsonCommentHandling.Skip
-            };
-
-            using FileStream fs = File.Create("UserDataFormated.json");
-            using var writer = new Utf8JsonWriter(fs, options: writerOptions);
-            using JsonDocument document = JsonDocument.Parse(jsonString, documentOptions);
-
-            JsonElement root = document.RootElement;
-
-        if (root.ValueKind == JsonValueKind.Object)
-            {
-                writer.WriteStartObject();
+                string json = JsonConvert.SerializeObject(users, Formatting.Indented);
+                File.WriteAllText(filePath, json);
             }
-            else
+            catch (Exception e)
             {
-                return;
+                Console.WriteLine("{0}", e);
             }
-
-            foreach (JsonProperty property in root.EnumerateObject())
-            {
-                property.WriteTo(writer);
-            }
-
-            writer.WriteEndObject();
-
-            writer.Flush(); 
         }
+ 
     }
     
 }
