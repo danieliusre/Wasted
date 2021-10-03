@@ -17,7 +17,7 @@ namespace Wasted.Data
             try
             {
                 Log.Information("Starting to Registration service");
-                if( dataValid (NameBox, LastNameBox, EmailBox, PasswordBox, ErrMsg))
+                if( dataValid (NameBox, LastNameBox, EmailBox, PasswordBox))
                 {
                     if(newEmail(EmailBox, users) && emailValid(EmailBox))
                     {
@@ -112,13 +112,14 @@ namespace Wasted.Data
             return ErrMsg;
         }
 
-        public bool dataValid (string NameBox, string LastNameBox, string EmailBox, string PasswordBox, List<string> ErrorMessages)
+        public bool dataValid (string NameBox, string LastNameBox, string EmailBox, string PasswordBox)
         {
             try
             {
                 Log.Information("Starting to dataValid");
                 if ( string.IsNullOrEmpty(NameBox) || string.IsNullOrEmpty(LastNameBox) || string.IsNullOrEmpty(EmailBox) || string.IsNullOrEmpty(PasswordBox))
                 {
+                    Log.Information("Finished dataValid (empty fields present)");
                     return false;
                 }
                 var hasNumber = new Regex(@"[0-9]+");
@@ -130,38 +131,35 @@ namespace Wasted.Data
                 //nameValid
                 if(hasNumber.IsMatch(NameBox) || hasSymbols.IsMatch(NameBox))
                 {
-                    Console.WriteLine("invalid name");
-                    ErrorMessages.Add("invalid name");
+                    ErrMsg.Add("invalid name");
+                    Log.Information("Finished dataValid (invalid name)");
                     return false;
                 }
-                //nameValid
+                //lastNameValid
                 if(hasNumber.IsMatch(LastNameBox) || hasSymbols.IsMatch(LastNameBox))
                 {
-                    Console.WriteLine("invalid lastname");
-                    ErrorMessages.Add("invalid lastname");
-                    ErrMsg = ErrorMessages;
+                    ErrMsg.Add("invalid lastname");
+                    Log.Information("Finished dataValid (invalid lastname)");
                     return false;
                 }
                 //emailValid
                 if(hasComma.IsMatch(EmailBox))
                 {
-                    Console.WriteLine("comma in email");
-                    ErrorMessages.Add("comma in email");
-                    ErrMsg = ErrorMessages;
+                    ErrMsg.Add("comma in email");
+                    Log.Information("Finished dataValid (invalid email)");
                     return false;
                 }
-                //PasswordValif
+                //PasswordValid
                 if(!hasNumber.IsMatch(PasswordBox) 
                 || !hasUpperChar.IsMatch(PasswordBox) 
                 || !hasLowerChar.IsMatch(PasswordBox)
                 || !hasMiniMaxChars.IsMatch(PasswordBox))
                 {
-                    Console.WriteLine("invalid password");
-                    ErrorMessages.Add("invalid password");
-                    ErrMsg = ErrorMessages;
+                    ErrMsg.Add("invalid password");
+                    Log.Information("Finished dataValid (invalid password)");
                     return false;
                 }
-                Log.Information("Finished data validation dataValid");
+                Log.Information("Finished data validation dataValid success");
                 return true;
             }
             catch (Exception e)
