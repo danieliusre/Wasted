@@ -63,8 +63,8 @@ namespace Wasted.Data
                         return false;
                     }
                 }
-                return true;
                 Log.Information("Finished email checking");
+                return true;
             }
             catch (Exception e)
             {
@@ -182,6 +182,42 @@ namespace Wasted.Data
             {
                 Log.Error("Exception caught {0}", e);
             }
+        }
+
+        public bool CheckSignIn(string SignInEmailBox, string SignInPasswordBox, List<User> users)
+        {
+            Log.Information("Starting to CheckSignIn");
+            if(!string.IsNullOrEmpty(SignInEmailBox) && !string.IsNullOrEmpty(SignInPasswordBox))
+            {
+                foreach(User user in users)
+                {
+                    if(user.Email == SignInEmailBox)
+                    {
+                        if(user.Password == SignInPasswordBox)
+                        {
+                            Log.Information("Finished CheckSignIn");
+                            return true;
+                        }
+                    }
+                }
+            }
+            Log.Error("Finished CheckSignIn");
+            return false;
+        }
+
+        public string getName (List<User> users, string email)
+        {
+            Log.Information("Starting to getName(Sign in)");
+            foreach(User user in users)
+            {
+                if(user.Email == email)
+                {
+                    Log.Information("Finished getName(Sign in)-success");
+                    return user.Name;
+                }
+            }
+            Log.Information("Finished getName(Sign in)-failure");
+            return "";
         }
  
     }
