@@ -8,14 +8,12 @@ using Newtonsoft.Json;
 
 namespace Wasted.Data
 {
-    
     public class RegistrationService
     { 
-        public List<string> ErrMsg = new List<string> ();
-        public List<User> AddUserData(string NameBox, string LastNameBox, string EmailBox, string PasswordBox, List<User> users, List<string> ErrorMessages)
+        public List<string> ErrMsg = new List<string>();
+        public List<string> AddUserData(string NameBox, string LastNameBox, string EmailBox, string PasswordBox, List<User> users)
         {
-            
-            if( dataValid (NameBox, LastNameBox, EmailBox, PasswordBox, ErrorMessages))
+            if( dataValid (NameBox, LastNameBox, EmailBox, PasswordBox, ErrMsg))
             {
                 if(newEmail(EmailBox, users) && emailValid(EmailBox))
                 {
@@ -26,16 +24,14 @@ namespace Wasted.Data
                         Email = EmailBox,
                         Password = PasswordBox
                     });
-                    writeToFile("UserData.json", users);git 
-                    ErrorMessages.Clear();
-                    ErrorMessages.Add("Success! Welcome to the Wasted family!");
-                    ErrMsg = ErrorMessages;
+                    writeToFile("UserData.json", users);
+                    ErrMsg.Clear();
+                    ErrMsg.Add("Success! Welcome to the Wasted family!");
                 }
                 else
                 {
-                    ErrorMessages.Clear();
-                    ErrorMessages.Add("A user with given email address already exists!");
-                    ErrMsg = ErrorMessages;
+                    ErrMsg.Clear();
+                    ErrMsg.Add("A user with given email address already exists!");
                     foreach(string line in ErrMsg)
                     {
                         Console.WriteLine("{0}", line);
@@ -44,24 +40,22 @@ namespace Wasted.Data
             }
             else
             {
-                ErrorMessages.Clear(); 
-                ErrMsg = ErrorMessages;  
+                ErrMsg.Clear(); 
             }
-            return users;
-        } 
+            return ErrMsg;
+        }
 
-
-        public bool newEmail(string email, List<User> users)
+        public bool newEmail(string email, List<User> users1)
         {
             bool newEmail = true;
-            foreach(User regUser in users)
+            foreach(User regUser in users1)
             {
                 if(String.Equals(email, regUser.Email))
                 {
-                    newEmail = false;
+                    return false;
                 }
             }
-            return newEmail;
+            return true;
         }
 
 
@@ -144,7 +138,6 @@ namespace Wasted.Data
                 ErrMsg = ErrorMessages;
                 return false;
             }
-
             return true;
         }
         public void writeToFile(string filePath, List<User> users)

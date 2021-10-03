@@ -46,7 +46,7 @@
     public void submitPressed()
     {
         RegistrationService service = new RegistrationService();
-        users = service.AddUserData(NameBox, LastNameBox, EmailBox, PasswordBox, users, ErrorMessages);
+        ErrorMessages = service.AddUserData(NameBox, LastNameBox, EmailBox, PasswordBox, users);
         ErrorMessages = service.getErrorMess();
     }
    
