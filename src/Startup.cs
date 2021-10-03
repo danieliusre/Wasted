@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Wasted.Data;
 using Serilog;
+using Microsoft.AspNetCore.Components.Authorization;
 
 namespace Wasted
 {
@@ -39,6 +40,8 @@ namespace Wasted
             services.AddSingleton<ProductService>();
             services.AddSingleton<RegistrationService>();
             services.AddSingleton<JsonFileService>();
+            services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
+            services.AddSingleton<AuthenticationResult>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
