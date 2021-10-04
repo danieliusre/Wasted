@@ -1,0 +1,44 @@
+[
+  {
+    "Name": "Apple",
+    "Type": "Fruit",
+    "MeasurementUnits": "kg",
+    "EnergyValue": 158
+  },
+  {
+    "Name": "Troat",
+    "Type": "Fish",
+    "MeasurementUnits": "kg",
+    "EnergyValue": 284
+  },
+  {
+    "Name": "Orange",
+    "Type": "Fruit",
+    "MeasurementUnits": "g",
+    "EnergyValue": 120
+  },
+  {
+    "Name": "Blackberry",
+    "Type": "Berry",
+    "MeasurementUnits": "kg",
+    "EnergyValue": 262
+  },
+  {
+    "Name": "Cheese",
+    "Type": "Dairy",
+    "MeasurementUnits": "kg",
+    "EnergyValue": 352
+  },
+  {
+    "Name": "Bass",
+    "Type": "Fish",
+    "MeasurementUnits": "kg",
+    "EnergyValue": 271
+  },
+  {
+    "Name": "Buttermilk",
+    "Type": "Dairy",
+    "MeasurementUnits": "l",
+    "EnergyValue": 175
+  }
+]

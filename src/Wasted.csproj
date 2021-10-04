@@ -11,5 +11,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+    <PackageReference Include="Syncfusion.PDF.NET.Core" Version="19.3.0.43" />
   </ItemGroup>
 </Project>

@@ -2,6 +2,9 @@
 
 @using Wasted.Data
 @inject ProductService ProductService
+@inject ExportService exportService
+@inject Microsoft.JSInterop.IJSRuntime JS
+@using  System.IO;
 
 <h1>Product List</h1>
 
@@ -25,33 +28,73 @@ else
                 <th scope="col">Type</th>
                 <th scope="col">Measurement units</th>
                 <th scope="col">Energy value (kcal/g)</th>
+                <th scope="col">Add to shopping list</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var product in products)
-            {
-                if (!IsVisible(product))
-                    continue;
-                <tr>
-                    <td>@product.Name</td>
-                    <td>@product.Type</td>
-                    <td>@product.MeasurementUnits</td>
-                    <td>@product.EnergyValue</td>
-                </tr>
+            @{
+                index=0;
+                foreach (var product in products)
+                {
+                    var i=index;
+                    if (!IsVisible(product))
+                        continue;
+                    <tr>
+                        <td>@product.Name</td>
+                        <td>@product.Type</td>
+                        <td>@product.MeasurementUnits</td>
+                        <td>@product.EnergyValue</td>
+                        <td>
+                            <button class="btn btn-success" @onclick="() => addToShoppingList(product)">+</button>
+                        </td>
+                    </tr>
+                    index++;
+                }
             }
+            
         </tbody>
     </table>
+    @if(shoppingList.Any())
+    {
+        <h1>Shopping list:</h1>
+        <table class="table table-striped">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">Product name</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
 
+                    foreach (var product in shoppingList)
+                    {
+                        <tr>
+                            <td>@product.Name</td>
+                        </tr>
+                    }
+                }
+                
+            </tbody>
+        </table>
+        <button class="btn btn-primary" @onclick="@ExportToPdf">Export to PDF</button>
+    }
+    
+    
 }
 
 @code {
-    private List<Product> products;
+    public int index { get; set; }
+    
+    private List<Product> products { get; set; }
+
+    private List<Product> shoppingList = new List<Product>();
      
     public string Filter { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         products = await ProductService.GetProducts();
+        await ProductService.SaveProducts(products);
     }
 
     public bool IsVisible(Product product)
@@ -59,8 +102,34 @@ else
         // Example of logger usage in .razor files:
         // Log.Information("Checking visibility for product {0}", product.Name); 
         return 
+            (
             string.IsNullOrEmpty(Filter) ||
             product.Name.Contains(Filter, StringComparison.OrdinalIgnoreCase) ||
-            product.Type.Contains(Filter, StringComparison.OrdinalIgnoreCase);
+            product.Type.Contains(Filter, StringComparison.OrdinalIgnoreCase) 
+            )
+            &&
+            !shoppingList.Exists(x => x.Name == product.Name);
+    }
+    public void addToShoppingList(Product product)
+    {
+        Log.Information("Adding {0} to shopping list", product);
+        shoppingList.Add(product);
+    }
+    protected async Task ExportToPdf()
+    {
+        try
+        {
+            var header="Here is your shopping list";
+            var text="We do not recommend to print this pdf. Save paper, use digital version instead";
+            using (MemoryStream excelStream = exportService.CreatePdfTable(shoppingList,header,text))
+            {
+                await JS.SaveAs("ShoppingList.pdf", excelStream.ToArray());
+            }
+        }
+        catch (Exception e)
+        {
+            Log.Error("Exception caught: {0}",e);
+        }
+       
     }
 }

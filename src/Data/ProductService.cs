@@ -20,11 +20,27 @@ namespace Wasted.Data
         public Task<List<Product>> GetProducts()
         {
             var products =  new List<Product>();
-            var filePath = AppDomain.CurrentDomain.BaseDirectory + "ProductList.txt";
+            var filePath = "ProductList.json";
+          
             try 
             {
-                Log.Information("Starting to ProductList");
+                Log.Information("Starting to read ProductList");
                 products = JsonConvert.DeserializeObject<List<Product>>(_jsonFileService.ReadJsonFromFile(filePath));
+                Log.Information("Finished reading Productlist");
+            }
+            catch (Exception e)
+            {
+                Log.Error("Exception caught: {0}",e);
+            }
+            return Task.FromResult(products);
+        }
+        public Task<List<Product>> SaveProducts(List<Product> products)
+        {
+            var filePath = "ProductList.json";
+            try 
+            {
+                Log.Information("Starting to read ProductList");
+                _jsonFileService.WriteJsonToFile(JsonConvert.SerializeObject(products, Formatting.Indented),filePath);
                 Log.Information("Finished reading Productlist");
             }
             catch (Exception e)

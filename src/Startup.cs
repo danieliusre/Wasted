@@ -41,6 +41,7 @@ namespace Wasted
             services.AddSingleton<RecipeCalcService>();
             services.AddSingleton<TipsService>();
             services.AddSingleton<RegistrationService>();
+            services.AddSingleton<ExportService>();
             services.AddSingleton<JsonFileService>();
             services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
             services.AddSingleton<AuthenticationResult>();
