@@ -7,10 +7,7 @@ namespace Wasted.Data
     {
         public string ReadJsonFromFile(string filePath)
         {
-            using (StreamReader r = new StreamReader(filePath))
-            {
-                return r.ReadToEnd();
-            }
+            return File.ReadAllText(filePath);
         }
         public void WriteJsonToFile(string json, string filePath)
         {

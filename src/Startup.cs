@@ -38,6 +38,7 @@ namespace Wasted
             services.AddSingleton<WeatherForecastService>();
             services.AddSingleton<ProductService>();
             services.AddSingleton<RegistrationService>();
+            services.AddSingleton<ExportService>();
             services.AddSingleton<JsonFileService>();
         }
 
