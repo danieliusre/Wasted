@@ -20,7 +20,7 @@ namespace Wasted.Data
         public Task<List<Product>> GetProducts()
         {
             var products =  new List<Product>();
-            var filePath = AppDomain.CurrentDomain.BaseDirectory + "DB\\ProductList.txt";
+            var filePath = AppDomain.CurrentDomain.BaseDirectory + "ProductList.txt";
             try 
             {
                 Log.Information("Starting to ProductList");
