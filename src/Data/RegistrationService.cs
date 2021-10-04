@@ -3,73 +3,74 @@ using System.IO;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Net.Mail;
-using System.Text.Json;
+using Newtonsoft.Json;
+using Serilog;
+
 
 namespace Wasted.Data
 {
     public class RegistrationService
-    {
-        public List<string> ErrMsg = new List<string> ();
-        public List<User> AddUserData(string NameBox, string LastNameBox, string EmailBox, string PasswordBox, List<User> users, List<string> ErrorMessages)
+    { 
+        public List<string> ErrMsg = new List<string>();
+        public List<string> AddUserData(string NameBox, string LastNameBox, string EmailBox, string PasswordBox, List<User> users)
         {
-            
-            if( dataValid (NameBox, LastNameBox, EmailBox, PasswordBox, ErrorMessages) 
-                           && !(string.IsNullOrEmpty(NameBox) 
-                           || string.IsNullOrEmpty(LastNameBox) 
-                           || string.IsNullOrEmpty(EmailBox) 
-                           || string.IsNullOrEmpty(PasswordBox)))
+            try
             {
-                if(newEmail(EmailBox, users) && emailValid(EmailBox))
+                Log.Information("Starting to Registration service");
+                if( dataValid (NameBox, LastNameBox, EmailBox, PasswordBox))
                 {
-                    users = CreateUserList(users);
-                    users.Add(new User(){
-                        Name = NameBox,
-                        Lastname = LastNameBox,
-                        Email = EmailBox,
-                        Password = PasswordBox
-                    });
-                    //working with both files for now, will transfer to json only
-                    string json1 = JsonSerializer.Serialize(users);
-                    File.WriteAllText(@"UserData.json", json1);
-                    File.AppendAllText(@"UserData.txt", NameBox + "," + LastNameBox + "," + EmailBox + "," + PasswordBox + Environment.NewLine);
-                    users.Clear();
-                    users = CreateUserList(users); 
-                    ErrorMessages.Clear();
-                    ErrorMessages.Add("Success! Welcome to the Wasted family!");
-                    ErrMsg = ErrorMessages;
-                    FormatJson();
+                    if(newEmail(EmailBox, users) && emailValid(EmailBox))
+                    {
+                        users = CreateUserList(users);
+                        users.Add(new User(){
+                            Name = NameBox,
+                            Lastname = LastNameBox,
+                            Email = EmailBox,
+                            Password = PasswordBox
+                        });
+                        writeToFile("UserData.json", users);
+                        ErrMsg.Clear();
+                        ErrMsg.Add("Success! Welcome to the Wasted family!");
+                    }
+                    else
+                    {
+                        ErrMsg.Clear();
+                        ErrMsg.Add("A user with given email address already exists!");
+                    }
                 }
                 else
                 {
-                    ErrorMessages.Clear();
-                    ErrorMessages.Add("A user with given email address already exists!");
-                    ErrMsg = ErrorMessages;
-                    foreach(string line in ErrMsg)
+                    ErrMsg.Clear(); 
+                }
+                Log.Information("Finished Registration service");
+            }
+            catch (Exception e)
+            {
+                Log.Error("Exception caught: {0}", e);
+            }
+            return ErrMsg;
+        }
+
+        public bool newEmail(string email, List<User> users1)
+        {
+            try
+            {
+                Log.Information("Starting to newEmail check");
+                foreach(User regUser in users1)
+                {
+                    if(String.Equals(email, regUser.Email))
                     {
-                        Console.WriteLine("{0}", line);
+                        return false;
                     }
                 }
+                Log.Information("Finished email checking");
+                return true;
             }
-            else
+            catch (Exception e)
             {
-                ErrorMessages.Clear(); 
-                ErrMsg = ErrorMessages;  
+                Log.Error("Exception caught {0}", e);
+                return false;
             }
-            return users;
-        } 
-
-
-        public bool newEmail(string email, List<User> users)
-        {
-            bool newEmail = true;
-            foreach(User regUser in users)
-            {
-                if(String.Equals(email, regUser.Email))
-                {
-                    newEmail = false;
-                }
-            }
-            return newEmail;
         }
 
 
@@ -77,30 +78,32 @@ namespace Wasted.Data
         {
             try
             {
+                Log.Information("Starting emailValid");
                 MailAddress m = new MailAddress(email);
+                Log.Information("Finished emailValid");
 
                 return true;
             }
-            catch (FormatException)
+            catch (FormatException e)
             {
+                Log.Error("Exception caught: {0}", e);
                 return false;
             }
         }
 
         public List<User> CreateUserList(List<User> users)
         {
-            string[] lines = System.IO.File.ReadAllLines(@"UserData.txt");   
-            foreach(string line in lines) 
+           string json = File.ReadAllText(@"UserData.json");
+            try 
             {
-
-                string[] userData = line.Split(',');
-                users.Add(new User()
-                {   Name = userData[0],
-                    Lastname = userData[1],
-                    Email = userData[2],
-                    Password = userData[3]
-                });
-            } 
+                Log.Information("Starting to CreateUserList");
+                users = JsonConvert.DeserializeObject<List<User>>(json);
+                Log.Information("Finished to CreateUserList");
+            }
+            catch(Exception e)
+            {
+                Log.Error("Exception caught: {0}",e);
+            }
             return users;
         }
 
@@ -109,88 +112,114 @@ namespace Wasted.Data
             return ErrMsg;
         }
 
-        public bool dataValid (string NameBox, string LastNameBox, string EmailBox, string PasswordBox, List<string> ErrorMessages)
+        public bool dataValid (string NameBox, string LastNameBox, string EmailBox, string PasswordBox)
         {
-            var hasNumber = new Regex(@"[0-9]+");
-            var hasUpperChar = new Regex(@"[A-Z]+");
-            var hasMiniMaxChars = new Regex(@".{8,15}");
-            var hasLowerChar = new Regex(@"[a-z]+");
-            var hasSymbols = new Regex(@"[!@#$%^&*()_+=\[{\]};:<>|./?,-]");
-            var hasComma = new Regex(@"[,]");
-            //nameValid
-            if(hasNumber.IsMatch(NameBox) || hasSymbols.IsMatch(NameBox))
+            try
             {
-                Console.WriteLine("invalid name");
-                ErrorMessages.Add("invalid name");
+                Log.Information("Starting to dataValid");
+                if ( string.IsNullOrEmpty(NameBox) || string.IsNullOrEmpty(LastNameBox) || string.IsNullOrEmpty(EmailBox) || string.IsNullOrEmpty(PasswordBox))
+                {
+                    Log.Information("Finished dataValid (empty fields present)");
+                    return false;
+                }
+                var hasNumber = new Regex(@"[0-9]+");
+                var hasUpperChar = new Regex(@"[A-Z]+");
+                var hasMiniMaxChars = new Regex(@".{8,15}");
+                var hasLowerChar = new Regex(@"[a-z]+");
+                var hasSymbols = new Regex(@"[!@#$%^&*()_+=\[{\]};:<>|./?,-]");
+                var hasComma = new Regex(@"[,]");
+                //nameValid
+                if(hasNumber.IsMatch(NameBox) || hasSymbols.IsMatch(NameBox))
+                {
+                    ErrMsg.Add("invalid name");
+                    Log.Information("Finished dataValid (invalid name)");
+                    return false;
+                }
+                //lastNameValid
+                if(hasNumber.IsMatch(LastNameBox) || hasSymbols.IsMatch(LastNameBox))
+                {
+                    ErrMsg.Add("invalid lastname");
+                    Log.Information("Finished dataValid (invalid lastname)");
+                    return false;
+                }
+                //emailValid
+                if(hasComma.IsMatch(EmailBox))
+                {
+                    ErrMsg.Add("comma in email");
+                    Log.Information("Finished dataValid (invalid email)");
+                    return false;
+                }
+                //PasswordValid
+                if(!hasNumber.IsMatch(PasswordBox) 
+                || !hasUpperChar.IsMatch(PasswordBox) 
+                || !hasLowerChar.IsMatch(PasswordBox)
+                || !hasMiniMaxChars.IsMatch(PasswordBox))
+                {
+                    ErrMsg.Add("invalid password");
+                    Log.Information("Finished dataValid (invalid password)");
+                    return false;
+                }
+                Log.Information("Finished data validation dataValid success");
+                return true;
+            }
+            catch (Exception e)
+            {
+                Log.Error("Exception caught:{0}",e);
                 return false;
             }
-            //nameValid
-            if(hasNumber.IsMatch(LastNameBox) || hasSymbols.IsMatch(LastNameBox))
-            {
-                Console.WriteLine("invalid lastname");
-                ErrorMessages.Add("invalid lastname");
-                ErrMsg = ErrorMessages;
-                return false;
-            }
-            //emailValid
-            if(hasComma.IsMatch(EmailBox))
-            {
-                Console.WriteLine("comma in email");
-                ErrorMessages.Add("comma in email");
-                ErrMsg = ErrorMessages;
-                return false;
-            }
-            //PasswordValif
-            if(!hasNumber.IsMatch(PasswordBox) 
-            || !hasUpperChar.IsMatch(PasswordBox) 
-            || !hasLowerChar.IsMatch(PasswordBox)
-            || !hasMiniMaxChars.IsMatch(PasswordBox))
-            {
-                Console.WriteLine("invalid password");
-                ErrorMessages.Add("invalid password");
-                ErrMsg = ErrorMessages;
-                return false;
-            }
-            return true;
+
         }
-    //function for further work
-        public void FormatJson()
+        public void writeToFile(string filePath, List<User> users)
         {
-            string jsonString = File.ReadAllText("UserData.json"); 
-            var writerOptions = new JsonWriterOptions
+            try
             {
-                Indented = true
-            };
-
-            var documentOptions = new JsonDocumentOptions
-            {
-                CommentHandling = JsonCommentHandling.Skip
-            };
-
-            using FileStream fs = File.Create("UserDataFormated.json");
-            using var writer = new Utf8JsonWriter(fs, options: writerOptions);
-            using JsonDocument document = JsonDocument.Parse(jsonString, documentOptions);
-
-            JsonElement root = document.RootElement;
-
-        if (root.ValueKind == JsonValueKind.Object)
-            {
-                writer.WriteStartObject();
+                Log.Information("Starting to writeToFile(RegisteringService)");
+                string json = JsonConvert.SerializeObject(users, Formatting.Indented);
+                File.WriteAllText(filePath, json);
+                Log.Information("Finished writing to file");
             }
-            else
+            catch (Exception e)
             {
-                return;
+                Log.Error("Exception caught {0}", e);
             }
-
-            foreach (JsonProperty property in root.EnumerateObject())
-            {
-                property.WriteTo(writer);
-            }
-
-            writer.WriteEndObject();
-
-            writer.Flush(); 
         }
+
+        public bool CheckSignIn(string SignInEmailBox, string SignInPasswordBox, List<User> users)
+        {
+            Log.Information("Starting to CheckSignIn");
+            if(!string.IsNullOrEmpty(SignInEmailBox) && !string.IsNullOrEmpty(SignInPasswordBox))
+            {
+                foreach(User user in users)
+                {
+                    if(user.Email == SignInEmailBox)
+                    {
+                        if(user.Password == SignInPasswordBox)
+                        {
+                            Log.Information("Finished CheckSignIn");
+                            return true;
+                        }
+                    }
+                }
+            }
+            Log.Error("Finished CheckSignIn");
+            return false;
+        }
+
+        public string getName (List<User> users, string email)
+        {
+            Log.Information("Starting to getName(Sign in)");
+            foreach(User user in users)
+            {
+                if(user.Email == email)
+                {
+                    Log.Information("Finished getName(Sign in)-success");
+                    return user.Name;
+                }
+            }
+            Log.Information("Finished getName(Sign in)-failure");
+            return "";
+        }
+ 
     }
     
 }

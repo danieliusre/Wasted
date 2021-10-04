@@ -1,26 +1,44 @@
 @page "/registration"
 
 @using Wasted.Data
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject RegistrationService RegistrationService
+<div id="one">
+    <h1 class="tac">Log in</h1>
 
-<h1 class="tac">Registration</h1>
+    <style>
+        @@import "css/Utils.css"
+    </style>
 
-<style>
-    @@import "css/Utils.css"
-</style>
-
-<iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
-<form method="post" action="submitscrip.php" target="dummyframe">
-<div > 
-    <input class="form-control tac regField" type="text"  placeholder="Name" @bind="@NameBox"/>
-    <input class="form-control tac regField" type="text"   placeholder="Last name" @bind="@LastNameBox"/>
-    <input class="form-control tac regField" type="email"  placeholder="Email"  @bind="@EmailBox"/>
-    <input class="form-control tac regField" type="password" placeholder="Password" @bind="@PasswordBox"/>
+    <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
+    <form method="post" action="submitscrip.php" target="dummyframe">
+    <div> 
+        <input class="form-control tac regField" type="text"  placeholder="Name" @bind="@NameBox"/>
+        <input class="form-control tac regField" type="text"   placeholder="Last name" @bind="@LastNameBox"/>
+        <input class="form-control tac regField" type="email"  placeholder="Email"  @bind="@EmailBox"/>
+        <input class="form-control tac regField" type="password" placeholder="Password" @bind="@PasswordBox"/>
+    </div>
+    <div>
+        <input class="buttonSub" type="submit" @onclick="submitPressed"> Submit</input>
+    </div>
+    </form>
 </div>
-<div>
-    <input class="buttonSub" type="submit" @onclick="submitPressed"> Submit</input>
+<div id="two">
+     <h1 class="tac">Sign in</h1>
+     <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
+    <form method="post" action="submitscrip.php" target="dummyframe">
+    <div> 
+        <input class="form-control tac regField" type="email"  placeholder="Email"  @bind="@SignInEmailBox"/>
+        <input class="form-control tac regField" type="password" placeholder="Password" @bind="@SignInPasswordBox"/>
+    </div>
+    <div>
+        <input class="buttonSub" type="submit" @onclick="SignInSubmitPressed"> Submit</input>
+    </div>
+    </form>
+     
 </div>
-</form>
 <ul class="registrationMessage tac">
     @foreach (string ErrorMesage in @ErrorMessages)
     {
@@ -33,21 +51,90 @@
             <input class="buttonSub center" type=button onClick="parent.location='http://localhost:5000'"value='Continue as a registered user'>
     </div>
 }
+@* //------------------------------------- *@
+@* <button @onclick="GetClaimsPrincipalData">Get ClaimsPrincipal Data</button>
+
+<p>@_authMessage</p>
+
+@if (_claims.Count() > 0)
+{
+    <ul>
+        @foreach (var claim in _claims)
+        {
+            <li>@claim.Type: @claim.Value</li>
+        }
+    </ul> 
+}
+<p>@_surnameMessage</p>*@
+
+@*//------------------#1Commented code for further authentication work------------------- *@
+
+    @if(signInSuccess)
+    {
+        AuthenticationResult.UserAuthenticated = true;
+        <div class="userField">
+            <h1>Hello, @service.getName(users, SignInEmailBox)</h1>
+            <br>
+            <h1>      Your product list and recipes will soon be available!          <br>Thanks for being with us!</h1>
+            <img src="https://image.flaticon.com/icons/png/512/1598/1598238.png" alt="earth" style="width:20%;">
+            <h1>      Sincerely yours          <br><i>WASTED </i> team</h1>
+        </div>
+    @* <AuthorizeView></AuthorizeView>*@
+        @* <h1>Hello, @service.getName(users, SignInEmailBox)</h1> *@
+       @* <p>You can only see this content if you're authenticated.</p>
+    <AuthorizeView></AuthorizeView> *@
+    }
+@* //------------------------------------- *@
 
 @code
-{  
+{
     public static List<string> ErrorMessages = new List<string>();
     static string NameBox ;
     static string LastNameBox ;
     static string EmailBox ; 
     static string PasswordBox ;
     static List<User> users = new List<User>();
+    static string SignInEmailBox ; 
+    static string SignInPasswordBox ;
+    public bool signInSuccess = false;
+    RegistrationService service = new RegistrationService();
 
     public void submitPressed()
     {
-        RegistrationService service = new RegistrationService();
-        users = service.AddUserData(NameBox, LastNameBox, EmailBox, PasswordBox, users, ErrorMessages);
+        ErrorMessages = service.AddUserData(NameBox, LastNameBox, EmailBox, PasswordBox, users);
         ErrorMessages = service.getErrorMess();
     }
+
+    public void SignInSubmitPressed()
+    {
+        users = RegistrationService.CreateUserList(users);
+        signInSuccess = RegistrationService.CheckSignIn(SignInEmailBox, SignInPasswordBox, users);
+    }
+
+    @* //--------------#2Commented code for further authentication work----------------------- *@
+    @* private string _authMessage;
+    private string _surnameMessage;
+    private IEnumerable<Claim> _claims = Enumerable.Empty<Claim>();
+
+    private async Task GetClaimsPrincipalData()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        Console.WriteLine("{0}", user.Identity.IsAuthenticated);
+
+        if (user.Identity.IsAuthenticated)
+        {
+            _authMessage = $"{user.Identity.Name} is authenticated.";
+            _claims = user.Claims;
+            _surnameMessage = 
+                $"Surname: {user.FindFirst(c => c.Type == ClaimTypes.Surname)?.Value}";
+        }
+        else
+        {
+            _authMessage = "The user is NOT authenticated.";
+        }
+    } *@
+    @* //------------------------------------- *@
+
    
 }

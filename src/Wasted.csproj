@@ -7,7 +7,7 @@
     <PackageReference Include="Json.NET" Version="1.0.33" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Serilog" Version="2.10.0" />
-    <None Update="DB\ProductList.txt">
+    <None Update="ProductList.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />

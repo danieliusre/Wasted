@@ -21,6 +21,7 @@ namespace Wasted.Data
         {
             var products =  new List<Product>();
             var filePath = "ProductList.json";
+          
             try 
             {
                 Log.Information("Starting to read ProductList");

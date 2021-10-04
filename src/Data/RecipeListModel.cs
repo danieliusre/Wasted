@@ -1,3 +1,7 @@
+using System;
+
+namespace Wasted.Data
+{
 public class RecipeModel
     {
         public string Item {get;set;}
@@ -5,3 +9,4 @@ public class RecipeModel
         public string Unit {get;set;}
         public string Date {get;set;}
     }
+}

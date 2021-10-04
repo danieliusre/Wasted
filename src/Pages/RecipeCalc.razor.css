@@ -1,0 +1,18 @@
+h1 {
+    color: rgb(0,15,128);
+}
+input[type=number]{
+    width: 120px;
+}
+#itemfieldid{
+    margin-right: 100px;
+}
+#leftfieldid{
+    margin-right: 100px;
+}
+#unit{
+    margin-right: 340px;
+}
+#bestuntilday{
+    margin-right: 170px;
+}
