@@ -68,35 +68,8 @@
 
     private void FindRecipe()
     {
-        System.IO.StreamReader RecipeFile = new System.IO.StreamReader(@"Recipes.txt");
-        List<RecipeModel> ingredients = new List<RecipeModel>();
-        dishes.Clear();
-        do
-        {
-            string dishName = RecipeFile.ReadLine();
-            int Need = Int32.Parse(RecipeFile.ReadLine());
-            ingredients.Clear();            
-            for (int i = 0; i<Need; i++)
-            {
-            string[] item = RecipeFile.ReadLine().Split(';');
-            ingredients.Add(new RecipeModel(){Item = item[0], Left = Int32.Parse(item[1]), Unit = item[2]});
-            }
-            foreach (var ingredient in ingredients)
-            {
-                foreach(var product in products)
-                {
-                    if(ingredient.Item.Equals(product.Item.ToLower()) && ingredient.Left <= product.Left)
-                    {
-                        Need--;
-                    }
-                }   
-            }
-            if(Need == 0)
-            {
-                dishes.Add(new DishModel(){Name = dishName, Ingredients = new List<RecipeModel>(ingredients)});
-                
-            }
-        }while(RecipeFile.ReadLine() != null);
+        dishes = RecipeCalcService.FindRecipe(products);
+        expiredProducts = RecipeCalcService.FindExpiredProducts(products);
     }
 }
 <table class="table">
