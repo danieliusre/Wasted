@@ -62,7 +62,6 @@ namespace Wasted.Data
             List<String> badProducts = new();
             try 
             {
-                Log.Information("Started reading RecipeProductList");
                 foreach (var product in products)
                 {
                     product.Item = char.ToUpper(product.Item[0]) + product.Item.Substring(1);
@@ -71,7 +70,7 @@ namespace Wasted.Data
                         badProducts.Add(product.Item);
                     }
                 } 
-                Log.Information("Finished reading RecipeProductList");
+                Log.Information("Found all expired products");
             }
             catch (Exception e)
             {

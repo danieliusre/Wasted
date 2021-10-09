@@ -1,7 +1,6 @@
 @page "/recipecalc"
 @using System.IO
 @using Wasted.Data
-@using Newtonsoft.Json
 @inject RecipeCalcService RecipeCalcService 
 
 <h1>RECIPE CALCULATOR</h1>
@@ -37,31 +36,35 @@
             {
                 if(unitTextField == "kg" || unitTextField == "l")
                 {product.Left += Int32.Parse(leftTextField) * 1000;}
+                else if(unitTextField == "oz")
+                {product.Left += Int32.Parse(leftTextField) * 28;}
                 else
                 {product.Left += Int32.Parse(leftTextField);} //adds what's left and deletes the new item
                 allFilled = false;
+                itemTextField = "";
+                leftTextField = "";
+                unitTextField = "";
+                dateTextField = "";
             }
         }
         if(allFilled)
         {
             products.Add(new RecipeModel(){Item = itemTextField.Trim(), Left = Int32.Parse(leftTextField), Unit = unitTextField, Date = dateTextField});
+            itemTextField = "";
+            leftTextField = "";
+            unitTextField = "";
+            dateTextField = "";
         }
-        itemTextField = "";
-        leftTextField = "";
-        unitTextField = "";
-        dateTextField = "";
         expiredProducts = RecipeCalcService.FindExpiredProducts(products);
     }
 
     private void SaveList()
     {
         RecipeCalcService.SaveProducts(products);
-        expiredProducts = RecipeCalcService.FindExpiredProducts(products);
     } 
 
     private void LoadList()
     {
-        products.Clear();
         products = RecipeCalcService.GetProducts();
         expiredProducts = RecipeCalcService.FindExpiredProducts(products);
     }
@@ -69,17 +72,18 @@
     private void FindRecipe()
     {
         dishes = RecipeCalcService.FindRecipe(products);
-        expiredProducts = RecipeCalcService.FindExpiredProducts(products);
     }
 }
 <table class="table">
-    <tr>
-        <th>Item</th>
-        <th>Left</th>
-        <th>Measurement</th>
-        <th>Best until</th>
-        <th>Add/Remove</th>
-    </tr>
+    <thead>
+        <tr>
+            <th>Item</th>
+            <th>Left</th>
+            <th>Measurement</th>
+            <th>Best until</th>
+            <th>Add/Remove</th>
+        </tr>
+    </thead>
 
 @foreach (var product in products)
 {
@@ -89,18 +93,17 @@
         <td>@product.Unit</td> 
         <td>@product.Date</td> 
         <td>
-            <button @onclick="() => products.Remove(product)">
-                <span class="oi oi-trash" aria-hidden="true"></span>
-            </button>  
+        <button class="btn btn-danger" @onclick="() => products.Remove(product)">-</button>
         </td>
     </tr>
 }
 </table>
 
-<div>
-    <input type = "text" size="10" id="itemfieldid" @bind="@itemTextField" @oninput="(e) => { itemTextField = e.Value ==null? string.Empty:(string)e.Value;}"/> 
-    <input type = "number" id="leftfieldid" @bind="@leftTextField" @oninput="(e) => { leftTextField = e.Value ==null? string.Empty:(string)e.Value;}"/> 
-    <select @bind="@unitTextField" @oninput="(e) => { unitTextField = e.Value ==null? string.Empty:(string)e.Value;}" name="unit" id="unit">
+<div class="input">
+    <span class="inputSpan">
+        <input class="inputField" type = "text" size="10" id="itemfieldid" @bind="@itemTextField" @oninput="(e) => { itemTextField = e.Value ==null? string.Empty:(string)e.Value;}"/> 
+        <input class="inputField" type = "number" id="leftfieldid" @bind="@leftTextField" @oninput="(e) => { leftTextField = e.Value ==null? string.Empty:(string)e.Value;}"/> 
+        <select class="inputField" @bind="@unitTextField" @oninput="(e) => { unitTextField = e.Value ==null? string.Empty:(string)e.Value;}" name="unit" id="unit">
                         <option value="g">g</option>
                         <option value="kg">kg</option>
                         <option value="l">l</option>
@@ -108,30 +111,36 @@
                         <option value="oz">oz</option>
                         <option value="unit(s)"></option>
                         </select>
-    <input @oninput="(e) => { dateTextField = e.Value ==null? string.Empty:(string)e.Value;}" type="date" id="bestuntilday" name="bestuntilday" size="1">
-    <button class="btn btn-primary" @onclick="AddProduct">Add new product</button>
+        <input class="inputField" @oninput="(e) => { dateTextField = e.Value ==null? string.Empty:(string)e.Value;}" type="date" id="bestuntilday" name="bestuntilday" size="1">
+        <button class="btn btn-primary" @onclick="AddProduct">+</button>
+    </span>
 </div>
 
-@if(dishes.Any()){<h1><font color=#3a0647><br>Here's what you can make:</font></h1>
-  <dl class="Recipes" >
-     @foreach (var dish in dishes) 
+@if(dishes.Any())
+{
+    <h1><font color=#3a0647><br>Here's what you can make:</font></h1>
+    <dl class="Recipes" >
+    @foreach (var dish in dishes) 
     {
         <dt style="color:#3a0647;font-size:30px;">@dish.Name</dt>
-        <dd>You will need:</dd>
+        <dd1>You will need:</dd1>
         <ul>
             @foreach (var Ingredient in dish.Ingredients)
             {
-                <li>@Ingredient.Item @Ingredient.Left @Ingredient.Unit</li>
+                <li style="color:#3a0647;font-size:20px;">@Ingredient.Item @Ingredient.Left @Ingredient.Unit</li>
             }
         </ul>
-}
-</dl>  
+    }
+    </dl>  
 }
 
-@if(expiredProducts.Any()){<h1><font style="color:red;font-size:25px;"><br>Be careful! These products have 3 or less days left, before they expire:</font></h1>}
-<ul class="Expired" >
-    @foreach (string expiredProduct in expiredProducts)
-    {
-        <li style="color:red;font-size:25px;">@expiredProduct</li>
-    }
-</ul>
+@if(expiredProducts.Any())
+{
+    <h1><font style="color:red;font-size:25px;"><br>Be careful! These products have 3 or less days left, before they expire:</font></h1>
+    <ul class="Expired" >
+        @foreach (string expiredProduct in expiredProducts)
+        {
+            <li style="color:red;font-size:25px;">@expiredProduct</li>
+        }
+    </ul>
+}
