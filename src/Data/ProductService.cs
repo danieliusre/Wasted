@@ -17,15 +17,17 @@ namespace Wasted.Data
             _jsonFileService = jsonFileService;
         }
 
-        public Task<List<Product>> GetProducts()
+        public Task<ProductList> GetProducts()
         {
-            var products =  new List<Product>();
-            var filePath = "ProductList.json";
-          
+            ProductList products = null;
             try 
             {
+                var filePath = "ProductList.json";
                 Log.Information("Starting to read ProductList");
-                products = JsonConvert.DeserializeObject<List<Product>>(_jsonFileService.ReadJsonFromFile(filePath));
+                products =  new ProductList(
+                    JsonConvert.DeserializeObject<Product[]>(
+                        _jsonFileService.ReadJsonFromFile(filePath)
+                    ));
                 Log.Information("Finished reading Productlist");
             }
             catch (Exception e)
@@ -34,7 +36,8 @@ namespace Wasted.Data
             }
             return Task.FromResult(products);
         }
-        public Task<List<Product>> SaveProducts(List<Product> products)
+        /* 
+        public Task<ProductList> SaveProducts(ProductList products)
         {
             var filePath = "ProductList.json";
             try 
@@ -48,6 +51,6 @@ namespace Wasted.Data
                 Log.Error("Exception caught: {0}",e);
             }
             return Task.FromResult(products);
-        }
+        }*/
     }
 }
