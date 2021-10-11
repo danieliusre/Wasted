@@ -3,7 +3,7 @@ Pancakes
 flour;300;g
 sugar;30;g
 milk;250;ml
-eggs;1;units
+eggs;1;unit
 butter;50;g
 
 Chocolate Cake
@@ -41,8 +41,8 @@ yogurt;70;g
 flour;150;g
 almonds;50;g
 orange;1;unit
-milk;20;ml;
-lemon;1;unit;
+milk;20;ml
+lemon;1;unit
 
 Waffles
 7
@@ -53,10 +53,3 @@ eggs;2;units
 milk;300;ml
 butter;100;g
 vanilla extract;5;ml
-
-TINGINYS!
-4
-gaidelis;400;g
-condensed milk;400;g
-butter;200;g
-cocoa;50;g
