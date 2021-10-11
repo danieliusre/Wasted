@@ -23,23 +23,32 @@
     string leftTextField = "";
     string unitTextField = "";
     string dateTextField = "";
-    List<RecipeModel> products = new();
-    List<String> expiredProducts = new();
+    List<ItemModel> products = new();
+    List<String> expiringProducts = new();
     List<DishModel> dishes = new List<DishModel>();
     private void AddProduct()
     {
         bool allFilled = (!string.IsNullOrEmpty(itemTextField)&&!string.IsNullOrEmpty(leftTextField)&&!string.IsNullOrEmpty(unitTextField)&&!string.IsNullOrEmpty(dateTextField));
-        //in case of same items being entered twice
-        foreach (var product in products)
+        
+        foreach (var product in products)         //in case of same items being entered twice
         {
             if(itemTextField.ToLower().Trim() == product.Item.ToLower() && allFilled)
             {
-                if(unitTextField == "kg" || unitTextField == "l")
-                {product.Left += Int32.Parse(leftTextField) * 1000;}
-                else if(unitTextField == "oz")
-                {product.Left += Int32.Parse(leftTextField) * 28;}
-                else
-                {product.Left += Int32.Parse(leftTextField);} //adds what's left and deletes the new item
+                switch (unitTextField)
+                {
+                    case "kg":
+                        product.Amount += Int32.Parse(leftTextField) * 1000;
+                        break;
+                    case "l":
+                        product.Amount += Int32.Parse(leftTextField) * 1000;
+                        break;
+                    case "oz":
+                        product.Amount += Int32.Parse(leftTextField) * 28;
+                        break;
+                    default:
+                        product.Amount += Int32.Parse(leftTextField);
+                        break;
+                }
                 allFilled = false;
                 itemTextField = "";
                 leftTextField = "";
@@ -49,13 +58,13 @@
         }
         if(allFilled)
         {
-            products.Add(new RecipeModel(){Item = itemTextField.Trim(), Left = Int32.Parse(leftTextField), Unit = unitTextField, Date = dateTextField});
+            products.Add(new ItemModel(){Item = itemTextField.Trim(), Amount = Int32.Parse(leftTextField), Unit = unitTextField, Date = dateTextField});
             itemTextField = "";
             leftTextField = "";
             unitTextField = "";
             dateTextField = "";
         }
-        expiredProducts = RecipeCalcService.FindExpiredProducts(products);
+        expiringProducts = RecipeCalcService.FindExpiringProducts(products);
     }
 
     private void SaveList()
@@ -66,7 +75,7 @@
     private void LoadList()
     {
         products = RecipeCalcService.GetProducts();
-        expiredProducts = RecipeCalcService.FindExpiredProducts(products);
+        expiringProducts = RecipeCalcService.FindExpiringProducts(products);
     }
 
     private void FindRecipe()
@@ -78,7 +87,7 @@
     <thead>
         <tr>
             <th>Item</th>
-            <th>Left</th>
+            <th>Amount</th>
             <th>Measurement</th>
             <th>Best until</th>
             <th>Add/Remove</th>
@@ -89,7 +98,7 @@
 {
     <tr>
         <td>@product.Item</td>
-        <td>@product.Left</td>
+        <td>@product.Amount</td>
         <td>@product.Unit</td> 
         <td>@product.Date</td> 
         <td>
@@ -127,18 +136,18 @@
         <ul>
             @foreach (var Ingredient in dish.Ingredients)
             {
-                <li style="color:#3a0647;font-size:20px;">@Ingredient.Item @Ingredient.Left @Ingredient.Unit</li>
+                <li style="color:#3a0647;font-size:20px;">@Ingredient.Item @Ingredient.Amount @Ingredient.Unit</li>
             }
         </ul>
     }
     </dl>  
 }
 
-@if(expiredProducts.Any())
+@if(expiringProducts.Any())
 {
     <h1><font style="color:red;font-size:25px;"><br>Be careful! These products have 3 or less days left, before they expire:</font></h1>
     <ul class="Expired" >
-        @foreach (string expiredProduct in expiredProducts)
+        @foreach (string expiredProduct in expiringProducts)
         {
             <li style="color:red;font-size:25px;">@expiredProduct</li>
         }

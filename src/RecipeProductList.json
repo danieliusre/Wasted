@@ -1,43 +1,43 @@
 [
   {
     "Item": "Flour",
-    "Left": 300,
+    "Amount": 1300,
     "Unit": "g",
     "Date": "2022-06-08"
   },
   {
     "Item": "Butter",
-    "Left": 50,
+    "Amount": 50,
     "Unit": "g",
     "Date": "2021-10-09"
   },
   {
     "Item": "Cocoa",
-    "Left": 75,
+    "Amount": 75,
     "Unit": "g",
     "Date": "2023-06-23"
   },
   {
     "Item": "Sugar",
-    "Left": 500,
+    "Amount": 500,
     "Unit": "g",
     "Date": "2021-09-30"
   },
   {
     "Item": "Soy milk",
-    "Left": 500,
+    "Amount": 500,
     "Unit": "ml",
     "Date": "2021-10-12"
   },
   {
     "Item": "Milk",
-    "Left": 1000,
+    "Amount": 1000,
     "Unit": "ml",
     "Date": "2021-10-20"
   },
   {
     "Item": "Eggs",
-    "Left": 4,
+    "Amount": 4,
     "Unit": "unit(s)",
     "Date": "2021-10-20"
   }

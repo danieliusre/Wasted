@@ -16,14 +16,14 @@ namespace Wasted.Data
         {
             _jsonFileService = jsonFileService;
         }
-        public List<RecipeModel> GetProducts()
+        public List<ItemModel> GetProducts()
         {
-            var products =  new List<RecipeModel>();
+            var products =  new List<ItemModel>();
             var filepath =  "RecipeProductList.json";
             try 
             {
                 Log.Information("Started reading RecipeProductList");
-                products = JsonConvert.DeserializeObject<List<RecipeModel>>(_jsonFileService.ReadJsonFromFile(filepath));
+                products = JsonConvert.DeserializeObject<List<ItemModel>>(_jsonFileService.ReadJsonFromFile(filepath));
                 Log.Information("Finished reading RecipeProductList");
             }
             catch (Exception e)
@@ -32,17 +32,25 @@ namespace Wasted.Data
             }
             return products;
         }
-        public Task<List<RecipeModel>> SaveProducts(List<RecipeModel> products)
+        public Task<List<ItemModel>> SaveProducts(List<ItemModel> products)
         {
             var filePath = "RecipeProductList.json";
             foreach(var product in products)
             {
-                if(product.Unit == "kg")
-                {product.Left = product.Left * 1000; product.Unit = "g";}
-                else if(product.Unit == "l")
-                {product.Left = product.Left * 1000; product.Unit = "ml";}
-                else if(product.Unit == "oz")
-                {product.Left = product.Left * 28; product.Unit = "g";}
+                switch (product.Unit)
+                {
+                    case "kg":
+                        product.Amount += product.Amount * 1000;
+                        break;
+                    case "l":
+                        product.Amount += product.Amount * 1000;
+                        break;
+                    case "oz":
+                        product.Amount += product.Amount * 28;
+                        break;
+                    default:
+                        break;
+                }
             } 
             try 
             {
@@ -57,7 +65,7 @@ namespace Wasted.Data
             return Task.FromResult(products);
         }
 
-        public List<String> FindExpiredProducts(List<RecipeModel> products)
+        public List<String> FindExpiringProducts(List<ItemModel> products)
         {
             List<String> badProducts = new();
             try 
@@ -79,7 +87,7 @@ namespace Wasted.Data
             return badProducts;
         }
 
-        public List<DishModel> FindRecipe(List<RecipeModel> products)
+        public List<DishModel> FindRecipe(List<ItemModel> products)
         {
             List<DishModel> dishes = new List<DishModel>();
             try 
@@ -87,7 +95,7 @@ namespace Wasted.Data
                 Log.Information("Starting to search for Recipes");
                 var filePath = "Recipes.txt";
                 System.IO.StreamReader RecipeFile = new System.IO.StreamReader(filePath);
-                List<RecipeModel> ingredients = new List<RecipeModel>();
+                List<ItemModel> ingredients = new List<ItemModel>();
                 do
                 {
                     string dishName = RecipeFile.ReadLine();
@@ -96,13 +104,13 @@ namespace Wasted.Data
                     for (int i = 0; i<Need; i++)
                     {
                         string[] item = RecipeFile.ReadLine().Split(';');
-                        ingredients.Add(new RecipeModel(){Item = item[0], Left = Int32.Parse(item[1]), Unit = item[2]});
+                        ingredients.Add(new ItemModel(){Item = item[0], Amount = Int32.Parse(item[1]), Unit = item[2]});
                     }
                     foreach (var ingredient in ingredients)
                     {
                         foreach(var product in products)
                         {
-                            if(ingredient.Item.Equals(product.Item.ToLower()) && ingredient.Left <= product.Left)
+                            if(ingredient.Item.Equals(product.Item.ToLower()) && ingredient.Amount <= product.Amount)
                             {
                                 Need--;
                             }
@@ -110,7 +118,7 @@ namespace Wasted.Data
                     }
                     if(Need == 0)
                     {
-                        dishes.Add(new DishModel(){Name = dishName, Ingredients = new List<RecipeModel>(ingredients)});
+                        dishes.Add(new DishModel(){Name = dishName, Ingredients = new List<ItemModel>(ingredients)});
                     }
                 }while(RecipeFile.ReadLine() != null);
 
