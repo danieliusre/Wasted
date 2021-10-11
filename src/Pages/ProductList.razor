@@ -43,7 +43,7 @@ else
                         <td>@product.Name</td>
                         <td>@product.Type</td>
                         <td>@product.MeasurementUnits</td>
-                        <td>@product.EnergyValue</td>
+                        <td>@((int)product.EnergyValue)</td>
                         <td>
                             <button class="btn btn-success" @onclick="() => addToShoppingList(product)">+</button>
                         </td>
@@ -66,7 +66,7 @@ else
             <tbody>
                 @{
 
-                    foreach (var product in shoppingList)
+                    foreach (var product in shoppingList.OrderBy(x => x.Name))
                     {
                         <tr>
                             <td>@product.Name</td>
@@ -85,7 +85,7 @@ else
 @code {
     public int index { get; set; }
     
-    private List<Product> products { get; set; }
+    private Wasted.Data.ProductList products { get; set; }
 
     private List<Product> shoppingList = new List<Product>();
      
@@ -94,7 +94,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         products = await ProductService.GetProducts();
-        await ProductService.SaveProducts(products);
+        //await ProductService.SaveProducts(products);
     }
 
     public bool IsVisible(Product product)
