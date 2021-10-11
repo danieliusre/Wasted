@@ -13,15 +13,16 @@ button.learnmore{
 .fa {
 	cursor: pointer;
 	user-select: none;
-	width: 43px;
-	height: 43px;
+	width: 44px;
+	height: 44px;
 	margin: 0 auto;
 	border-radius: 50%;
 	color: rgb(97, 12, 71);
 	background-color: rgba(51, 12, 87, 0.3);
 	border-color: rgb(2, 7, 71);
-	border-width: 1px;
-	font-size: 29px;
+	border-width: 2px;
+	font-size: 30px;
+	background-position: center;
   }
   
 .fa:hover {
@@ -33,3 +34,40 @@ button.learnmore{
 	border-color: rgb(2, 7, 71);
 	background-color: rgba(51, 12, 87, 0.3);
 }
+
+#itemfieldid{
+    margin-right: 300px;
+}
+
+.textField
+{
+    border-radius: 20px;
+    font-size: 20 px;
+    margin-top: 30px;
+    margin-bottom: 10px;
+}
+
+.button {
+	display: inline-block;
+	padding: 5px 15px;
+	font-size: 24px;
+	cursor: pointer;
+	text-align: center;
+	text-decoration: none;
+	outline: none;
+	color: rgb(255, 255, 255);
+	background-color: #582568;
+	border: none;
+	border-radius: 15px;
+	box-shadow: 0 9px rgb(54, 20, 44);
+	margin: auto;
+	display: flex;
+  }
+  
+  .button:hover {background-color: #0f0330}
+  
+  .button:active {
+	background-color: #683a64;
+	box-shadow: 0 5px #666;
+	transform: translateY(4px);
+  }
