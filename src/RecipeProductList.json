@@ -7,7 +7,7 @@
   },
   {
     "Item": "Butter",
-    "Amount": 50,
+    "Amount": 550,
     "Unit": "g",
     "Date": "2021-10-09"
   },
@@ -40,5 +40,29 @@
     "Amount": 4,
     "Unit": "unit(s)",
     "Date": "2021-10-20"
+  },
+  {
+    "Item": "Cinnamon",
+    "Amount": 50,
+    "Unit": "g",
+    "Date": "2021-12-08"
+  },
+  {
+    "Item": "Dark chocolate",
+    "Amount": 200,
+    "Unit": "g",
+    "Date": "2022-01-08"
+  },
+  {
+    "Item": "Apples",
+    "Amount": 2002,
+    "Unit": "g",
+    "Date": "2023-06-29"
+  },
+  {
+    "Item": "Water",
+    "Amount": 10000,
+    "Unit": "ml",
+    "Date": "2021-10-27"
   }
 ]

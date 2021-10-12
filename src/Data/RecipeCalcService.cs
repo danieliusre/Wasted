@@ -40,13 +40,16 @@ namespace Wasted.Data
                 switch (product.Unit)
                 {
                     case "kg":
-                        product.Amount += product.Amount * 1000;
+                        product.Amount = product.Amount * 1000;
+                        product.Unit = "g";
                         break;
                     case "l":
-                        product.Amount += product.Amount * 1000;
+                        product.Amount = product.Amount * 1000;
+                        product.Unit = "ml";
                         break;
                     case "oz":
-                        product.Amount += product.Amount * 28;
+                        product.Amount = product.Amount * 28;
+                        product.Unit = "ml/g";
                         break;
                     default:
                         break;
@@ -118,7 +121,7 @@ namespace Wasted.Data
                     }
                     if(Need == 0)
                     {
-                        dishes.Add(new DishModel(){Name = dishName, Ingredients = new List<ItemModel>(ingredients)});
+                        dishes.Add(new DishModel(){Name = dishName, Ingredients = new List<ItemModel>(ingredients), Relevance = ingredients.Count()});
                     }
                 }while(RecipeFile.ReadLine() != null);
 
@@ -128,6 +131,7 @@ namespace Wasted.Data
             {
                 Log.Error("Exception caught: {0}",e);
             }
+            dishes.Sort();
             return dishes;
         }
     }

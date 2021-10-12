@@ -11,10 +11,18 @@ public class ItemModel
         public string Date {get;set;}
     }
     
-public class DishModel
+public class DishModel : IComparable<DishModel>
     {
         public string Name {get; set;}
 
         public List<ItemModel> Ingredients {get; set;}
+
+        public int Relevance {get; set;} //easy to make (least ingredients required)
+
+        public int CompareTo(DishModel other)
+        {
+            return Relevance.CompareTo(other.Relevance);
+        }
     }
+
 }   
