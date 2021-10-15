@@ -57,8 +57,8 @@
 	string TipTextField = "";
 	string LinkTextField = "";
 	int NumberTextField;
-	public int clickLikeCount = 0;
-	public int clickDislikeCount = 0;
+	public int clickLikeCount;
+	public int clickDislikeCount;
     protected override async Task OnInitializedAsync()
     {
         allTips = await TipsService.GetTips();
@@ -69,12 +69,28 @@
 	}
 	public void LikePressed()
     {
-		clickLikeCount++;
-        TipsService.Like(allTips, number, clickLikeCount);
+		if (clickLikeCount == 0)
+		{
+			clickLikeCount++;
+			TipsService.Like(allTips, number, clickLikeCount);
+		}
+		else
+		{
+			clickLikeCount--;
+			TipsService.UnLike(allTips, number, clickLikeCount);
+		}
     }
 	public void DislikePressed()
     {
-		clickDislikeCount++;
-        TipsService.Dislike(allTips, number, clickDislikeCount);
-    }
+		if (clickDislikeCount == 0)
+		{
+			clickDislikeCount++;
+			TipsService.Dislike(allTips, number, clickDislikeCount);
+		}
+		else
+		{
+			clickDislikeCount--;
+			TipsService.UnDislike(allTips, number, clickDislikeCount);
+		}
+	}
 }
