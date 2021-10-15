@@ -133,7 +133,7 @@ namespace Wasted.Data
                 }
                 if(!validate.PasswordValid(PasswordBox))
                 {
-                    ErrMsg.Add("invalid password");
+                    ErrMsg.Add("invalid password (must include uppercare, lowercase, 8-15 symbols, digit");
                     Log.Information("Finished dataValid (invalid password)");
                     return false;
                 }

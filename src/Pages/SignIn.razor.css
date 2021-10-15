@@ -18,13 +18,11 @@
   padding-top: 10px;
 }
 
-  div
-{
+div{
   text-align: center;
   margin: 50px 25px;
 }
-#vertically-aligned-block
-{
+#vertically-aligned-block{
   float:left; 
   margin-right:10px;
   margin-left: 5px;

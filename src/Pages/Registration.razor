@@ -1,7 +1,6 @@
 @page "/registration"
 
 @using Wasted.Data
-@using System.Security.Claims
 @using Microsoft.AspNetCore.Components.Authorization
 @inject NavigationManager NavigationManager;
 @inject AuthenticationStateProvider AuthenticationStateProvider
@@ -43,6 +42,7 @@
         }
     </ul>
 </div>
+
 @code
 {
     public static List<string> ErrorMessages = new List<string>();
@@ -62,13 +62,13 @@
         ErrorMessages = service.getErrorMess();
         if(ErrorMessages[0] == "Success! Welcome to the Wasted family!")
         {
-        ((CustomAuthStateProvider)AuthenticationStateProvider).markUserAsAuthenticated(EmailBox);
-        NavigationManager.NavigateTo("/");
-        ErrorMessages.Clear();
-        NameBox = "";
-        LastNameBox = "";
-        EmailBox = "";
-        PasswordBox = "";
+            ErrorMessages.Clear();
+            NameBox = "";
+            LastNameBox = "";
+            EmailBox = "";
+            PasswordBox = "";
+            ((CustomAuthStateProvider)AuthenticationStateProvider).markUserAsAuthenticated(EmailBox);
+            NavigationManager.NavigateTo("/");
         }
     }
 
