@@ -38,10 +38,6 @@ namespace Wasted.Data
                         ErrMsg.Add("A user with given email address already exists!");
                     }
                 }
-                else
-                {
-                    ErrMsg.Clear(); 
-                }
                 Log.Information("Finished Registration service");
             }
             catch (Exception e)
