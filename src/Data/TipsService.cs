@@ -72,23 +72,20 @@ namespace Wasted.Data
         {
             foreach(var tips in allTips)
             {
-                if (tips.TipNumber == number)
+                if (tips.TipNumber == 1)
                 { 
-                    if (clickLikeCount < 2)
-                    {
-                        Console.WriteLine(clickLikeCount);
-                        tips.TipLikes++; 
-                        clickLikeCount++;
-                        Console.WriteLine(clickLikeCount);
-                    }
-                    else
-                    {
-                        if (tips.TipLikes != 0)
-                        {
-                        tips.TipLikes--;
-                        clickLikeCount = 0;
-                        }
-                    }
+                    tips.TipLikes++; 
+                }
+            }
+        }
+
+         public void UnLike(List<TipsModel> allTips, int number, int clickLikeCount)
+        {
+            foreach(var tips in allTips)
+            {
+                if (tips.TipNumber == 1)
+                { 
+                    tips.TipLikes--; 
                 }
             }
         }
@@ -97,23 +94,20 @@ namespace Wasted.Data
         {
             foreach(var tips in allTips)
             {
-                if (tips.TipNumber == number)
+                if (tips.TipNumber == 1)
                 { 
-                    if (clickDislikeCount < 2)
-                    {
-                        Console.WriteLine(clickDislikeCount);
-                        tips.TipDislikes++; 
-                        clickDislikeCount++;
-                        Console.WriteLine(clickDislikeCount);
-                    }
-                    else
-                    {
-                        if (tips.TipDislikes != 0)
-                        {
-                        tips.TipDislikes--;
-                        clickDislikeCount = 0;
-                        }
-                    }
+                    tips.TipDislikes++; 
+                }
+            }
+        }
+
+        public void UnDislike(List<TipsModel> allTips, int number, int clickDislikeCount)
+        {
+            foreach(var tips in allTips)
+            {
+                if (tips.TipNumber == 1)
+                { 
+                    tips.TipDislikes--; 
                 }
             }
         }
