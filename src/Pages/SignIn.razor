@@ -1,7 +1,6 @@
 @page "/signIn"
 
 @using Wasted.Data
-
 @using Microsoft.AspNetCore.Components.Authorization
 
 @inject AuthenticationStateProvider AuthenticationStateProvider
@@ -27,7 +26,7 @@
         </div>
         </form>
     </div>
-    <div id = "vertically-aligned-block"class="flex float">
+    <div id = "vertically-aligned-block">
         @if(ErrorMessages.Any())
         {
             <ul  class="list-style-type: none">
@@ -49,23 +48,23 @@
     public static List<string> ErrorMessages = new List<string>();
 
     public void SignInSubmitPressed()
+    {
+        ErrorMessages.Clear();
+        users = RegistrationService.CreateUserList(users);
+        signInSuccess = RegistrationService.CheckSignIn(SignInEmailBox, SignInPasswordBox, users);
+        if(signInSuccess)
         {
-            ErrorMessages.Clear();
-            users = RegistrationService.CreateUserList(users);
-            signInSuccess = RegistrationService.CheckSignIn(SignInEmailBox, SignInPasswordBox, users);
-            if(signInSuccess)
-            {
-                ((CustomAuthStateProvider)AuthenticationStateProvider).markUserAsAuthenticated(SignInEmailBox);
-                NavigationManager.NavigateTo("/");
-                SignInEmailBox = "";
-                SignInPasswordBox = "";
-            }
-            else
-            {
-                ErrorMessages.Add("Sign in failed");
-                ErrorMessages.Add("Please, make sure you enter correct email and password");
-                SignInEmailBox = "";
-                SignInPasswordBox = "";
-            }
+            SignInEmailBox = "";
+            SignInPasswordBox = "";
+            ((CustomAuthStateProvider)AuthenticationStateProvider).markUserAsAuthenticated(SignInEmailBox);
+            NavigationManager.NavigateTo("/");
         }
+        else
+        {
+            SignInEmailBox = "";
+            SignInPasswordBox = "";
+            ErrorMessages.Add("Sign in failed");
+            ErrorMessages.Add("Please, make sure you enter correct email and password");
+        }
+    }
 }
