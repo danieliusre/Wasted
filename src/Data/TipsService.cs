@@ -23,9 +23,9 @@ namespace Wasted.Data
             var filepath =  "TipsList.json";
             try 
             {
-                Log.Information("Started reading RecipeProductList");
+                Log.Information("Started reading TipList");
                 tips = JsonConvert.DeserializeObject<List<TipsModel>>(_jsonFileService.ReadJsonFromFile(filepath));
-                Log.Information("Finished reading RecipeProductList");
+                Log.Information("Finished reading TipList");
             }
             catch (Exception e)
             {
@@ -33,40 +33,6 @@ namespace Wasted.Data
             }
             return tips;
         }
-
-        //Funkcija kai paspausta submit
-        /*public void AddUserData(string NameTextField, string TipTextField, string LinkTextField, int NumberTextField, List<TipsModel> allTips)
-        {
-            try
-            {
-                Log.Information("Starting to Registration service");
-                if ( string.IsNullOrEmpty(NameTextField) || string.IsNullOrEmpty(TipTextField) || string.IsNullOrEmpty(LinkTextField) || NumberTextField != 0)
-                {
-                        allTips.Add(new TipsModel(){TipNumber = NumberTextField, TipName = NameTextField, Name = TipTextField, TipLikes = 0, TipDislikes = 0, Link = LinkTextField});
-                        //funkcija rašanti į json failą
-                }
-            }
-            catch (Exception e)
-            {
-                Log.Error("Exception caught: {0}", e);
-            }
-        }*/
-
-        /*public void ReadTips(List<TipsModel> allTips)
-        {
-        System.IO.StreamReader TipsFile = new System.IO.StreamReader(@"Tips.txt");
-        allTips.Clear();
-            do
-            {
-                int numberOfTheTip = Int32.Parse(TipsFile.ReadLine());
-                string nameOfTheTip = TipsFile.ReadLine();
-                string tipName = TipsFile.ReadLine();
-                int like = Int32.Parse(TipsFile.ReadLine());
-                int dislike = Int32.Parse(TipsFile.ReadLine());
-                string link = TipsFile.ReadLine();
-                allTips.Add(new TipsModel(){TipNumber = numberOfTheTip, TipName = nameOfTheTip, Name = tipName, TipLikes = like, TipDislikes = dislike, Link = link});
-            }while(TipsFile.ReadLine() != null);
-        }*/
 
          public int AddTip(string NameTextField, string TipTextField, string LinkTextField, string NumberTextField, List<TipsModel> allTips)
         {
