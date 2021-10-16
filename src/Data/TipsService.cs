@@ -17,6 +17,23 @@ namespace Wasted.Data
             _jsonFileService = jsonFileService;
         }
 
+        public List<TipsModel> GetTips()
+        {
+            var tips =  new List<TipsModel>();
+            var filepath =  "TipsList.json";
+            try 
+            {
+                Log.Information("Started reading RecipeProductList");
+                tips = JsonConvert.DeserializeObject<List<TipsModel>>(_jsonFileService.ReadJsonFromFile(filepath));
+                Log.Information("Finished reading RecipeProductList");
+            }
+            catch (Exception e)
+            {
+                Log.Error("Exception caught: {0}",e);
+            }
+            return tips;
+        }
+
         //Funkcija kai paspausta submit
         /*public void AddUserData(string NameTextField, string TipTextField, string LinkTextField, int NumberTextField, List<TipsModel> allTips)
         {
@@ -35,24 +52,7 @@ namespace Wasted.Data
             }
         }*/
 
-        public Task<List<TipsModel>> GetTips()
-        {
-            var tips =  new List<TipsModel>();
-            var filePath = "DB\\Tips.txt";
-            try 
-            {
-                Log.Information("Starting to TipsList");
-                tips = JsonConvert.DeserializeObject<List<TipsModel>>(_jsonFileService.ReadJsonFromFile(filePath));
-                Log.Information("Finished reading Tipslist");
-            }
-            catch (Exception e)
-            {
-                Log.Error("Exception caught: {0}",e);
-            }
-            return Task.FromResult(tips);
-        }
-
-        public void ReadTips(List<TipsModel> allTips)
+        /*public void ReadTips(List<TipsModel> allTips)
         {
         System.IO.StreamReader TipsFile = new System.IO.StreamReader(@"Tips.txt");
         allTips.Clear();
@@ -66,7 +66,61 @@ namespace Wasted.Data
                 string link = TipsFile.ReadLine();
                 allTips.Add(new TipsModel(){TipNumber = numberOfTheTip, TipName = nameOfTheTip, Name = tipName, TipLikes = like, TipDislikes = dislike, Link = link});
             }while(TipsFile.ReadLine() != null);
+        }*/
+
+         public int AddTip(string NameTextField, string TipTextField, string LinkTextField, string NumberTextField, List<TipsModel> allTips)
+        {
+            try
+            {
+                Log.Information("Starting to Tips service");
+                        allTips.Add(new TipsModel(){
+                            TipNumber = Int32.Parse(NumberTextField),
+                            TipName = NameTextField,
+                            Name = TipTextField,
+                            TipLikes = 0,
+                            TipDislikes = 0,
+                            Link = LinkTextField,
+                        });
+                        writeToFile("TipsList.json", allTips);
+                    }
+            catch (Exception e)
+            {
+                Log.Error("Exception caught: {0}", e);
+            }
+            return 0;
         }
+
+        public void writeToFile(string filePath, List<TipsModel> allTips)
+        {
+            try
+            {
+                Log.Information("Starting to writeToFile(TipsList)");
+                string json = JsonConvert.SerializeObject(allTips, Formatting.Indented);
+                File.WriteAllText(filePath, json);
+                Log.Information("Finished writing to file");
+            }
+            catch (Exception e)
+            {
+                Log.Error("Exception caught {0}", e);
+            }
+        }
+
+        public Task<List<TipsModel>> SaveTips(List<TipsModel> allTips)
+        {
+            var filePath = "TipsList.json";
+            try 
+            {
+                Log.Information("Starting writing TipsList");
+                _jsonFileService.WriteJsonToFile(JsonConvert.SerializeObject(allTips, Formatting.Indented),filePath);
+                Log.Information("Finished writing TipsList");
+            }
+            catch (Exception e)
+            {
+                Log.Error("Exception caught: {0}",e);
+            }
+            return Task.FromResult(allTips);
+        }
+
 
         public void Like(List<TipsModel> allTips, int number, int clickLikeCount)
         {
