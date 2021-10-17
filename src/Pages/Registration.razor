@@ -1,25 +1,17 @@
 @page "/registration"
 
 @using Wasted.Data
-@using System.Security.Claims
 @using Microsoft.AspNetCore.Components.Authorization
 @inject NavigationManager NavigationManager;
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject RegistrationService RegistrationService
+
 <div class="flex">
-<ul>
-
-
-    @foreach (string ErrorMesage in @ErrorMessages)
-    {
-        @ErrorMesage
-    }
-</ul>
 </div>
 <AuthorizeView>
     <NotAuthorized>
     <div id="one">
-        <h1 class="tac">Log in</h1>
+        <h1 class="tac">Sign up</h1>
 
         <style>
             @@import "css/Utils.css"
@@ -34,81 +26,51 @@
             <input class="form-control tac regField" type="password" placeholder="Password" @bind="@PasswordBox"/>
         </div>
         <div>
-            <input class="buttonSub" type="submit" @onclick="submitPressed"> Submit</input>
-        </div>
-        </form>
-    </div>
-    <div id="two">
-        <h1 class="tac">Sign in</h1>
-        <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
-        <form method="post" action="submitscrip.php" target="dummyframe">
-        <div> 
-            <input class="form-control tac regField" type="email"  placeholder="Email"  @bind="@SignInEmailBox"/>
-            <input class="form-control tac regField" type="password" placeholder="Password" @bind="@SignInPasswordBox"/>
-        </div>
-        <div>
-            <input class="buttonSub" type="submit" @onclick="SignInSubmitPressed"> Submit</input>
+            <input class="buttonSub" type="submit" @onclick="submitPressed"></input>
         </div>
         </form>
     </div>
     </NotAuthorized>
 </AuthorizeView>
-    <AuthorizeView>
-        <Authorized>
-            <div> 
-                <h1><font color=rbg(24,28,92)><br>Hello, @service.getName(users, SignInEmailBox)!</font></h1>
-                <br>
-                <h2>It's our pleasure to welcome you back</h2>
-                <div class="greetingBox">
-                    <h3>  EXPLORE:</h3>
-                    <ul style="list-style: none;">
-                        <h4>🌱  TIPS</h4>
-                        <h4>🌱  PRODUCT LIST</h4>
-                        <h4>🌱  RECIPES</h4>
-                </ul>
-                </div>
-            </div>
-                </Authorized>
-    </AuthorizeView> 
    
+
+<div id = "vertically-aligned-block"class="flex float">
+    <ul>
+        @foreach (string ErrorMesage in @ErrorMessages)
+        {
+            @ErrorMesage
+            <br>
+        }
+    </ul>
+</div>
+
 @code{
+
     public static List<string> ErrorMessages = new List<string>();
     static string NameBox ;
     static string LastNameBox ;
     static string EmailBox ; 
     static string PasswordBox ;
     static List<User> users = new List<User>();
-    static string SignInEmailBox ; 
-    static string SignInPasswordBox ;
-    public bool signInSuccess = false;
+    
     RegistrationService service = new RegistrationService();
-    public bool showRegistrationform = true;
 
-    private IEnumerable<Claim> _claims = Enumerable.Empty<Claim>();
 
     public void submitPressed()
     {
+        ErrorMessages.Clear();
         ErrorMessages = service.AddUserData(NameBox, LastNameBox, EmailBox, PasswordBox, users);
         ErrorMessages = service.getErrorMess();
-        if(ErrorMessages.Any() && ErrorMessages[0] == "Success! Welcome to the Wasted family!")
+        if(ErrorMessages[0] == "Success! Welcome to the Wasted family!")
         {
-            ErrorMessages[0] = "Registration successful! To proceed, sign in to your accout.";
-        }
-
-    }
-
-    public void SignInSubmitPressed()
-    {
-        users = RegistrationService.CreateUserList(users);
-        signInSuccess = RegistrationService.CheckSignIn(SignInEmailBox, SignInPasswordBox, users);
-        ErrorMessages.Clear();
-        if(signInSuccess)
-        {
-            ((CustomAuthStateProvider)AuthenticationStateProvider).markUserAsAuthenticated(SignInEmailBox);
+            ErrorMessages.Clear();
+            NameBox = "";
+            LastNameBox = "";
+            EmailBox = "";
+            PasswordBox = "";
+            ((CustomAuthStateProvider)AuthenticationStateProvider).markUserAsAuthenticated(EmailBox);
             NavigationManager.NavigateTo("/");
         }
     }
-    [CascadingParameter]
-    private Task<AuthenticationState> authenticationStateTask { get; set; } 
-   
+
 }

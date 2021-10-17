@@ -24,5 +24,12 @@ namespace Wasted
 
                 NotifyAuthenticationStateChanged (Task.FromResult(new AuthenticationState(user)));
         }
+
+        public void MarkUserAsLoggedOut()
+    {
+        var anonymousUser = new ClaimsPrincipal(new ClaimsIdentity());
+        var authState = Task.FromResult(new AuthenticationState(anonymousUser));
+        NotifyAuthenticationStateChanged(authState);
+    }
     }
 }

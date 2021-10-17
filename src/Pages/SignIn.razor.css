@@ -1,23 +1,12 @@
-
-div{
-  text-align: center;
-  margin: 50px 25px;
-}
-
-.regField{
+  .regField
+{
   border-radius: 20px;
   font-size: 20 px;
   margin-top: 30px;
   margin-bottom: 10px;
 }
-
-.center {
-  margin: auto;
-  width: 50%;
-  padding: 10px;
-}
-
-#one {
+  #one 
+{
   float:left; 
   margin-right:10px;
   margin-left: 5px;
@@ -29,13 +18,10 @@ div{
   padding-top: 10px;
 }
 
-.userField{
-  width: 100%;
-  margin-top: 20px;
-  float:left;
-  clear: left;
+div{
+  text-align: center;
+  margin: 50px 25px;
 }
-
 #vertically-aligned-block{
   float:left; 
   margin-right:10px;
