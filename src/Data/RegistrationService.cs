@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using System.Net.Mail;
 using Newtonsoft.Json;
 using Serilog;
@@ -11,6 +10,7 @@ namespace Wasted.Data
 {
     public class RegistrationService
     { 
+        private JsonFileService _jsonFileService = new JsonFileService();
         public List<string> ErrMsg = new List<string>();
         public List<string> AddUserData(string NameBox, string LastNameBox, string EmailBox, string PasswordBox, List<User> users)
         {
@@ -37,10 +37,6 @@ namespace Wasted.Data
                         ErrMsg.Clear();
                         ErrMsg.Add("A user with given email address already exists!");
                     }
-                }
-                else
-                {
-                    ErrMsg.Clear(); 
                 }
                 Log.Information("Finished Registration service");
             }
@@ -93,7 +89,7 @@ namespace Wasted.Data
 
         public List<User> CreateUserList(List<User> users)
         {
-           string json = File.ReadAllText(@"UserData.json");
+           string json = _jsonFileService.ReadJsonFromFile(@"UserData.json");
             try 
             {
                 Log.Information("Starting to CreateUserList");
@@ -114,48 +110,30 @@ namespace Wasted.Data
 
         public bool dataValid (string NameBox, string LastNameBox, string EmailBox, string PasswordBox)
         {
+            ValidationService validate = new ValidationService();
             try
             {
                 Log.Information("Starting to dataValid");
-                if ( string.IsNullOrEmpty(NameBox) || string.IsNullOrEmpty(LastNameBox) || string.IsNullOrEmpty(EmailBox) || string.IsNullOrEmpty(PasswordBox))
+                if ( validate.EmptyFieldsPresent(NameBox, LastNameBox, EmailBox,PasswordBox))
                 {
                     Log.Information("Finished dataValid (empty fields present)");
                     return false;
                 }
-                var hasNumber = new Regex(@"[0-9]+");
-                var hasUpperChar = new Regex(@"[A-Z]+");
-                var hasMiniMaxChars = new Regex(@".{8,15}");
-                var hasLowerChar = new Regex(@"[a-z]+");
-                var hasSymbols = new Regex(@"[!@#$%^&*()_+=\[{\]};:<>|./?,-]");
-                var hasComma = new Regex(@"[,]");
-                //nameValid
-                if(hasNumber.IsMatch(NameBox) || hasSymbols.IsMatch(NameBox))
+                if(!validate.NameValid(NameBox))
                 {
                     ErrMsg.Add("invalid name");
                     Log.Information("Finished dataValid (invalid name)");
                     return false;
                 }
-                //lastNameValid
-                if(hasNumber.IsMatch(LastNameBox) || hasSymbols.IsMatch(LastNameBox))
+                if(!validate.NameValid(LastNameBox))
                 {
                     ErrMsg.Add("invalid lastname");
                     Log.Information("Finished dataValid (invalid lastname)");
                     return false;
                 }
-                //emailValid
-                if(hasComma.IsMatch(EmailBox))
+                if(!validate.PasswordValid(PasswordBox))
                 {
-                    ErrMsg.Add("comma in email");
-                    Log.Information("Finished dataValid (invalid email)");
-                    return false;
-                }
-                //PasswordValid
-                if(!hasNumber.IsMatch(PasswordBox) 
-                || !hasUpperChar.IsMatch(PasswordBox) 
-                || !hasLowerChar.IsMatch(PasswordBox)
-                || !hasMiniMaxChars.IsMatch(PasswordBox))
-                {
-                    ErrMsg.Add("invalid password");
+                    ErrMsg.Add("invalid password (must include uppercare, lowercase, 8-15 symbols, digit");
                     Log.Information("Finished dataValid (invalid password)");
                     return false;
                 }
