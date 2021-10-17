@@ -7,233 +7,110 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-<i class="fa fa-check" @onclick="ReadList"></i>
+<i class="fa fa-check" @onclick="ReadTips"></i>
 
 </h1>
 
 <p style="font-size:20px;">The best way to predict the future is to create it!</p>
 <hr><hr>
 
-<h2><font color=rbg(24,28,92)><br>Shop Smart</font>
-
-<i @onclick="likeTipOne" class="fa fa-thumbs-up">
-    @likeOne
-</i>
-
-<i @onclick="dislikeTipOne" class="fa fa-thumbs-down">
-	@dislikeOne
-</i>
-
-</h2>
-
-<br> 
-
-<div class="progress">
-  <div class="progress-bar" role="progressbar" aria-valuenow="70"
-  aria-valuemin="0" aria-valuemax="100" style="width:@likeOne%">
-    <span class="sr-only">Complete</span>
-  </div>
-</div>
-
-<br>
-
-<p style="font-size:20px;">To avoid buying more food than you need, make frequent trips to the grocery store every few days rather than doing a bulk shopping trip once a week.</p>
-
-<button class="learnmore" onclick=" window.open('https://en.wikipedia.org/wiki/Smart_shop','_blank');">
-	I want to learn more
-</button>
-
-<h2><font color="#3a0647"><br>Store Food Correctly</font>
-
-<i @onclick="likeTipTwo" class="fa fa-thumbs-up">
-	@likeTwo
-</i>
-
-<i @onclick="dislikeTipTwo" class="fa fa-thumbs-down">
-	@dislikeTwo
-</i>
-
-</h2>
-
-<br> 
-
-<div class="progress">
-  <div class="progress-bar" role="progressbar" aria-valuenow="70"
-  aria-valuemin="0" aria-valuemax="100" style="width:@likeTwo%">
-    <span class="sr-only">Complete</span>
-  </div>
-</div>
-
-<br>
-
-<p style="font-size:20px;">Separating foods that produce more ethylene gas from those that don’t is another great way to reduce food spoilage. Ethylene promotes ripening in foods and could lead to spoilage.</p>
-
-<button class="learnmore" onclick=" window.open('https://www.betterhealth.vic.gov.au/health/healthyliving/food-safety-and-storage','_blank');">
-	I want to learn more
-</button>
-
-
-<h3><font color="purple"><br>Learn to Preserve</font>
-
-<i @onclick="likeTipThree" class="fa fa-thumbs-up">
-	@likeThree
-</i>
-
-<i @onclick="dislikeTipThree" class="fa fa-thumbs-down">
-	@dislikeThree
-</i>
-
-</h3>
-
-<br> 
-
-<div class="progress">
-  <div class="progress-bar" role="progressbar" aria-valuenow="70"
-  aria-valuemin="0" aria-valuemax="100" style="width:@likeThree%">
-    <span class="sr-only">Complete</span>
-  </div>
-</div>
-
-<br>
-
-<p style="font-size:20px;">Pickling, drying, canning, fermenting, freezing and curing are all methods you can use to make food last longer, thus reducing waste.</p>
-
-<button class="learnmore" onclick=" window.open('https://www.masterclass.com/articles/a-guide-to-home-food-preservation-how-to-pickle-can-ferment-dry-and-preserve-at-home','_blank');">
-	I want to learn more
-</button>
-
-@code {
-	private List<TipsModel> allTips;
-    public string Filter { get; set; }
-
-    protected override async Task OnInitializedAsync()
-    {
-        allTips = await TipsService.GetTips();
-    }
-
-	int ClickCount = 0;
-	int ClickCountTwo = 0;
-	int ClickCountThree = 0;
-    private int likeOne = 0;
-	private int dislikeOne = 0;
-	private int likeTwo = 0;
-	private int dislikeTwo = 0;
-	private int likeThree = 0;
-	private int dislikeThree = 0;
-
-	private void ReadList()
-	{
-		using (TextReader reader = File.OpenText("Likes.txt"))
+@foreach(var tips in allTips)
 		{
-			likeOne = int.Parse(reader.ReadLine());
-			dislikeOne = int.Parse(reader.ReadLine());
-			likeTwo = int.Parse(reader.ReadLine());
-			dislikeTwo = int.Parse(reader.ReadLine());
-			likeThree = int.Parse(reader.ReadLine());
-			dislikeThree = int.Parse(reader.ReadLine());
+			<h2><font color=rbg(24,28,92)><br>@tips.TipName</font>
+				<i @onclick="LikePressed" class="fa fa-thumbs-up">
+					@tips.TipLikes
+				</i>
+				<i @onclick="DislikePressed" class="fa fa-thumbs-down">
+					@tips.TipDislikes
+				</i>
+				<button class="from-control tac remove" @onclick="() => allTips.Remove(tips)"> - </button>
+			</h2>
+			<br> 
+			<div class="progress">
+			<div class="progress-bar" role="progressbar" aria-valuenow="70"
+			aria-valuemin="0" aria-valuemax="100" style="width:@tips.TipLikes%">
+				<span class="sr-only">Complete</span>
+			</div>
+			</div>
+			<br>
+			<p style="font-size:20px;">@tips.Name</p> 
+			<button class="learnmore" onclick=" window.open('@tips.Link','_blank');">
+			I want to learn more
+			</button>
+			<br>
+			
 		}
+		<br>
+		@if (tipsRead != 0)
+		{
+		<p style="font-size:20px;">Add your own helpful tip!</p>
+		<div> 
+		<input class="form-control tac textField" type="text"  placeholder="Tip number" @bind="@NumberTextField"/>	
+        <input class="form-control tac textField" type="text"  placeholder="Tip name" @bind="@NameTextField"/>
+        <input class="form-control tac textField" type="text"   placeholder="Tip" @bind="@TipTextField"/>
+        <input class="form-control tac textField" type="text"  placeholder="Link for more information about it"  @bind="@LinkTextField"/>
+    	</div>
+		<div>
+        <button class="learnmore" type="submit" @onclick="SubmitPressed"> Submit </button>
+		</div>
+		<br>
+		<button class="learnmore" @onclick="SavePressed"> SAVE </button>
+		}
+    	
+
+@code{
+	List<TipsModel> allTips = new();
+	public int tipsRead = 0;
+	public int number;
+	string NameTextField = "";
+	string TipTextField = "";
+	string LinkTextField = "";
+	string NumberTextField;
+	public int clickLikeCount;
+	public int clickDislikeCount;
+	public void ReadTips()
+	{
+		tipsRead = 1;
+		allTips = TipsService.GetTips();
 	}
 
-	private void likeTipOne()
+	public void SubmitPressed()
     {
-		int clickLimit = 1; 
-		if (ClickCount < clickLimit)
+        TipsService.AddTip(NameTextField, TipTextField, LinkTextField, NumberTextField, allTips);
+		NumberTextField = "";
+        NameTextField = "";
+        TipTextField = "";
+        LinkTextField = "";
+	}
+
+	public void SavePressed()
+    {
+        TipsService.SaveTips(allTips);
+	}
+	public void LikePressed()
+    {
+		if (clickLikeCount == 0)
 		{
-			ClickCount++;
-			likeOne++;
+			clickLikeCount++;
+			TipsService.Like(allTips, number, clickLikeCount);
 		}
 		else
 		{
-			if (likeOne != 0)
-			{
-			likeOne--;
-			ClickCount--;
-			}
+			clickLikeCount--;
+			TipsService.UnLike(allTips, number, clickLikeCount);
 		}
     }
-
-    private void dislikeTipOne()
-     {
-		int clickLimit = 1; 
-		if (ClickCount < clickLimit)
-		{
-			ClickCount++;
-			dislikeOne++;
-		}
-		else
-		{
-			if (dislikeOne != 0){
-			dislikeOne--;
-			ClickCount--;
-			}	
-		}
-    }	
-
-    private void likeTipTwo()
-     {
-		int clickLimit = 1; 
-		if (ClickCountTwo < clickLimit)
-		{
-			ClickCountTwo++;
-			likeTwo++;
-		}
-		else
-		{
-			if (likeTwo != 0){
-			likeTwo--;
-			ClickCountTwo--;
-			}	
-		}
-    }	
-
-    private void dislikeTipTwo()
+	public void DislikePressed()
     {
-		int clickLimit = 1; 
-		if (ClickCountTwo < clickLimit)
+		if (clickDislikeCount == 0)
 		{
-			ClickCountTwo++;
-			dislikeTwo++;
+			clickDislikeCount++;
+			TipsService.Dislike(allTips, number, clickDislikeCount);
 		}
 		else
 		{
-			if (dislikeTwo != 0){
-			dislikeTwo--;
-			ClickCountTwo--;
-			}	
+			clickDislikeCount--;
+			TipsService.UnDislike(allTips, number, clickDislikeCount);
 		}
-    }	
-	
-    private void likeTipThree()
-    {
-		int clickLimit = 1; 
-		if (ClickCountThree < clickLimit)
-		{
-			ClickCountThree++;
-			likeThree++;
-		}
-		else
-		{
-			if (likeThree != 0){
-			likeThree--;
-			ClickCountThree--;
-			}	
-		}
-    }	
-
-    private void dislikeTipThree()
-    {
-		int clickLimit = 1; 
-		if (ClickCountThree < clickLimit)
-		{
-			ClickCountThree++;
-			dislikeThree++;
-		}
-		else
-		{
-			if (dislikeThree != 0){
-			dislikeThree--;
-			ClickCountThree--;
-			}	
-		}
-    }	
+	}
 }

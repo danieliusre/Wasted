@@ -17,21 +17,119 @@ namespace Wasted.Data
             _jsonFileService = jsonFileService;
         }
 
-        public Task<List<TipsModel>> GetTips()
+        public List<TipsModel> GetTips()
         {
             var tips =  new List<TipsModel>();
-            var filePath = "DB\\TipsList.txt";
+            var filepath =  "TipsList.json";
             try 
             {
-                Log.Information("Starting to TipsList");
-                tips = JsonConvert.DeserializeObject<List<TipsModel>>(_jsonFileService.ReadJsonFromFile(filePath));
-                Log.Information("Finished reading Tipslist");
+                Log.Information("Started reading TipList");
+                tips = JsonConvert.DeserializeObject<List<TipsModel>>(_jsonFileService.ReadJsonFromFile(filepath));
+                Log.Information("Finished reading TipList");
             }
             catch (Exception e)
             {
                 Log.Error("Exception caught: {0}",e);
             }
-            return Task.FromResult(tips);
+            return tips;
+        }
+
+         public int AddTip(string NameTextField, string TipTextField, string LinkTextField, string NumberTextField, List<TipsModel> allTips)
+        {
+            try
+            {
+                Log.Information("Starting to Tips service");
+                        allTips.Add(new TipsModel(){
+                            TipNumber = Int32.Parse(NumberTextField),
+                            TipName = NameTextField,
+                            Name = TipTextField,
+                            TipLikes = 0,
+                            TipDislikes = 0,
+                            Link = LinkTextField,
+                        });
+                        writeToFile("TipsList.json", allTips);
+                    }
+            catch (Exception e)
+            {
+                Log.Error("Exception caught: {0}", e);
+            }
+            return 0;
+        }
+
+        public void writeToFile(string filePath, List<TipsModel> allTips)
+        {
+            try
+            {
+                Log.Information("Starting to writeToFile(TipsList)");
+                string json = JsonConvert.SerializeObject(allTips, Formatting.Indented);
+                File.WriteAllText(filePath, json);
+                Log.Information("Finished writing to file");
+            }
+            catch (Exception e)
+            {
+                Log.Error("Exception caught {0}", e);
+            }
+        }
+
+        public Task<List<TipsModel>> SaveTips(List<TipsModel> allTips)
+        {
+            var filePath = "TipsList.json";
+            try 
+            {
+                Log.Information("Starting writing TipsList");
+                _jsonFileService.WriteJsonToFile(JsonConvert.SerializeObject(allTips, Formatting.Indented),filePath);
+                Log.Information("Finished writing TipsList");
+            }
+            catch (Exception e)
+            {
+                Log.Error("Exception caught: {0}",e);
+            }
+            return Task.FromResult(allTips);
+        }
+
+
+        public void Like(List<TipsModel> allTips, int number, int clickLikeCount)
+        {
+            foreach(var tips in allTips)
+            {
+                if (tips.TipNumber == 1)
+                { 
+                    tips.TipLikes++; 
+                }
+            }
+        }
+
+         public void UnLike(List<TipsModel> allTips, int number, int clickLikeCount)
+        {
+            foreach(var tips in allTips)
+            {
+                if (tips.TipNumber == 1)
+                { 
+                    tips.TipLikes--; 
+                }
+            }
+        }
+
+        public void Dislike(List<TipsModel> allTips, int number, int clickDislikeCount)
+        {
+            foreach(var tips in allTips)
+            {
+                if (tips.TipNumber == 1)
+                { 
+                    tips.TipDislikes++; 
+                }
+            }
+        }
+
+        public void UnDislike(List<TipsModel> allTips, int number, int clickDislikeCount)
+        {
+            foreach(var tips in allTips)
+            {
+                if (tips.TipNumber == 1)
+                { 
+                    tips.TipDislikes--; 
+                }
+            }
         }
     }
 }

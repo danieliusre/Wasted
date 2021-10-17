@@ -1,9 +1,7 @@
 @page "/recipecalc"
 @using System.IO
 @using Wasted.Data
-@using Newtonsoft.Json
-@inject RecipeCalcService RecipeCalcService
- 
+@inject RecipeCalcService RecipeCalcService 
 
 <h1>RECIPE CALCULATOR</h1>
 
@@ -25,152 +23,133 @@
     string leftTextField = "";
     string unitTextField = "";
     string dateTextField = "";
-    List<RecipeModel> products = new();
-    List<String> badProducts = new();
-    List<String> dishes = new();
-    List<RecipeModel> ingredients = new();
+    List<ItemModel> products = new();
+    List<String> expiringProducts = new();
+    List<DishModel> dishes = new List<DishModel>();
     private void AddProduct()
     {
         bool allFilled = (!string.IsNullOrEmpty(itemTextField)&&!string.IsNullOrEmpty(leftTextField)&&!string.IsNullOrEmpty(unitTextField)&&!string.IsNullOrEmpty(dateTextField));
-        //in case of same items being entered twice
-        foreach (var product in products)
+        
+        foreach (var product in products)         //in case of same items being entered twice
         {
             if(itemTextField.ToLower().Trim() == product.Item.ToLower() && allFilled)
             {
-                if(unitTextField == "kg" || unitTextField == "l")
-                {product.Left += Int32.Parse(leftTextField) * 1000;}
-                else
-                {product.Left += Int32.Parse(leftTextField);} //adds what's left and deletes the new item
+                switch (unitTextField)
+                {
+                    case "kg":
+                        product.Amount += Int32.Parse(leftTextField) * 1000;
+                        break;
+                    case "l":
+                        product.Amount += Int32.Parse(leftTextField) * 1000;
+                        break;
+                    case "oz":
+                        product.Amount += Int32.Parse(leftTextField) * 28;
+                        break;
+                    default:
+                        product.Amount += Int32.Parse(leftTextField);
+                        break;
+                }
+                allFilled = false;
                 itemTextField = "";
                 leftTextField = "";
                 unitTextField = "";
                 dateTextField = "";
-                allFilled = false;
             }
         }
         if(allFilled)
         {
-            products.Add(new RecipeModel(){Item = itemTextField.Trim(), Left = Int32.Parse(leftTextField), Unit = unitTextField, Date = dateTextField});
+            products.Add(new ItemModel(){Item = itemTextField.Trim(), Amount = Int32.Parse(leftTextField), Unit = unitTextField, Date = dateTextField});
+            itemTextField = "";
+            leftTextField = "";
+            unitTextField = "";
+            dateTextField = "";
         }
+        expiringProducts = RecipeCalcService.FindExpiringProducts(products);
     }
 
     private void SaveList()
     {
-        foreach(var product in products)
-        {
-            if(product.Unit == "kg")
-            {product.Left = product.Left * 1000; product.Unit = "g";}
-            else if(product.Unit == "l")
-            {product.Left = product.Left * 1000; product.Unit = "ml";}
-            else if(product.Unit == "oz")
-            {product.Left = product.Left * 28; product.Unit = "g";}
-        } 
-        File.WriteAllText("RecipeList.json", JsonConvert.SerializeObject(products));
+        RecipeCalcService.SaveProducts(products);
     } 
 
     private void LoadList()
     {
-        products.Clear();
-        badProducts.Clear();
         products = RecipeCalcService.GetProducts();
-        foreach (var product in products)
-        {
-            product.Item = char.ToUpper(product.Item[0]) + product.Item.Substring(1);
-            if((DateTime.Parse(product.Date) - DateTime.Today).TotalDays < 3)
-            {
-                badProducts.Add(product.Item);
-            }
-        } 
+        expiringProducts = RecipeCalcService.FindExpiringProducts(products);
     }
 
     private void FindRecipe()
     {
-        System.IO.StreamReader RecipeFile = new System.IO.StreamReader(@"Recipes.txt");
-        dishes.Clear();
-        do
-        {
-            string dishName = RecipeFile.ReadLine();
-            int Need = Int32.Parse(RecipeFile.ReadLine());
-            ingredients.Clear();
-            for (int i = 0; i<Need; i++)
-            {
-            string[] item = RecipeFile.ReadLine().Split(';');
-            ingredients.Add(new RecipeModel(){Item = item[0], Left = Int32.Parse(item[1]), Unit = item[2]});
-            }
-            foreach (var ingredient in ingredients)
-            {
-                foreach(var product in products)
-                {
-                    if(ingredient.Item.Equals(product.Item.ToLower()) && ingredient.Left <= product.Left)
-                    {
-                        Need--;
-                    }
-                }   
-            }
-            if(Need == 0)
-            {
-                dishes.Add(dishName.ToUpper());
-            }
-        }while(RecipeFile.ReadLine() != null);
-
-        if(!dishes.Any())
-            dishes.Add("Nothing");
+        dishes = RecipeCalcService.FindRecipe(products);
     }
 }
-
 <table class="table">
-    <tr>
-        <th>Item</th>
-        <th>Left</th>
-        <th>Measurement</th>
-        <th>Best until</th>
-        <th>Add/Remove</th>
-    </tr>
+    <thead>
+        <tr>
+            <th>Item</th>
+            <th>Amount</th>
+            <th>Measurement</th>
+            <th>Best until</th>
+            <th>Add/Remove</th>
+        </tr>
+    </thead>
 
 @foreach (var product in products)
 {
     <tr>
         <td>@product.Item</td>
-        <td>@product.Left</td>
+        <td>@product.Amount</td>
         <td>@product.Unit</td> 
         <td>@product.Date</td> 
         <td>
-            <button @onclick="() => products.Remove(product)">
-                <span class="oi oi-trash" aria-hidden="true"></span>
-            </button>  
+        <button class="btn btn-danger" @onclick="() => products.Remove(product)">-</button>
         </td>
     </tr>
 }
 </table>
 
-<div>
-    <input type = "text" size="10" id="itemfieldid" @bind="@itemTextField" @oninput="(e) => { itemTextField = e.Value ==null? string.Empty:(string)e.Value;}"/> 
-    <input type = "number" id="leftfieldid" @bind="@leftTextField" @oninput="(e) => { leftTextField = e.Value ==null? string.Empty:(string)e.Value;}"/> 
-    <select @bind="@unitTextField" @oninput="(e) => { unitTextField = e.Value ==null? string.Empty:(string)e.Value;}" name="unit" id="unit">
+<div class="input">
+    <span class="inputSpan">
+        <input class="inputField" type = "text" size="10" id="itemfieldid" @bind="@itemTextField" @oninput="(e) => { itemTextField = e.Value ==null? string.Empty:(string)e.Value;}"/> 
+        <input class="inputField" type = "number" id="leftfieldid" @bind="@leftTextField" @oninput="(e) => { leftTextField = e.Value ==null? string.Empty:(string)e.Value;}"/> 
+        <select class="inputField" @bind="@unitTextField" @oninput="(e) => { unitTextField = e.Value ==null? string.Empty:(string)e.Value;}" name="unit" id="unit">
                         <option value="g">g</option>
                         <option value="kg">kg</option>
                         <option value="l">l</option>
                         <option value="ml">ml</option>
                         <option value="oz">oz</option>
-                        <option value="units"></option>
+                        <option value="unit(s)"></option>
                         </select>
-    <input @oninput="(e) => { dateTextField = e.Value ==null? string.Empty:(string)e.Value;}" type="date" id="bestuntilday" name="bestuntilday" size="1">
-    <button class="btn btn-primary" @onclick="AddProduct">Add new product</button>
+        <input class="inputField" @oninput="(e) => { dateTextField = e.Value ==null? string.Empty:(string)e.Value;}" type="date" id="bestuntilday" name="bestuntilday" size="1">
+        <button class="btn btn-primary" @onclick="AddProduct">+</button>
+    </span>
 </div>
 
-@if(dishes.Any()){<h1><font color=#3a0647><br>Here's what you can make:</font></h1>}
-<dl class="Recipes" >
-    @foreach (string dish in dishes)
+@if(dishes.Any())
+{
+    <h1><font color=#3a0647><br>Here's what you can make:</font></h1>
+    <dl class="Recipes" >
+    @foreach (var dish in dishes) 
     {
-        <dt style="color:#3a0647;font-size:30px;">@dish</dt>
-        <dd>You will need: (coming soon)</dd>
+        <dt style="color:#3a0647;font-size:30px;">@dish.Name</dt>
+        <dd1>You will need:</dd1>
+        <ul>
+            @foreach (var Ingredient in dish.Ingredients)
+            {
+                <li style="color:#3a0647;font-size:20px;">@Ingredient.Item @Ingredient.Amount @Ingredient.Unit</li>
+            }
+        </ul>
     }
-</dl>
+    </dl>  
+}
 
-@if(badProducts.Any()){<h1><font style="color:red;font-size:25px;"><br>Be careful! These products have 3 or less days left, before they expire:</font></h1>}
-<ul class="Expired" >
-    @foreach (string badProduct in badProducts)
-    {
-        <li style="color:red;font-size:25px;">@badProduct</li>
-    }
-</ul>
+@if(expiringProducts.Any())
+{
+    <h1><font style="color:red;font-size:25px;"><br>Be careful! These products have 3 or less days left, before they expire:</font></h1>
+    <ul class="Expired" >
+        @foreach (string expiredProduct in expiringProducts)
+        {
+            <li style="color:red;font-size:25px;">@expiredProduct</li>
+        }
+    </ul>
+}

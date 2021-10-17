@@ -23,9 +23,38 @@ button.learnmore{
 	border-width: 1px;
 	font-size: 29px;
   }
+
+.remove {
+	float: right;
+	cursor: pointer;
+	user-select: none;
+	width: 43px;
+	height: 43px;
+	margin: 0 auto;
+	border-radius: 50%;
+	color: rgb(97, 0, 0);
+	background-color: rgba(255, 0, 0, 0.3);
+	border-color: rgb(0, 0, 0);
+	border-width: 1px;
+	font-size: 29px;
+
+}
   
 .fa:hover {
 	color: darkblue;
+}
+
+#itemfieldid{
+    margin-right: 300px;
+}
+
+.textField
+{
+    border-radius: 20px;
+    font-size: 20 px;
+    margin-top: 30px;
+    margin-bottom: 10px;
+	text-align: center;
 }
 
 .progress {
@@ -33,3 +62,4 @@ button.learnmore{
 	border-color: rgb(2, 7, 71);
 	background-color: rgba(51, 12, 87, 0.3);
 }
+

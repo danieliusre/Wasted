@@ -33,6 +33,7 @@
     </NotAuthorized>
 </AuthorizeView>
    
+
 <div id = "vertically-aligned-block"class="flex float">
     <ul>
         @foreach (string ErrorMesage in @ErrorMessages)
@@ -43,8 +44,8 @@
     </ul>
 </div>
 
-@code
-{
+@code{
+
     public static List<string> ErrorMessages = new List<string>();
     static string NameBox ;
     static string LastNameBox ;

@@ -3,42 +3,42 @@
     "Name": "Apple",
     "Type": "Fruit",
     "MeasurementUnits": "kg",
-    "EnergyValue": 158
+    "EnergyValue": 158.487
   },
   {
     "Name": "Troat",
     "Type": "Fish",
     "MeasurementUnits": "kg",
-    "EnergyValue": 284
+    "EnergyValue": 284.546
   },
   {
     "Name": "Orange",
     "Type": "Fruit",
     "MeasurementUnits": "g",
-    "EnergyValue": 120
+    "EnergyValue": 120.692
   },
   {
     "Name": "Blackberry",
     "Type": "Berry",
     "MeasurementUnits": "kg",
-    "EnergyValue": 262
+    "EnergyValue": 262.178
   },
   {
     "Name": "Cheese",
     "Type": "Dairy",
     "MeasurementUnits": "kg",
-    "EnergyValue": 352
+    "EnergyValue": 352.698
   },
   {
     "Name": "Bass",
     "Type": "Fish",
     "MeasurementUnits": "kg",
-    "EnergyValue": 271
+    "EnergyValue": 271.745
   },
   {
     "Name": "Buttermilk",
     "Type": "Dairy",
     "MeasurementUnits": "l",
-    "EnergyValue": 175
+    "EnergyValue": 175.1245
   }
 ]

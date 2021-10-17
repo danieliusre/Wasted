@@ -1,18 +1,75 @@
 h1 {
     color: rgb(0,15,128);
 }
+dd1{
+    color:#3a0647;
+    font-size:20px;
+}
 input[type=number]{
     width: 120px;
 }
 #itemfieldid{
-    margin-right: 100px;
+    margin-left: 90px;
 }
 #leftfieldid{
-    margin-right: 100px;
+    margin-left: 185px;
 }
 #unit{
-    margin-right: 340px;
+    margin-left: 230px;
 }
 #bestuntilday{
-    margin-right: 170px;
+    margin-left: 200px;
+    margin-right: 190px;
 }
+.input{
+    background-color: rgb(214, 214, 214);
+    height: 60px;
+    line-height: 60px;
+}
+.inputSpan{
+    vertical-align: middle;
+    line-height: 20px;
+}
+.inputField{
+    border-radius: 10px;
+    border: 1px;
+    font-size: 20px;
+    text-align: center;
+}
+
+table{
+    width:100%;
+    table-layout: fixed;
+  }
+  .tbl-header{
+    background-color: rgba(0, 0, 0, 0.3);
+   }
+  .tbl-content{
+    height:300px;
+    overflow-x:auto;
+    margin-top: 0px;
+    border: 1px solid rgba(255,255,255,0.3);
+  }
+  th{
+    padding: 20px 15px;
+    text-align: center;
+    font-weight: 500;
+    font-size: 20px;
+    color: #000;
+    text-transform: uppercase;
+  }
+  td{
+    padding: 15px;
+    text-align: center;
+    vertical-align:middle;
+    font-weight: 300;
+    font-size: 15px;
+    color: #000;
+    border-bottom: solid 1px rgba(255,255,255,0.1);
+  }
+  thead{
+    background-color: rgb(214, 214, 214);
+  }
+
+
+

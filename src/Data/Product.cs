@@ -2,14 +2,31 @@ using System;
 
 namespace Wasted.Data
 {
-    public class Product
+    public struct Product
     {
-        public string Name { get; set; }
+        private string _name;
+        private string _type;
+        private string _measurementUnits;
+        private double _energyValue;
 
-        public string Type { get; set; }
+        public string Name { 
+            get { return _name; }
+            set { _name = value; }
+        }
 
-        public string MeasurementUnits { get; set; }
+        public string Type { 
+            get => _type;
+            set => _type = value;
+        }
 
-        public int EnergyValue { get; set; }
+        public string MeasurementUnits { 
+            get { return _measurementUnits; }
+            set { _measurementUnits = value; }
+        }
+
+        public double EnergyValue { 
+            get => _energyValue;
+            set => _energyValue = value; 
+        }
     }
 }
