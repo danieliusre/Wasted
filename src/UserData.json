@@ -118,5 +118,11 @@
     "Lastname": "Valkauskas",
     "Email": "karolis@gmail.com",
     "Password": "Karolis123"
+  },
+  {
+    "Name": "Ema",
+    "Lastname": "Sinkeviciute",
+    "Email": "emsi@gmail.com",
+    "Password": "Ema12345"
   }
 ]

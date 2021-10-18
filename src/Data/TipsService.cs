@@ -17,78 +17,95 @@ namespace Wasted.Data
             _jsonFileService = jsonFileService;
         }
 
-        //Funkcija kai paspausta submit
-        /*public void AddUserData(string NameTextField, string TipTextField, string LinkTextField, int NumberTextField, List<TipsModel> allTips)
-        {
-            try
-            {
-                Log.Information("Starting to Registration service");
-                if ( string.IsNullOrEmpty(NameTextField) || string.IsNullOrEmpty(TipTextField) || string.IsNullOrEmpty(LinkTextField) || NumberTextField != 0)
-                {
-                        allTips.Add(new TipsModel(){TipNumber = NumberTextField, TipName = NameTextField, Name = TipTextField, TipLikes = 0, TipDislikes = 0, Link = LinkTextField});
-                        //funkcija rašanti į json failą
-                }
-            }
-            catch (Exception e)
-            {
-                Log.Error("Exception caught: {0}", e);
-            }
-        }*/
-
-        public Task<List<TipsModel>> GetTips()
+        public List<TipsModel> GetTips()
         {
             var tips =  new List<TipsModel>();
-            var filePath = "DB\\Tips.txt";
+            var filepath =  "TipsList.json";
             try 
             {
-                Log.Information("Starting to TipsList");
-                tips = JsonConvert.DeserializeObject<List<TipsModel>>(_jsonFileService.ReadJsonFromFile(filePath));
-                Log.Information("Finished reading Tipslist");
+                Log.Information("Started reading TipList");
+                tips = JsonConvert.DeserializeObject<List<TipsModel>>(_jsonFileService.ReadJsonFromFile(filepath));
+                Log.Information("Finished reading TipList");
             }
             catch (Exception e)
             {
                 Log.Error("Exception caught: {0}",e);
             }
-            return Task.FromResult(tips);
+            return tips;
         }
 
-        public void ReadTips(List<TipsModel> allTips)
+         public int AddTip(string NameTextField, string TipTextField, string LinkTextField, string NumberTextField, List<TipsModel> allTips)
         {
-        System.IO.StreamReader TipsFile = new System.IO.StreamReader(@"Tips.txt");
-        allTips.Clear();
-            do
+            try
             {
-                int numberOfTheTip = Int32.Parse(TipsFile.ReadLine());
-                string nameOfTheTip = TipsFile.ReadLine();
-                string tipName = TipsFile.ReadLine();
-                int like = Int32.Parse(TipsFile.ReadLine());
-                int dislike = Int32.Parse(TipsFile.ReadLine());
-                string link = TipsFile.ReadLine();
-                allTips.Add(new TipsModel(){TipNumber = numberOfTheTip, TipName = nameOfTheTip, Name = tipName, TipLikes = like, TipDislikes = dislike, Link = link});
-            }while(TipsFile.ReadLine() != null);
+                Log.Information("Starting to Tips service");
+                        allTips.Add(new TipsModel(){
+                            TipNumber = Int32.Parse(NumberTextField),
+                            TipName = NameTextField,
+                            Name = TipTextField,
+                            TipLikes = 0,
+                            TipDislikes = 0,
+                            Link = LinkTextField,
+                        });
+                        writeToFile("TipsList.json", allTips);
+                    }
+            catch (Exception e)
+            {
+                Log.Error("Exception caught: {0}", e);
+            }
+            return 0;
         }
+
+        public void writeToFile(string filePath, List<TipsModel> allTips)
+        {
+            try
+            {
+                Log.Information("Starting to writeToFile(TipsList)");
+                string json = JsonConvert.SerializeObject(allTips, Formatting.Indented);
+                File.WriteAllText(filePath, json);
+                Log.Information("Finished writing to file");
+            }
+            catch (Exception e)
+            {
+                Log.Error("Exception caught {0}", e);
+            }
+        }
+
+        public Task<List<TipsModel>> SaveTips(List<TipsModel> allTips)
+        {
+            var filePath = "TipsList.json";
+            try 
+            {
+                Log.Information("Starting writing TipsList");
+                _jsonFileService.WriteJsonToFile(JsonConvert.SerializeObject(allTips, Formatting.Indented),filePath);
+                Log.Information("Finished writing TipsList");
+            }
+            catch (Exception e)
+            {
+                Log.Error("Exception caught: {0}",e);
+            }
+            return Task.FromResult(allTips);
+        }
+
 
         public void Like(List<TipsModel> allTips, int number, int clickLikeCount)
         {
             foreach(var tips in allTips)
             {
-                if (tips.TipNumber == number)
+                if (tips.TipNumber == 1)
                 { 
-                    if (clickLikeCount < 2)
-                    {
-                        Console.WriteLine(clickLikeCount);
-                        tips.TipLikes++; 
-                        clickLikeCount++;
-                        Console.WriteLine(clickLikeCount);
-                    }
-                    else
-                    {
-                        if (tips.TipLikes != 0)
-                        {
-                        tips.TipLikes--;
-                        clickLikeCount = 0;
-                        }
-                    }
+                    tips.TipLikes++; 
+                }
+            }
+        }
+
+         public void UnLike(List<TipsModel> allTips, int number, int clickLikeCount)
+        {
+            foreach(var tips in allTips)
+            {
+                if (tips.TipNumber == 1)
+                { 
+                    tips.TipLikes--; 
                 }
             }
         }
@@ -97,23 +114,20 @@ namespace Wasted.Data
         {
             foreach(var tips in allTips)
             {
-                if (tips.TipNumber == number)
+                if (tips.TipNumber == 1)
                 { 
-                    if (clickDislikeCount < 2)
-                    {
-                        Console.WriteLine(clickDislikeCount);
-                        tips.TipDislikes++; 
-                        clickDislikeCount++;
-                        Console.WriteLine(clickDislikeCount);
-                    }
-                    else
-                    {
-                        if (tips.TipDislikes != 0)
-                        {
-                        tips.TipDislikes--;
-                        clickDislikeCount = 0;
-                        }
-                    }
+                    tips.TipDislikes++; 
+                }
+            }
+        }
+
+        public void UnDislike(List<TipsModel> allTips, int number, int clickDislikeCount)
+        {
+            foreach(var tips in allTips)
+            {
+                if (tips.TipNumber == 1)
+                { 
+                    tips.TipDislikes--; 
                 }
             }
         }
