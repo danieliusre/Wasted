@@ -33,10 +33,8 @@ else
         </thead>
         <tbody>
             @{
-                index=0;
                 foreach (var product in products)
                 {
-                    var i=index;
                     if (!IsVisible(product))
                         continue;
                     <tr>
@@ -48,7 +46,6 @@ else
                             <button class="btn btn-success" @onclick="() => addToShoppingList(product)">+</button>
                         </td>
                     </tr>
-                    index++;
                 }
             }
             
