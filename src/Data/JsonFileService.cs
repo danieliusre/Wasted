@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using Serilog;
 
 namespace Wasted.Data
 {
@@ -7,11 +8,32 @@ namespace Wasted.Data
     {
         public string ReadJsonFromFile(string filePath)
         {
-            return File.ReadAllText(filePath);
+            try
+            {
+                var fileContents = File.ReadAllText(filePath);
+                return fileContents;
+            }
+            catch(Exception e)
+            {
+                Log.Error("Error reading file: {0} \\n Exception details: {1} ", filePath,e);
+                return "Error";
+            }
+            
         }
-        public void WriteJsonToFile(string json, string filePath)
+        public void WriteJsonToFile(string json, string filePath="")
         {
-            File.WriteAllText(filePath, json);
+            try
+            {
+                if(String.IsNullOrEmpty(filePath))
+                {
+                    filePath="DefaultFileDirectory/" + DateTime.Now.ToString();
+                }
+                File.WriteAllText(filePath, json);
+            }
+            catch(Exception e)
+            {
+                Log.Error("Error writing to file: {0} \\n Exception details: {1} ", filePath,e);
+            }
         }
     }
 }
