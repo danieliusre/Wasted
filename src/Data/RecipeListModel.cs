@@ -3,7 +3,7 @@ using System;
 
 namespace Wasted.Data
 {
-public class ItemModel
+public class ProductModel
     {
         public string Item {get;set;}
         public int Amount {get;set;}
@@ -15,7 +15,7 @@ public class DishModel : IComparable<DishModel>
     {
         public string Name {get; set;}
 
-        public List<ItemModel> Ingredients {get; set;}
+        public List<ProductModel> Ingredients {get; set;}
 
         public int Relevance {get; set;} //easy to make (least ingredients required)
 
@@ -23,6 +23,8 @@ public class DishModel : IComparable<DishModel>
         {
             return Relevance.CompareTo(other.Relevance);
         }
+
+        public string Type {get;set;}
     }
 
 }   

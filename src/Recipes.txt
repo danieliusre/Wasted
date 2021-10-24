@@ -1,5 +1,6 @@
 Pancakes
 5
+
 flour;300;g
 sugar;30;g
 milk;250;ml
@@ -8,6 +9,7 @@ butter;50;g
 
 Chocolate Cake
 4
+Baked
 flour;230;g
 cocoa;75;g
 sugar;410;g
@@ -15,6 +17,7 @@ eggs;2;units
 
 Brownies
 6
+Baked
 flour;150;g
 butter;180;g
 dark chocolate;200;g
@@ -24,6 +27,7 @@ eggs;3;units
 
 Apple Pie
 7
+Baked
 apples;2000;g
 cinnamon;15;g
 butter;100;g
@@ -34,6 +38,7 @@ eggs;1;unit
 
 Lemon Curd & Orange Cake
 9
+Baked
 butter;170;g
 sugar;150;g
 eggs;2;units
@@ -46,6 +51,7 @@ lemon;1;unit
 
 Waffles
 7
+
 flour;400;g
 salt;5;g
 sugar;20;g
