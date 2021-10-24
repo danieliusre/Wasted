@@ -16,14 +16,14 @@ namespace Wasted.Data
         {
             _jsonFileService = jsonFileService;
         }
-        public List<ItemModel> GetProducts()
+        public List<RecipeItemModel> GetProducts()
         {
-            var products =  new List<ItemModel>();
+            var products =  new List<RecipeItemModel>();
             var filepath =  "RecipeProductList.json";
             try 
             {
                 Log.Information("Started reading RecipeProductList");
-                products = JsonConvert.DeserializeObject<List<ItemModel>>(_jsonFileService.ReadJsonFromFile(filepath));
+                products = JsonConvert.DeserializeObject<List<RecipeItemModel>>(_jsonFileService.ReadJsonFromFile(filepath));
                 Log.Information("Finished reading RecipeProductList");
             }
             catch (Exception e)
@@ -32,7 +32,7 @@ namespace Wasted.Data
             }
             return products;
         }
-        public Task<List<ItemModel>> SaveProducts(List<ItemModel> products)
+        public Task<List<RecipeItemModel>> SaveProducts(List<RecipeItemModel> products)
         {
             var filePath = "RecipeProductList.json";
             foreach(var product in products)
@@ -68,7 +68,7 @@ namespace Wasted.Data
             return Task.FromResult(products);
         }
 
-        public List<String> FindExpiringProducts(List<ItemModel> products)
+        public List<String> FindExpiringProducts(List<RecipeItemModel> products)
         {
             List<String> badProducts = new();
             try 
@@ -90,7 +90,7 @@ namespace Wasted.Data
             return badProducts;
         }
 
-        public List<DishModel> FindRecipe(List<ItemModel> products)
+        public List<DishModel> FindRecipe(List<RecipeItemModel> products)
         {
             List<DishModel> dishes = new List<DishModel>();
             try 
@@ -98,16 +98,17 @@ namespace Wasted.Data
                 Log.Information("Starting to search for Recipes");
                 var filePath = "Recipes.txt";
                 System.IO.StreamReader RecipeFile = new System.IO.StreamReader(filePath);
-                List<ItemModel> ingredients = new List<ItemModel>();
+                List<RecipeItemModel> ingredients = new List<RecipeItemModel>();
                 do
                 {
                     string dishName = RecipeFile.ReadLine();
                     int Need = Int32.Parse(RecipeFile.ReadLine());
+                    string dishType = RecipeFile.ReadLine();
                     ingredients.Clear();            
                     for (int i = 0; i<Need; i++)
                     {
                         string[] item = RecipeFile.ReadLine().Split(';');
-                        ingredients.Add(new ItemModel(){Item = item[0], Amount = Int32.Parse(item[1]), Unit = item[2]});
+                        ingredients.Add(new RecipeItemModel(){Item = item[0], Amount = Int32.Parse(item[1]), Unit = item[2]});
                     }
                     foreach (var ingredient in ingredients)
                     {
@@ -121,7 +122,7 @@ namespace Wasted.Data
                     }
                     if(Need == 0)
                     {
-                        dishes.Add(new DishModel(){Name = dishName, Ingredients = new List<ItemModel>(ingredients), Relevance = ingredients.Count()});
+                        dishes.Add(new DishModel(){Name = dishName, Ingredients = new List<RecipeItemModel>(ingredients), Relevance = ingredients.Count(), Type = dishType});
                     }
                 }while(RecipeFile.ReadLine() != null);
 
@@ -133,6 +134,35 @@ namespace Wasted.Data
             }
             dishes.Sort();
             return dishes;
+        }
+    }
+    public class DishType
+    {
+        public static string ReturnDishType(string sender)
+        {
+            string dishType;
+            switch (sender)
+            {
+                case "All":
+                    dishType = "All";
+                    break;
+                case "Baked":
+                    dishType = "Baked";
+                    break;
+                case "Pasta":
+                    dishType = "Pasta";
+                    break;
+                case "Salad":
+                    dishType = "Salad";
+                    break;
+                case "Soup":
+                    dishType = "Soup";
+                    break;
+                default:
+                    dishType = "All";
+                    break;
+            }
+            return dishType;
         }
     }
 }

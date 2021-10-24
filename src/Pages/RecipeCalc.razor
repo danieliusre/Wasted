@@ -23,9 +23,11 @@
     string leftTextField = "";
     string unitTextField = "";
     string dateTextField = "";
-    List<ItemModel> products = new();
+    string dishType = "All";
+    List<RecipeItemModel> products = new();
     List<String> expiringProducts = new();
     List<DishModel> dishes = new List<DishModel>();
+
     private void AddProduct()
     {
         bool allFilled = (!string.IsNullOrEmpty(itemTextField)&&!string.IsNullOrEmpty(leftTextField)&&!string.IsNullOrEmpty(unitTextField)&&!string.IsNullOrEmpty(dateTextField));
@@ -58,7 +60,7 @@
         }
         if(allFilled)
         {
-            products.Add(new ItemModel(){Item = itemTextField.Trim(), Amount = Int32.Parse(leftTextField), Unit = unitTextField, Date = dateTextField});
+            products.Add(new RecipeItemModel(){Item = itemTextField.Trim(), Amount = Int32.Parse(leftTextField), Unit = unitTextField, Date = dateTextField});
             itemTextField = "";
             leftTextField = "";
             unitTextField = "";
@@ -81,6 +83,11 @@
     private void FindRecipe()
     {
         dishes = RecipeCalcService.FindRecipe(products);
+    }
+
+    private void GetDishType(string sender)
+    {
+        dishType = DishType.ReturnDishType(sender);
     }
 }
 <table class="table">
@@ -127,10 +134,23 @@
 
 @if(dishes.Any())
 {
-    <h1><font color=#3a0647><br>Here's what you can make:</font></h1>
+    <h1><font color=#3a0647><br>Here's what you can make: (showing @dishType)</font></h1>
+    <div>
+    <button class="btn btn-info" @onclick='() => GetDishType("All")'>All</button>
+    <button class="btn btn-info" @onclick='() => GetDishType("Baked")'>Baked</button>
+    <button class="btn btn-info" @onclick='() => GetDishType("Pasta")'>Pasta</button>
+    <button class="btn btn-info" @onclick='() => GetDishType("Salad")'>Salad</button>
+    <button class="btn btn-info" @onclick='() => GetDishType("Soup")'>Soup</button>
+    </div>
+}
+
+@if(dishes.Any())
+{
     <dl class="Recipes" >
     @foreach (var dish in dishes) 
     {
+        if(dishType == "All" || dishType == dish.Type)
+        {
         <dt style="color:#3a0647;font-size:30px;">@dish.Name</dt>
         <dd1>You will need:</dd1>
         <ul>
@@ -139,8 +159,9 @@
                 <li style="color:#3a0647;font-size:20px;">@Ingredient.Item @Ingredient.Amount @Ingredient.Unit</li>
             }
         </ul>
+        }
     }
-    </dl>  
+    </dl> 
 }
 
 @if(expiringProducts.Any())
