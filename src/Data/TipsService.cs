@@ -12,6 +12,7 @@ namespace Wasted.Data
     {
         private readonly JsonFileService _jsonFileService;
 
+        public List<string> ErrorMsg = new List<string>();
         public TipsService(JsonFileService jsonFileService)
         {
             _jsonFileService = jsonFileService;
@@ -34,10 +35,12 @@ namespace Wasted.Data
             return tips;
         }
 
-         public int AddTip(string NameTextField, string TipTextField, string LinkTextField, string NumberTextField, List<TipsModel> allTips)
+         public List<string> AddTip(string NameTextField, string TipTextField, string LinkTextField, string NumberTextField, List<TipsModel> allTips)
         {
             try
             {
+                if( DataValid (NameTextField, TipTextField, LinkTextField, NumberTextField))
+                {
                 Log.Information("Starting to Tips service");
                         allTips.Add(new TipsModel(){
                             TipNumber = Int32.Parse(NumberTextField),
@@ -48,12 +51,19 @@ namespace Wasted.Data
                             Link = LinkTextField,
                         });
                         writeToFile("TipsList.json", allTips);
-                    }
+                        ErrorMsg.Add("Success! Thank you for the new tip!");
+                }
+                else
+                {
+                    ErrorMsg.Clear();
+                    ErrorMsg.Add("Correct your tip!");
+                }
+            }
             catch (Exception e)
             {
                 Log.Error("Exception caught: {0}", e);
             }
-            return 0;
+            return ErrorMsg;
         }
 
         public void writeToFile(string filePath, List<TipsModel> allTips)
@@ -88,48 +98,82 @@ namespace Wasted.Data
         }
 
 
-        public void Like(List<TipsModel> allTips, int number, int clickLikeCount)
+        public void Like(List<TipsModel> allTips, int nr, int clickLikeCount)
         {
             foreach(var tips in allTips)
             {
-                if (tips.TipNumber == 1)
+                if (tips.TipNumber == nr)
                 { 
                     tips.TipLikes++; 
                 }
             }
         }
 
-         public void UnLike(List<TipsModel> allTips, int number, int clickLikeCount)
+         public void UnLike(List<TipsModel> allTips, int nr, int clickLikeCount)
         {
             foreach(var tips in allTips)
             {
-                if (tips.TipNumber == 1)
+                if (tips.TipNumber == nr)
                 { 
                     tips.TipLikes--; 
                 }
             }
         }
 
-        public void Dislike(List<TipsModel> allTips, int number, int clickDislikeCount)
+        public void Dislike(List<TipsModel> allTips, int nr, int clickDislikeCount)
         {
             foreach(var tips in allTips)
             {
-                if (tips.TipNumber == 1)
+                if (tips.TipNumber == nr)
                 { 
                     tips.TipDislikes++; 
                 }
             }
         }
 
-        public void UnDislike(List<TipsModel> allTips, int number, int clickDislikeCount)
+        public void UnDislike(List<TipsModel> allTips, int nr, int clickDislikeCount)
         {
             foreach(var tips in allTips)
             {
-                if (tips.TipNumber == 1)
+                if (tips.TipNumber == nr)
                 { 
                     tips.TipDislikes--; 
                 }
             }
+        }
+
+         public bool DataValid (string NameTextField, string TipTextField, string LinkTextField, string NumberTextField)
+        {
+            ValidationService validate = new ValidationService();
+            try
+            {
+                Log.Information("Starting to DataValid");
+                if ( validate.EmptyFieldsPresent(NameTextField, TipTextField, LinkTextField, NumberTextField))
+                {
+                    Log.Information("Finished DataValid (empty fields present)");
+                    return false;
+                }
+                if(!validate.NumberValid(NumberTextField))
+                {
+                    ErrorMsg.Add("invalid tip number (must be a number)");
+                    Log.Information("Finished dataValid (invalid password)");
+                    return false;
+                }
+                if(!validate.LinkValid(LinkTextField))
+                {
+                    ErrorMsg.Add("invalid link (must start with http/https)");
+                    Log.Information("Finished dataValid (invalid link)");
+                    return false;
+                }
+                Log.Information("Finished data validation DataValid success");
+                return true;
+            }
+            catch (Exception e)
+            {
+                Log.Error("Exception caught:{0}",e);
+                return false;
+            }
+
         }
     }
 }
