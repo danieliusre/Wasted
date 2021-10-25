@@ -26,6 +26,7 @@
     string dishType = "All";
     List<RecipeItemModel> products = new();
     List<String> expiringProducts = new();
+    List<String> expiredProducts = new();
     List<DishModel> dishes = new List<DishModel>();
 
     private void AddProduct()
@@ -67,6 +68,7 @@
             dateTextField = "";
         }
         expiringProducts = RecipeCalcService.FindExpiringProducts(products);
+        expiredProducts = RecipeCalcService.FindExpiredProducts(products);
     }
 
     private void SaveList()
@@ -78,6 +80,7 @@
     {
         products = RecipeCalcService.GetProducts();
         expiringProducts = RecipeCalcService.FindExpiringProducts(products);
+        expiredProducts = RecipeCalcService.FindExpiredProducts(products);
     }
 
     private void FindRecipe()
@@ -100,19 +103,20 @@
             <th>Add/Remove</th>
         </tr>
     </thead>
-
-@foreach (var product in products)
-{
-    <tr>
-        <td>@product.Item</td>
-        <td>@product.Amount</td>
-        <td>@product.Unit</td> 
-        <td>@product.Date</td> 
-        <td>
-        <button class="btn btn-danger" @onclick="() => products.Remove(product)">-</button>
-        </td>
-    </tr>
-}
+    <tbody>
+    @foreach (var product in products)
+    {
+        <tr>
+            <td>@product.Item</td>
+            <td>@product.Amount</td>
+            <td>@product.Unit</td> 
+            <td>@product.Date</td> 
+            <td>
+            <button class="btn btn-danger" @onclick="() => products.Remove(product)">-</button>
+            </td>
+        </tr>
+    }
+    </tbody>
 </table>
 
 <div class="input">
@@ -164,13 +168,31 @@
     </dl> 
 }
 
+@if(expiredProducts.Any())
+{
+    <div class="expire">
+        <h1><font style="color:red;font-size:25px;"><br>Be careful! These products have already expired:</font></h1>
+        <ul>
+            @foreach (string expiredProduct in expiredProducts)
+            {
+                <li style="color:red;font-size:25px;">@expiredProduct</li>
+            }
+        </ul>
+    </div>
+}
+
 @if(expiringProducts.Any())
 {
-    <h1><font style="color:red;font-size:25px;"><br>Be careful! These products have 3 or less days left, before they expire:</font></h1>
-    <ul class="Expired" >
-        @foreach (string expiredProduct in expiringProducts)
-        {
-            <li style="color:red;font-size:25px;">@expiredProduct</li>
-        }
-    </ul>
+    <div class="expire">
+        <h1><font style="color:#ff9900;font-size:25px;"><br>These products have 4 or less days left, before they expire:</font></h1>
+        <ul>
+            @foreach (string expiringProduct in expiringProducts)
+            {
+                <li style="color:#ff9900;font-size:25px;">@expiringProduct</li>
+            }
+        </ul>
+    </div>
 }
+
+
+    

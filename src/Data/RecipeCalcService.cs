@@ -76,7 +76,29 @@ namespace Wasted.Data
                 foreach (var product in products)
                 {
                     product.Item = char.ToUpper(product.Item[0]) + product.Item.Substring(1);
-                    if((DateTime.Parse(product.Date) - DateTime.Today).TotalDays < 3)
+                    if((DateTime.Parse(product.Date) - DateTime.Today).TotalDays <= 4 && (DateTime.Parse(product.Date) - DateTime.Today).TotalDays >= 0)
+                    {
+                        badProducts.Add(product.Item);
+                    }
+                } 
+                Log.Information("Found all expiring products");
+            }
+            catch (Exception e)
+            {
+                Log.Error("Exception caught: {0}",e);
+            }
+            return badProducts;
+        }
+
+        public List<String> FindExpiredProducts(List<RecipeItemModel> products)
+        {
+            List<String> badProducts = new();
+            try 
+            {
+                foreach (var product in products)
+                {
+                    product.Item = char.ToUpper(product.Item[0]) + product.Item.Substring(1);
+                    if((DateTime.Parse(product.Date) - DateTime.Today).TotalDays < 0)
                     {
                         badProducts.Add(product.Item);
                     }
