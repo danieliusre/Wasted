@@ -162,28 +162,28 @@ namespace Wasted.Data
     {
         public static string ReturnDishType(string sender)
         {
-            string dishType;
-            switch (sender)
-            {
-                case "All":
-                    dishType = "All";
-                    break;
-                case "Baked":
-                    dishType = "Baked";
-                    break;
-                case "Pasta":
-                    dishType = "Pasta";
-                    break;
-                case "Salad":
-                    dishType = "Salad";
-                    break;
-                case "Soup":
-                    dishType = "Soup";
-                    break;
-                default:
-                    dishType = "All";
-                    break;
-            }
+            string dishType = sender;
+            // switch (sender)
+            // {
+            //     case "All":
+            //         dishType = "All";
+            //         break;
+            //     case "Baked":
+            //         dishType = "Baked";
+            //         break;
+            //     case "Pasta":
+            //         dishType = "Pasta";
+            //         break;
+            //     case "Salad":
+            //         dishType = "Salad";
+            //         break;
+            //     case "Soup":
+            //         dishType = "Soup";
+            //         break;
+            //     default:
+            //         dishType = "All";
+            //         break;
+            // }
             return dishType;
         }
     }

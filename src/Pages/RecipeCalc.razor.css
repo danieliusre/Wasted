@@ -86,11 +86,6 @@ table{
     width: 100%;
     table-layout: fixed;
   }
-  .scrollit {
-    width: 100%;
-    overflow:scroll;
-    height:200px;
-}
 
 
 
