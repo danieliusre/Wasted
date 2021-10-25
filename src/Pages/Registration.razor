@@ -2,9 +2,10 @@
 
 @using Wasted.Data
 @using Microsoft.AspNetCore.Components.Authorization
-@inject NavigationManager NavigationManager;
+@inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject RegistrationService RegistrationService
+
 
 <div class="flex">
 </div>
@@ -68,7 +69,7 @@
             LastNameBox = "";
             EmailBox = "";
             PasswordBox = "";
-            ((CustomAuthStateProvider)AuthenticationStateProvider).markUserAsAuthenticated(EmailBox);
+            ((CustomAuthStateProvider)AuthenticationStateProvider).markUserAsAuthenticated(EmailBox, "user");
             NavigationManager.NavigateTo("/");
         }
     }

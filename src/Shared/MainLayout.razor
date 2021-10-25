@@ -1,8 +1,10 @@
 @inherits LayoutComponentBase
 @using System.Security.Claims
 @using Microsoft.AspNetCore.Components.Authorization
+@using Wasted.Data
 @inject AuthenticationStateProvider AuthenticationStateProvider
-@inject NavigationManager Navigation
+@inject NavigationManager NavigationManager
+@inject RegistrationService RegistrationService
 
 
 <div class="page">
@@ -14,6 +16,7 @@
         <div class="top-row px-4">
             <AuthorizeView>
                 <Authorized>
+            <h5>Hello, @RegistrationService.getName(RegistrationService.CreateUserList(new List<User>()), @context.User.Identity.Name)</h5>
             <button type="submit" class="nav-link btn btn-link" @onclick="LogOut">Log out</button>
                 </Authorized>
             </AuthorizeView>
@@ -33,5 +36,6 @@
     private void LogOut()
     {
         ((CustomAuthStateProvider)AuthenticationStateProvider).MarkUserAsLoggedOut();
+        NavigationManager.NavigateTo("/");
     }
 }

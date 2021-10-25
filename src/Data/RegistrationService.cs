@@ -26,7 +26,8 @@ namespace Wasted.Data
                             Name = NameBox,
                             Lastname = LastNameBox,
                             Email = EmailBox,
-                            Password = PasswordBox
+                            Password = PasswordBox,
+                            Role = "user"
                         });
                         writeToFile("UserData.json", users);
                         ErrMsg.Clear();
@@ -100,6 +101,12 @@ namespace Wasted.Data
             {
                 Log.Error("Exception caught: {0}",e);
             }
+            return users;
+        }
+        public List<User> GetUserList()
+        {
+            List<User> users = new List<User>();
+            users = CreateUserList(users);
             return users;
         }
 
@@ -196,6 +203,18 @@ namespace Wasted.Data
             }
             Log.Information("Finished getName(Sign in)-failure");
             return "";
+        }
+
+        public string GetRole(string email, List<User> users)
+        {
+            foreach(var user in users)
+            {
+                if(email == user.Email)
+                {
+                    return user.Role;
+                }
+            }
+            return "user";
         }
  
     }
