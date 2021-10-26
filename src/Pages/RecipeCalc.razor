@@ -90,7 +90,8 @@
 
     private void GetDishType(string sender)
     {
-        dishType = DishType.ReturnDishType(sender);
+        //dishType = DishType.ReturnDishType(sender);
+        dishType = sender;
     }
 }
 <table class="table">
@@ -138,14 +139,15 @@
 
 @if(dishes.Any())
 {
-    <h1><font color=#3a0647><br>Here's what you can make: (showing @dishType)</font></h1>
+    <h1><font color=#3a0647><br>Here's what you can make:</font></h1>
         <div>
-            <button class="btn btn-info" @onclick='() => GetDishType("All")'>All</button>
+            <button id="ButtonAll" class="btn btn-info" @onclick='() => GetDishType("All")'>All</button>
             <button class="btn btn-info" @onclick='() => GetDishType("Baked")'>Baked</button>
             <button class="btn btn-info" @onclick='() => GetDishType("Pasta")'>Pasta</button>
             <button class="btn btn-info" @onclick='() => GetDishType("Salad")'>Salad</button>
-            <button class="btn btn-info" @onclick='() => GetDishType("Soup")'>Soup</button>
+            <button class="btn btn-info" @onclick='() => GetDishType("Soup")'>Soup</button> 
         </div>
+    <h1><font style="color:#3a0647;font-size:20px">(Showing @dishType)</font></h1>
 }
 
 @if(dishes.Any())

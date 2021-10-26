@@ -114,40 +114,31 @@ namespace Wasted.Data
 
         public List<DishModel> FindRecipe(List<RecipeItemModel> products)
         {
+            List<DishModel> recipes = new List<DishModel>();
             List<DishModel> dishes = new List<DishModel>();
             try 
             {
                 Log.Information("Starting to search for Recipes");
-                var filePath = "Recipes.txt";
-                System.IO.StreamReader RecipeFile = new System.IO.StreamReader(filePath);
-                List<RecipeItemModel> ingredients = new List<RecipeItemModel>();
-                do
+                var filepath = "Recipes.json";
+                recipes = JsonConvert.DeserializeObject<List<DishModel>>(_jsonFileService.ReadJsonFromFile(filepath));
+                int have;
+                foreach (var recipe in recipes)
                 {
-                    string dishName = RecipeFile.ReadLine();
-                    int Need = Int32.Parse(RecipeFile.ReadLine());
-                    string dishType = RecipeFile.ReadLine();
-                    ingredients.Clear();            
-                    for (int i = 0; i<Need; i++)
+                    have = 0;
+                    for(int i = 0; i < recipe.numberOfIngredients; i++)
+                    foreach (var product in products)
                     {
-                        string[] item = RecipeFile.ReadLine().Split(';');
-                        ingredients.Add(new RecipeItemModel(){Item = item[0], Amount = Int32.Parse(item[1]), Unit = item[2]});
-                    }
-                    foreach (var ingredient in ingredients)
-                    {
-                        foreach(var product in products)
+                        if(recipe.Ingredients[i].Item == product.Item.ToLower() && recipe.Ingredients[i].Amount <= product.Amount)
                         {
-                            if(ingredient.Item.Equals(product.Item.ToLower()) && ingredient.Amount <= product.Amount)
-                            {
-                                Need--;
-                            }
-                        }   
+                            have++;
+                        }
                     }
-                    if(Need == 0)
+                    if(have == recipe.numberOfIngredients)
                     {
-                        dishes.Add(new DishModel(){Name = dishName, Ingredients = new List<RecipeItemModel>(ingredients), Relevance = ingredients.Count(), Type = dishType});
+                        recipe.Relevance = recipe.numberOfIngredients;
+                        dishes.Add(recipe);
                     }
-                }while(RecipeFile.ReadLine() != null);
-
+                }
                 Log.Information("Finished finding all recipes");
             }
             catch (Exception e)
@@ -158,33 +149,33 @@ namespace Wasted.Data
             return dishes;
         }
     }
-    public class DishType
-    {
-        public static string ReturnDishType(string sender)
-        {
-            string dishType = sender;
-            // switch (sender)
-            // {
-            //     case "All":
-            //         dishType = "All";
-            //         break;
-            //     case "Baked":
-            //         dishType = "Baked";
-            //         break;
-            //     case "Pasta":
-            //         dishType = "Pasta";
-            //         break;
-            //     case "Salad":
-            //         dishType = "Salad";
-            //         break;
-            //     case "Soup":
-            //         dishType = "Soup";
-            //         break;
-            //     default:
-            //         dishType = "All";
-            //         break;
-            // }
-            return dishType;
-        }
-    }
+    // public class DishType
+    // {
+    //     public static string ReturnDishType(string sender)
+    //     {
+    //         string dishType = sender;
+    //         // switch (sender)
+    //         // {
+    //         //     case "All":
+    //         //         dishType = "All";
+    //         //         break;
+    //         //     case "Baked":
+    //         //         dishType = "Baked";
+    //         //         break;
+    //         //     case "Pasta":
+    //         //         dishType = "Pasta";
+    //         //         break;
+    //         //     case "Salad":
+    //         //         dishType = "Salad";
+    //         //         break;
+    //         //     case "Soup":
+    //         //         dishType = "Soup";
+    //         //         break;
+    //         //     default:
+    //         //         dishType = "All";
+    //         //         break;
+    //         // }
+    //         return dishType;
+    //     }
+    // }
 }
