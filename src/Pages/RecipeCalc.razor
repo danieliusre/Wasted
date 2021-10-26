@@ -23,9 +23,12 @@
     string leftTextField = "";
     string unitTextField = "";
     string dateTextField = "";
-    List<ItemModel> products = new();
+    string dishType = "All";
+    List<RecipeItemModel> products = new();
     List<String> expiringProducts = new();
+    List<String> expiredProducts = new();
     List<DishModel> dishes = new List<DishModel>();
+
     private void AddProduct()
     {
         bool allFilled = (!string.IsNullOrEmpty(itemTextField)&&!string.IsNullOrEmpty(leftTextField)&&!string.IsNullOrEmpty(unitTextField)&&!string.IsNullOrEmpty(dateTextField));
@@ -58,13 +61,14 @@
         }
         if(allFilled)
         {
-            products.Add(new ItemModel(){Item = itemTextField.Trim(), Amount = Int32.Parse(leftTextField), Unit = unitTextField, Date = dateTextField});
+            products.Add(new RecipeItemModel(){Item = itemTextField.Trim(), Amount = Int32.Parse(leftTextField), Unit = unitTextField, Date = dateTextField});
             itemTextField = "";
             leftTextField = "";
             unitTextField = "";
             dateTextField = "";
         }
         expiringProducts = RecipeCalcService.FindExpiringProducts(products);
+        expiredProducts = RecipeCalcService.FindExpiredProducts(products);
     }
 
     private void SaveList()
@@ -76,11 +80,18 @@
     {
         products = RecipeCalcService.GetProducts();
         expiringProducts = RecipeCalcService.FindExpiringProducts(products);
+        expiredProducts = RecipeCalcService.FindExpiredProducts(products);
     }
 
     private void FindRecipe()
     {
         dishes = RecipeCalcService.FindRecipe(products);
+    }
+
+    private void GetDishType(string sender)
+    {
+        //dishType = DishType.ReturnDishType(sender);
+        dishType = sender;
     }
 }
 <table class="table">
@@ -93,19 +104,20 @@
             <th>Add/Remove</th>
         </tr>
     </thead>
-
-@foreach (var product in products)
-{
-    <tr>
-        <td>@product.Item</td>
-        <td>@product.Amount</td>
-        <td>@product.Unit</td> 
-        <td>@product.Date</td> 
-        <td>
-        <button class="btn btn-danger" @onclick="() => products.Remove(product)">-</button>
-        </td>
-    </tr>
-}
+    <tbody>
+    @foreach (var product in products)
+    {
+        <tr>
+            <td>@product.Item</td>
+            <td>@product.Amount</td>
+            <td>@product.Unit</td> 
+            <td>@product.Date</td> 
+            <td>
+            <button class="btn btn-danger" @onclick="() => products.Remove(product)">-</button>
+            </td>
+        </tr>
+    }
+    </tbody>
 </table>
 
 <div class="input">
@@ -128,28 +140,61 @@
 @if(dishes.Any())
 {
     <h1><font color=#3a0647><br>Here's what you can make:</font></h1>
+        <div>
+            <button id="ButtonAll" class="btn btn-info" @onclick='() => GetDishType("All")'>All</button>
+            <button class="btn btn-info" @onclick='() => GetDishType("Baked")'>Baked</button>
+            <button class="btn btn-info" @onclick='() => GetDishType("Pasta")'>Pasta</button>
+            <button class="btn btn-info" @onclick='() => GetDishType("Salad")'>Salad</button>
+            <button class="btn btn-info" @onclick='() => GetDishType("Soup")'>Soup</button> 
+        </div>
+    <h1><font style="color:#3a0647;font-size:20px">(Showing @dishType)</font></h1>
+}
+
+@if(dishes.Any())
+{
     <dl class="Recipes" >
     @foreach (var dish in dishes) 
     {
+        if(dishType == "All" || dishType == dish.Type)
+        {
         <dt style="color:#3a0647;font-size:30px;">@dish.Name</dt>
-        <dd1>You will need:</dd1>
+            <dd1>You will need:</dd1>
+                <ul>
+                    @foreach (var Ingredient in dish.Ingredients)
+                    {
+                        <li style="color:#3a0647;font-size:20px;">@Ingredient.Item @Ingredient.Amount @Ingredient.Unit</li>
+                    }
+                </ul>
+                }
+            }
+            </dl> 
+}
+
+@if(expiredProducts.Any())
+{
+    <div class="expire">
+        <h1><font style="color:red;font-size:25px;"><br>Be careful! These products have already expired:</font></h1>
         <ul>
-            @foreach (var Ingredient in dish.Ingredients)
+            @foreach (string expiredProduct in expiredProducts)
             {
-                <li style="color:#3a0647;font-size:20px;">@Ingredient.Item @Ingredient.Amount @Ingredient.Unit</li>
+                <li style="color:red;font-size:25px;">@expiredProduct</li>
             }
         </ul>
-    }
-    </dl>  
+    </div>
 }
 
 @if(expiringProducts.Any())
 {
-    <h1><font style="color:red;font-size:25px;"><br>Be careful! These products have 3 or less days left, before they expire:</font></h1>
-    <ul class="Expired" >
-        @foreach (string expiredProduct in expiringProducts)
-        {
-            <li style="color:red;font-size:25px;">@expiredProduct</li>
-        }
-    </ul>
+    <div class="expire">
+        <h1><font style="color:#ff9900;font-size:25px;"><br>These products have 4 or less days left, before they expire:</font></h1>
+        <ul>
+            @foreach (string expiringProduct in expiringProducts)
+            {
+                <li style="color:#ff9900;font-size:25px;">@expiringProduct</li>
+            }
+        </ul>
+    </div>
 }
+
+
+    

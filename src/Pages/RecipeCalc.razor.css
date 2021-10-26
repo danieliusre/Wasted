@@ -19,7 +19,7 @@ input[type=number]{
 }
 #bestuntilday{
     margin-left: 200px;
-    margin-right: 190px;
+    margin-right: 180px;
 }
 .input{
     background-color: rgb(214, 214, 214);
@@ -36,6 +36,12 @@ input[type=number]{
     font-size: 20px;
     text-align: center;
 }
+.expire{
+    display: inline-block;
+    width: 50%;
+    vertical-align: top;
+}
+
 
 table{
     width:100%;
@@ -69,6 +75,16 @@ table{
   }
   thead{
     background-color: rgb(214, 214, 214);
+  }
+  tbody{
+    display: block;
+    max-height: 300px;
+    overflow-y: auto;
+  }
+  thead, tbody tr{
+    display: table;
+    width: 100%;
+    table-layout: fixed;
   }
 
 

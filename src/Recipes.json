@@ -1,0 +1,66 @@
+[
+    {
+      "Name": "Pancakes",
+      "Type": "",
+      "numberOfIngredients": 5,
+      "Ingredients":[
+      {"Item": "flour", "Amount": "300", "Unit": "g"},
+      {"Item": "sugar", "Amount": "30", "Unit": "g"},
+      {"Item": "milk", "Amount": "250", "Unit": "ml"},
+      {"Item": "eggs", "Amount": "1", "Unit": "unit"},
+      {"Item": "butter", "Amount": "50", "Unit": "g"}
+    ]
+    },
+    {
+      "Name": "Chocolate Cake",
+      "Type": "Baked",
+      "numberOfIngredients": 4,
+      "Ingredients":[
+      {"Item": "flour", "Amount": "230", "Unit": "g"},
+      {"Item": "cocoa", "Amount": "75", "Unit": "g"},
+      {"Item": "sugar", "Amount": "410", "Unit": "g"},
+      {"Item": "eggs", "Amount": "2", "Unit": "units"}
+    ]
+    },
+    {
+        "Name": "Brownies",
+        "Type": "Baked",
+        "numberOfIngredients": 6,
+        "Ingredients":[
+        {"Item": "flour", "Amount": "150", "Unit": "g"},
+        {"Item": "butter", "Amount": "180", "Unit": "g"},
+        {"Item": "dark chocolate", "Amount": "200", "Unit": "g"},
+        {"Item": "cocoa", "Amount": "30", "Unit": "g"},
+        {"Item": "sugar", "Amount": "150", "Unit": "g"},
+        {"Item": "eggs", "Amount": "3", "Unit": "units"}
+    ]
+    },
+    {
+        "Name": "Apple Pie",
+        "Type": "Baked",
+        "numberOfIngredients": 7,
+        "Ingredients":[
+        {"Item": "apples", "Amount": "2000", "Unit": "g"},
+        {"Item": "cinnamon", "Amount": "15", "Unit": "g"},
+        {"Item": "butter", "Amount": "100", "Unit": "g"},
+        {"Item": "flour", "Amount": "100", "Unit": "g"},
+        {"Item": "water", "Amount": "100", "Unit": "ml"},
+        {"Item": "sugar", "Amount": "5", "Unit": "g"},
+        {"Item": "eggs", "Amount": "1", "Unit": "units"}
+      ]
+      },
+      {
+        "Name": "Waffles",
+        "Type": "",
+        "numberOfIngredients": 7,
+        "Ingredients":[
+        {"Item": "flour", "Amount": "400", "Unit": "g"},
+        {"Item": "salt", "Amount": "5", "Unit": "g"},
+        {"Item": "sugar", "Amount": "20", "Unit": "g"},
+        {"Item": "eggs", "Amount": "2", "Unit": "units"},
+        {"Item": "milk", "Amount": "300", "Unit": "ml"},
+        {"Item": "butter", "Amount": "100", "Unit": "g"},
+        {"Item": "vanilla extract", "Amount": "5", "Unit": "ml"}
+      ]
+      }
+]

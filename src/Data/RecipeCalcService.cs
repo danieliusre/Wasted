@@ -16,14 +16,14 @@ namespace Wasted.Data
         {
             _jsonFileService = jsonFileService;
         }
-        public List<ItemModel> GetProducts()
+        public List<RecipeItemModel> GetProducts()
         {
-            var products =  new List<ItemModel>();
+            var products =  new List<RecipeItemModel>();
             var filepath =  "RecipeProductList.json";
             try 
             {
                 Log.Information("Started reading RecipeProductList");
-                products = JsonConvert.DeserializeObject<List<ItemModel>>(_jsonFileService.ReadJsonFromFile(filepath));
+                products = JsonConvert.DeserializeObject<List<RecipeItemModel>>(_jsonFileService.ReadJsonFromFile(filepath));
                 Log.Information("Finished reading RecipeProductList");
             }
             catch (Exception e)
@@ -32,7 +32,7 @@ namespace Wasted.Data
             }
             return products;
         }
-        public Task<List<ItemModel>> SaveProducts(List<ItemModel> products)
+        public Task<List<RecipeItemModel>> SaveProducts(List<RecipeItemModel> products)
         {
             var filePath = "RecipeProductList.json";
             foreach(var product in products)
@@ -68,7 +68,7 @@ namespace Wasted.Data
             return Task.FromResult(products);
         }
 
-        public List<String> FindExpiringProducts(List<ItemModel> products)
+        public List<String> FindExpiringProducts(List<RecipeItemModel> products)
         {
             List<String> badProducts = new();
             try 
@@ -76,7 +76,29 @@ namespace Wasted.Data
                 foreach (var product in products)
                 {
                     product.Item = char.ToUpper(product.Item[0]) + product.Item.Substring(1);
-                    if((DateTime.Parse(product.Date) - DateTime.Today).TotalDays < 3)
+                    if((DateTime.Parse(product.Date) - DateTime.Today).TotalDays <= 4 && (DateTime.Parse(product.Date) - DateTime.Today).TotalDays >= 0)
+                    {
+                        badProducts.Add(product.Item);
+                    }
+                } 
+                Log.Information("Found all expiring products");
+            }
+            catch (Exception e)
+            {
+                Log.Error("Exception caught: {0}",e);
+            }
+            return badProducts;
+        }
+
+        public List<String> FindExpiredProducts(List<RecipeItemModel> products)
+        {
+            List<String> badProducts = new();
+            try 
+            {
+                foreach (var product in products)
+                {
+                    product.Item = char.ToUpper(product.Item[0]) + product.Item.Substring(1);
+                    if((DateTime.Parse(product.Date) - DateTime.Today).TotalDays < 0)
                     {
                         badProducts.Add(product.Item);
                     }
@@ -90,41 +112,33 @@ namespace Wasted.Data
             return badProducts;
         }
 
-        public List<DishModel> FindRecipe(List<ItemModel> products)
+        public List<DishModel> FindRecipe(List<RecipeItemModel> products)
         {
+            List<DishModel> recipes = new List<DishModel>();
             List<DishModel> dishes = new List<DishModel>();
             try 
             {
                 Log.Information("Starting to search for Recipes");
-                var filePath = "Recipes.txt";
-                System.IO.StreamReader RecipeFile = new System.IO.StreamReader(filePath);
-                List<ItemModel> ingredients = new List<ItemModel>();
-                do
+                var filepath = "Recipes.json";
+                recipes = JsonConvert.DeserializeObject<List<DishModel>>(_jsonFileService.ReadJsonFromFile(filepath));
+                int have;
+                foreach (var recipe in recipes)
                 {
-                    string dishName = RecipeFile.ReadLine();
-                    int Need = Int32.Parse(RecipeFile.ReadLine());
-                    ingredients.Clear();            
-                    for (int i = 0; i<Need; i++)
+                    have = 0;
+                    for(int i = 0; i < recipe.numberOfIngredients; i++)
+                    foreach (var product in products)
                     {
-                        string[] item = RecipeFile.ReadLine().Split(';');
-                        ingredients.Add(new ItemModel(){Item = item[0], Amount = Int32.Parse(item[1]), Unit = item[2]});
-                    }
-                    foreach (var ingredient in ingredients)
-                    {
-                        foreach(var product in products)
+                        if(recipe.Ingredients[i].Item == product.Item.ToLower() && recipe.Ingredients[i].Amount <= product.Amount)
                         {
-                            if(ingredient.Item.Equals(product.Item.ToLower()) && ingredient.Amount <= product.Amount)
-                            {
-                                Need--;
-                            }
-                        }   
+                            have++;
+                        }
                     }
-                    if(Need == 0)
+                    if(have == recipe.numberOfIngredients)
                     {
-                        dishes.Add(new DishModel(){Name = dishName, Ingredients = new List<ItemModel>(ingredients), Relevance = ingredients.Count()});
+                        recipe.Relevance = recipe.numberOfIngredients;
+                        dishes.Add(recipe);
                     }
-                }while(RecipeFile.ReadLine() != null);
-
+                }
                 Log.Information("Finished finding all recipes");
             }
             catch (Exception e)
@@ -135,4 +149,33 @@ namespace Wasted.Data
             return dishes;
         }
     }
+    // public class DishType
+    // {
+    //     public static string ReturnDishType(string sender)
+    //     {
+    //         string dishType = sender;
+    //         // switch (sender)
+    //         // {
+    //         //     case "All":
+    //         //         dishType = "All";
+    //         //         break;
+    //         //     case "Baked":
+    //         //         dishType = "Baked";
+    //         //         break;
+    //         //     case "Pasta":
+    //         //         dishType = "Pasta";
+    //         //         break;
+    //         //     case "Salad":
+    //         //         dishType = "Salad";
+    //         //         break;
+    //         //     case "Soup":
+    //         //         dishType = "Soup";
+    //         //         break;
+    //         //     default:
+    //         //         dishType = "All";
+    //         //         break;
+    //         // }
+    //         return dishType;
+    //     }
+    // }
 }
