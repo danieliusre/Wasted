@@ -10,13 +10,18 @@ namespace Wasted.Data
         {
             try
             {
+                CheckFile(filePath);
                 var fileContents = File.ReadAllText(filePath);
                 return fileContents;
+            }
+            catch(FileNotFoundException)
+            {
+                throw;
             }
             catch(Exception e)
             {
                 Log.Error("Error reading file: {0} \\n Exception details: {1} ", filePath,e);
-                return "Error";
+                throw;
             }
             
         }
@@ -34,6 +39,10 @@ namespace Wasted.Data
             {
                 Log.Error("Error writing to file: {0} \\n Exception details: {1} ", filePath,e);
             }
+        }
+        public bool CheckFile(string filePath)
+        {
+           return File.Exists(filePath) ? true : throw new FileNotFoundException(filePath);
         }
     }
 }
