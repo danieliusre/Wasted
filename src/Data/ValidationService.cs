@@ -10,6 +10,9 @@ namespace Wasted.Data
         Regex hasLowerChar = new Regex(@"[a-z]+");
         Regex hasSymbols = new Regex(@"[!@#$%^&*()_+=\[{\]};:<>|./?,-]");
         Regex hasComma = new Regex(@"[,]");
+
+        Regex hasHTTP = new Regex(@"^(http|https)://");
+
         public bool EmptyFieldsPresent(string NameBox, string LastnameBox, string EmailBox, string PasswordBox)
         {
             if(string.IsNullOrEmpty(NameBox) ||  
@@ -28,6 +31,24 @@ namespace Wasted.Data
                 return false;
             }
             return true;
+        }
+
+        public bool NumberValid(string NumberTextField)
+        {
+             if(hasNumber.IsMatch(NumberTextField))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool LinkValid(string LinkTextField)
+        {
+            if(hasHTTP.IsMatch(LinkTextField))
+            {
+                return true;
+            }
+            return false;
         }
         
         public bool PasswordValid(string PasswordBox)

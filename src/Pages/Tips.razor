@@ -7,8 +7,6 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-<i class="fa fa-check" @onclick="ReadTips"></i>
-
 </h1>
 
 <p style="font-size:20px;">The best way to predict the future is to create it!</p>
@@ -17,10 +15,10 @@
 @foreach(var tips in allTips)
 		{
 			<h2><font color=rbg(24,28,92)><br>@tips.TipName</font>
-				<i @onclick="LikePressed" class="fa fa-thumbs-up">
+				<i @onclick="() => LikePressed(tips.TipNumber)" class="fa fa-thumbs-up">
 					@tips.TipLikes
 				</i>
-				<i @onclick="DislikePressed" class="fa fa-thumbs-down">
+				<i @onclick="() => DislikePressed(tips.TipNumber)" class="fa fa-thumbs-down">
 					@tips.TipDislikes
 				</i>
 				<button class="from-control tac remove" @onclick="() => allTips.Remove(tips)"> - </button>
@@ -40,9 +38,7 @@
 			<br>
 			
 		}
-		<br>
-		@if (tipsRead != 0)
-		{
+		<hr><hr>
 		<p style="font-size:20px;">Add your own helpful tip!</p>
 		<div> 
 		<input class="form-control tac textField" type="text"  placeholder="Tip number" @bind="@NumberTextField"/>	
@@ -50,33 +46,44 @@
         <input class="form-control tac textField" type="text"   placeholder="Tip" @bind="@TipTextField"/>
         <input class="form-control tac textField" type="text"  placeholder="Link for more information about it"  @bind="@LinkTextField"/>
     	</div>
+		<ul>
+        @foreach (string ErrorMesage in @ErrorMessages)
+        {
+            @ErrorMesage
+            <br>
+        }
+    	</ul>
 		<div>
         <button class="learnmore" type="submit" @onclick="SubmitPressed"> Submit </button>
 		</div>
 		<br>
 		<button class="learnmore" @onclick="SavePressed"> SAVE </button>
-		}
+		<div id = "vertically-aligned-block"class="flex float">
+</div>
     	
 
 @code{
+	public static List<string> ErrorMessages = new List<string>();
 	List<TipsModel> allTips = new();
 	public int tipsRead = 0;
-	public int number;
+	public int number = 1;
 	string NameTextField = "";
 	string TipTextField = "";
 	string LinkTextField = "";
 	string NumberTextField;
 	public int clickLikeCount;
 	public int clickDislikeCount;
-	public void ReadTips()
-	{
-		tipsRead = 1;
-		allTips = TipsService.GetTips();
-	}
 
+    protected override void OnInitialized()
+    {
+		allTips = TipsService.GetTips();
+       
+    }
 	public void SubmitPressed()
     {
-        TipsService.AddTip(NameTextField, TipTextField, LinkTextField, NumberTextField, allTips);
+		ErrorMessages.Clear();
+        ErrorMessages = TipsService.AddTip(NameTextField, TipTextField, LinkTextField, NumberTextField, allTips);
+		ErrorMessages.Clear();
 		NumberTextField = "";
         NameTextField = "";
         TipTextField = "";
@@ -85,32 +92,40 @@
 
 	public void SavePressed()
     {
-        TipsService.SaveTips(allTips);
+       TipsService.SaveTips(allTips);
 	}
-	public void LikePressed()
+	public void LikePressed(int nr)
     {
+		if (number != nr){
+			clickLikeCount = 0;
+		}
+		number = nr;
+		Console.WriteLine(number);
 		if (clickLikeCount == 0)
 		{
 			clickLikeCount++;
-			TipsService.Like(allTips, number, clickLikeCount);
+			TipsService.Like(allTips, nr, clickLikeCount);
 		}
 		else
 		{
 			clickLikeCount--;
-			TipsService.UnLike(allTips, number, clickLikeCount);
+			TipsService.UnLike(allTips, nr, clickLikeCount);
 		}
     }
-	public void DislikePressed()
+	public void DislikePressed(int nr)
     {
-		if (clickDislikeCount == 0)
-		{
-			clickDislikeCount++;
-			TipsService.Dislike(allTips, number, clickDislikeCount);
-		}
-		else
-		{
-			clickDislikeCount--;
-			TipsService.UnDislike(allTips, number, clickDislikeCount);
-		}
-	}
+			if (number != nr){
+				clickDislikeCount = 0;
+			}
+			if (clickDislikeCount == 0)
+			{
+				clickDislikeCount++;
+				TipsService.Dislike(allTips, nr, clickDislikeCount);
+			}
+			else
+			{
+				clickDislikeCount--;
+				TipsService.UnDislike(allTips, nr, clickDislikeCount);
+			}
+		}	
 }
