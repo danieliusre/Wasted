@@ -54,9 +54,9 @@
         signInSuccess = RegistrationService.CheckSignIn(SignInEmailBox, SignInPasswordBox, users);
         if(signInSuccess)
         {
+            ((CustomAuthStateProvider)AuthenticationStateProvider).markUserAsAuthenticated(SignInEmailBox, RegistrationService.GetRole(SignInEmailBox, users));
             SignInEmailBox = "";
             SignInPasswordBox = "";
-            ((CustomAuthStateProvider)AuthenticationStateProvider).markUserAsAuthenticated(SignInEmailBox);
             NavigationManager.NavigateTo("/");
         }
         else

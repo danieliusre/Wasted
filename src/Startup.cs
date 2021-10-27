@@ -45,6 +45,7 @@ namespace Wasted
             services.AddSingleton<JsonFileService>();
             services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
             services.AddSingleton<AuthenticationResult>();
+            services.AddSingleton<Admins>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
