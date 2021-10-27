@@ -73,14 +73,7 @@ namespace Wasted.Data
             List<String> badProducts = new();
             try 
             {
-                foreach (var product in products)
-                {
-                    product.Item = char.ToUpper(product.Item[0]) + product.Item.Substring(1);
-                    if((DateTime.Parse(product.Date) - DateTime.Today).TotalDays <= 4 && (DateTime.Parse(product.Date) - DateTime.Today).TotalDays >= 0)
-                    {
-                        badProducts.Add(product.Item);
-                    }
-                } 
+                badProducts = products.Where(product => (DateTime.Parse(product.Date) - DateTime.Today).TotalDays <= 4 && (DateTime.Parse(product.Date) - DateTime.Today).TotalDays >= 0).Select(product => char.ToUpper(product.Item[0]) + product.Item.Substring(1)).ToList();
                 Log.Information("Found all expiring products");
             }
             catch (Exception e)
@@ -95,14 +88,7 @@ namespace Wasted.Data
             List<String> badProducts = new();
             try 
             {
-                foreach (var product in products)
-                {
-                    product.Item = char.ToUpper(product.Item[0]) + product.Item.Substring(1);
-                    if((DateTime.Parse(product.Date) - DateTime.Today).TotalDays < 0)
-                    {
-                        badProducts.Add(product.Item);
-                    }
-                } 
+                badProducts = products.Where(product => (DateTime.Parse(product.Date) - DateTime.Today).TotalDays < 0).Select(product => char.ToUpper(product.Item[0]) + product.Item.Substring(1)).ToList();
                 Log.Information("Found all expired products");
             }
             catch (Exception e)
