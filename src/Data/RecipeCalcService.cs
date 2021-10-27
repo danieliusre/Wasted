@@ -26,6 +26,10 @@ namespace Wasted.Data
                 products = JsonConvert.DeserializeObject<List<RecipeItemModel>>(_jsonFileService.ReadJsonFromFile(filepath));
                 Log.Information("Finished reading RecipeProductList");
             }
+            catch(FileNotFoundException e)
+            {
+                Log.Error(e.Message);
+            }
             catch (Exception e)
             {
                 Log.Error("Exception caught: {0}",e);

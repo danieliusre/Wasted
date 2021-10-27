@@ -28,6 +28,10 @@ namespace Wasted.Data
                 tips = JsonConvert.DeserializeObject<List<TipsModel>>(_jsonFileService.ReadJsonFromFile(filepath));
                 Log.Information("Finished reading TipList");
             }
+            catch(FileNotFoundException e)
+            {
+                Log.Error(e.Message);
+            }
             catch (Exception e)
             {
                 Log.Error("Exception caught: {0}",e);

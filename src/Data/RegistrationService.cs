@@ -90,12 +90,16 @@ namespace Wasted.Data
 
         public List<User> CreateUserList(List<User> users)
         {
-           string json = _jsonFileService.ReadJsonFromFile(@"UserData.json");
             try 
             {
                 Log.Information("Starting to CreateUserList");
+                string json = _jsonFileService.ReadJsonFromFile(@"UserData.json");
                 users = JsonConvert.DeserializeObject<List<User>>(json);
                 Log.Information("Finished to CreateUserList");
+            }
+            catch(FileNotFoundException e)
+            {
+                Log.Error(e.Message);
             }
             catch(Exception e)
             {
