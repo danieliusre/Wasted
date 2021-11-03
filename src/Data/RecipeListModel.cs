@@ -28,4 +28,7 @@ public class DishModel : IComparable<DishModel>
         public string Type {get; set;}
     }
 
+    public delegate bool CanMakeDish (List<RecipeItemModel> products, DishModel recipes);
+
 }   
+

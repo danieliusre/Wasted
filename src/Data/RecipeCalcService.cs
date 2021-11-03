@@ -102,41 +102,37 @@ namespace Wasted.Data
             return badProducts;
         }
 
-        public List<DishModel> FindRecipe(List<RecipeItemModel> products)
+        public static bool haveEnoughIngredients(List<RecipeItemModel> products, DishModel recipe)
+        {
+            foreach (var product in products)
+            {
+                for(int i = 0; i < recipe.numberOfIngredients; i++)
+                {
+                    if(string.Equals(product.Item, recipe.Ingredients[i].Item, StringComparison.OrdinalIgnoreCase) && product.Amount <= recipe.Ingredients[i].Amount)
+                        return false;
+                }
+            }
+            return true;
+        }
+
+        public List<DishModel> FindRecipe(List<RecipeItemModel> products, CanMakeDish makeable)
         {
             List<DishModel> recipes = new List<DishModel>();
-            List<DishModel> dishes = new List<DishModel>();
+            List<DishModel> dishesAbleToMake = new List<DishModel>();
             try 
             {
                 Log.Information("Starting to search for Recipes");
                 var filepath = "Recipes.json";
                 recipes = JsonConvert.DeserializeObject<List<DishModel>>(_jsonFileService.ReadJsonFromFile(filepath));
-                int have;
-                foreach (var recipe in recipes)
-                {
-                    have = 0;
-                    for(int i = 0; i < recipe.numberOfIngredients; i++)
-                    foreach (var product in products)
-                    {
-                        if(recipe.Ingredients[i].Item == product.Item.ToLower() && recipe.Ingredients[i].Amount <= product.Amount)
-                        {
-                            have++;
-                        }
-                    }
-                    if(have == recipe.numberOfIngredients)
-                    {
-                        recipe.Relevance = recipe.numberOfIngredients;
-                        dishes.Add(recipe);
-                    }
-                }
+                dishesAbleToMake = recipes.Where(recipe => haveEnoughIngredients(products, recipe) == true).ToList();
                 Log.Information("Finished finding all recipes");
             }
             catch (Exception e)
             {
                 Log.Error("Exception caught: {0}",e);
             }
-            dishes.Sort();
-            return dishes;
+            dishesAbleToMake.Sort();
+            return dishesAbleToMake;
         }
     }
     // public class DishType

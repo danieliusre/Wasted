@@ -85,7 +85,8 @@
 
     private void FindRecipe()
     {
-        dishes = RecipeCalcService.FindRecipe(products);
+        CanMakeDish makeable = new CanMakeDish(RecipeCalcService.haveEnoughIngredients);
+        dishes = RecipeCalcService.FindRecipe(products, makeable);
     }
 
     private void GetDishType(string sender)
