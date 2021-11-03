@@ -41,23 +41,7 @@ namespace Wasted.Data
             var filePath = "RecipeProductList.json";
             foreach(var product in products)
             {
-                switch (product.Unit)
-                {
-                    case "kg":
-                        product.Amount = product.Amount * 1000;
-                        product.Unit = "g";
-                        break;
-                    case "l":
-                        product.Amount = product.Amount * 1000;
-                        product.Unit = "ml";
-                        break;
-                    case "oz":
-                        product.Amount = product.Amount * 28;
-                        product.Unit = "ml/g";
-                        break;
-                    default:
-                        break;
-                }
+                ChangeMeasurements(product);
             } 
             try 
             {
@@ -108,8 +92,10 @@ namespace Wasted.Data
             {
                 for(int i = 0; i < recipe.numberOfIngredients; i++)
                 {
-                    if(string.Equals(product.Item, recipe.Ingredients[i].Item, StringComparison.OrdinalIgnoreCase) && product.Amount <= recipe.Ingredients[i].Amount)
+                    if(string.Equals(product.Item, recipe.Ingredients[i].Item, StringComparison.OrdinalIgnoreCase) && product.Amount < recipe.Ingredients[i].Amount)
+                    {
                         return false;
+                    }
                 }
             }
             return true;
@@ -124,7 +110,26 @@ namespace Wasted.Data
                 Log.Information("Starting to search for Recipes");
                 var filepath = "Recipes.json";
                 recipes = JsonConvert.DeserializeObject<List<DishModel>>(_jsonFileService.ReadJsonFromFile(filepath));
-                dishesAbleToMake = recipes.Where(recipe => haveEnoughIngredients(products, recipe) == true).ToList();
+                //dishesAbleToMake = recipes.Where(recipe => haveEnoughIngredients(products, recipe) == true).ToList();
+                
+                int have;
+                foreach (var recipe in recipes)
+                {
+                    have = 0;
+                    for(int i = 0; i < recipe.numberOfIngredients; i++)
+                    foreach (var product in products)
+                    {
+                        if(recipe.Ingredients[i].Item == product.Item.ToLower() && recipe.Ingredients[i].Amount <= product.Amount)
+                        {
+                            have++;
+                        }
+                    }
+                    if(have == recipe.numberOfIngredients)
+                    {
+                        recipe.Relevance = recipe.numberOfIngredients;
+                        dishesAbleToMake.Add(recipe);
+                    }
+                } 
                 Log.Information("Finished finding all recipes");
             }
             catch (Exception e)
@@ -134,7 +139,30 @@ namespace Wasted.Data
             dishesAbleToMake.Sort();
             return dishesAbleToMake;
         }
+
+        public Task<RecipeItemModel> ChangeMeasurements(RecipeItemModel product)
+            {
+                switch (product.Unit)
+                {
+                    case "kg":
+                        product.Amount = product.Amount * 1000;
+                        product.Unit = "g";
+                        break;
+                    case "l":
+                        product.Amount = product.Amount * 1000;
+                        product.Unit = "ml";
+                        break;
+                    case "oz":
+                        product.Amount = product.Amount * 28;
+                        product.Unit = "ml/g";
+                        break;
+                    default:
+                        break;
+                }
+                return Task.FromResult(product);
+            }
     }
+
     // public class DishType
     // {
     //     public static string ReturnDishType(string sender)
