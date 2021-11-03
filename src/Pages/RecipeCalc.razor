@@ -31,42 +31,32 @@
 
     private void AddProduct()
     {
-        bool allFilled = (!string.IsNullOrEmpty(itemTextField)&&!string.IsNullOrEmpty(leftTextField)&&!string.IsNullOrEmpty(unitTextField)&&!string.IsNullOrEmpty(dateTextField));
+        ValidationService valid = new ValidationService();
+        bool emptyFieldsPresent = valid.EmptyFieldsPresent(itemTextField, leftTextField, unitTextField, dateTextField);
+        
+        RecipeItemModel newProduct = new RecipeItemModel(){Item = itemTextField.ToLower().Trim(), Amount = Int32.Parse(leftTextField), Unit = unitTextField, Date = dateTextField};
+        newProduct.Item = newProduct.Item[0].ToString().ToUpper() + newProduct.Item.Substring(1);
+
+        if(emptyFieldsPresent)
+            return;
+        
+        itemTextField = "";
+        leftTextField = "";
+        unitTextField = "";
+        dateTextField = "";
         
         foreach (var product in products)         //in case of same items being entered twice
         {
-            if(itemTextField.ToLower().Trim() == product.Item.ToLower() && allFilled)
+            if(newProduct.Item == product.Item)
             {
-                switch (unitTextField)
-                {
-                    case "kg":
-                        product.Amount += Int32.Parse(leftTextField) * 1000;
-                        break;
-                    case "l":
-                        product.Amount += Int32.Parse(leftTextField) * 1000;
-                        break;
-                    case "oz":
-                        product.Amount += Int32.Parse(leftTextField) * 28;
-                        break;
-                    default:
-                        product.Amount += Int32.Parse(leftTextField);
-                        break;
-                }
-                allFilled = false;
-                itemTextField = "";
-                leftTextField = "";
-                unitTextField = "";
-                dateTextField = "";
+                RecipeCalcService.ChangeMeasurements(newProduct);
+                product.Amount += newProduct.Amount;
+
+                return;
             }
         }
-        if(allFilled)
-        {
-            products.Add(new RecipeItemModel(){Item = itemTextField.Trim(), Amount = Int32.Parse(leftTextField), Unit = unitTextField, Date = dateTextField});
-            itemTextField = "";
-            leftTextField = "";
-            unitTextField = "";
-            dateTextField = "";
-        }
+
+        products.Add(newProduct);
         expiringProducts = RecipeCalcService.FindExpiringProducts(products);
         expiredProducts = RecipeCalcService.FindExpiredProducts(products);
     }
