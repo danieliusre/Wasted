@@ -87,6 +87,15 @@ namespace Wasted.Data
             return badProducts;
         }
 
+        public List<RecipeItemModel> RemoveExpiredProducts(List<RecipeItemModel> products)
+        {
+            List<String> badProducts = new();
+            badProducts = FindExpiredProducts(products);
+            //products.RemoveAll();
+            products = products.Where(product => !badProducts.Contains(product.Item)).ToList();
+            return products;
+        }
+
         public static bool haveEnoughIngredients(List<RecipeItemModel> products, DishModel recipe)
         {
             foreach (var product in products)
@@ -144,4 +153,20 @@ namespace Wasted.Data
                 return Task.FromResult(product);
             }
     }
+
+    // public class DishType
+    // {
+    //     public string Type {get; set;}
+    //     public static Lazy<DishType> ReturnDishType(string sender)
+    //     {
+    //         var dishType = new Lazy<DishType>();
+    //         dishType.Value.getDishType(sender);
+    //         return dishType;
+    //     }
+
+    //     public string getDishType(string sender)
+    //     {
+    //         return sender;
+    //     }
+    // }
 }
