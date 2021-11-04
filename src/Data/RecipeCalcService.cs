@@ -22,7 +22,7 @@ namespace Wasted.Data
             var filepath =  "RecipeProductList.json";
             try 
             {
-                await Task.Delay(1);
+                await Task.Delay(1000);
                 Log.Information("Started reading RecipeProductList");
                 products = JsonConvert.DeserializeObject<List<RecipeItemModel>>(_jsonFileService.ReadJsonFromFile(filepath));
                 Log.Information("Finished reading RecipeProductList");
@@ -91,24 +91,26 @@ namespace Wasted.Data
         {
             List<String> badProducts = new();
             badProducts = FindExpiredProducts(products);
-            //products.RemoveAll();
             products = products.Where(product => !badProducts.Contains(product.Item)).ToList();
             return products;
         }
 
-        public static bool haveEnoughIngredients(List<RecipeItemModel> products, DishModel recipe)
+        public bool haveEnoughIngredients(List<RecipeItemModel> products, DishModel recipe)
         {
+            int have = 0;
             foreach (var product in products)
             {
                 for(int i = 0; i < recipe.numberOfIngredients; i++)
                 {
-                    if(string.Equals(product.Item, recipe.Ingredients[i].Item, StringComparison.OrdinalIgnoreCase) && product.Amount < recipe.Ingredients[i].Amount)
+                    if(string.Equals(product.Item, recipe.Ingredients[i].Item, StringComparison.OrdinalIgnoreCase) && product.Amount >= recipe.Ingredients[i].Amount)
                     {
-                        return false;
+                        have++;
                     }
                 }
             }
-            return true;
+            if(have == recipe.numberOfIngredients)
+                return true;
+            return false;
         }
 
         public List<DishModel> FindRecipe(List<RecipeItemModel> products, CanMakeDish makeable)
