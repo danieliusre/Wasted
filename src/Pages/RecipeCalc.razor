@@ -12,13 +12,14 @@
 
 <button class="btn btn-primary" @onclick="SaveList">Save list</button>
 
-<button class="btn btn-primary" @onclick="LoadList">Load list</button>
-
 <button class="btn btn-primary" @onclick="FindRecipe">Find a recipe!</button>
 
 <hr>
 
 @code {
+
+    
+
     string itemTextField = "";
     string leftTextField = "";
     string unitTextField = "";
@@ -28,6 +29,13 @@
     List<String> expiringProducts = new();
     List<String> expiredProducts = new();
     List<DishModel> dishes = new List<DishModel>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        products = await RecipeCalcService.GetProducts();
+        expiringProducts = RecipeCalcService.FindExpiringProducts(products);
+        expiredProducts = RecipeCalcService.FindExpiredProducts(products);
+    }
 
     private void AddProduct()
     {
@@ -63,13 +71,6 @@
     private void SaveList()
     {
         RecipeCalcService.SaveProducts(products);
-    } 
-
-    private void LoadList()
-    {
-        products = RecipeCalcService.GetProducts();
-        expiringProducts = RecipeCalcService.FindExpiringProducts(products);
-        expiredProducts = RecipeCalcService.FindExpiredProducts(products);
     }
 
     private void FindRecipe()
