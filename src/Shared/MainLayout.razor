@@ -16,7 +16,7 @@
         <div class="top-row px-4">
             <AuthorizeView>
                 <Authorized>
-            <h5>Hello, @RegistrationService.getName(RegistrationService.CreateUserList(new List<User>()), @context.User.Identity.Name)</h5>
+            <h5>Hello, @RegistrationService.getName(RegistrationService.CreateUserList(), @context.User.Identity.Name)</h5>
             <button type="submit" class="nav-link btn btn-link" @onclick="LogOut">Log out</button>
                 </Authorized>
             </AuthorizeView>

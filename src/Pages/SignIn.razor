@@ -50,7 +50,7 @@
     public void SignInSubmitPressed()
     {
         ErrorMessages.Clear();
-        users = RegistrationService.CreateUserList(users);
+        users = RegistrationService.CreateUserList();
         signInSuccess = RegistrationService.CheckSignIn(SignInEmailBox, SignInPasswordBox, users);
         if(signInSuccess)
         {
