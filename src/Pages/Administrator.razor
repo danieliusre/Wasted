@@ -2,34 +2,105 @@
 @using Wasted.Data
 @using System.Collections.Generic
 @inject RegistrationService RegistrationService
-
+<style>
+    @@import "css/Utils.css"
+</style>
 
 
 <AuthorizeView>
     <Authorized>
-        <h1>Registered users:</h1>
-        <table class="table table-striped">
-  <thead>
-    <tr>
-      <th scope="col"></th>
-      <th scope="col">Name</th>
-      <th scope="col">Last name</th>
-      <th scope="col">Email</th>
-    </tr>
-  </thead>
-<tbody>
-  @foreach(User user in RegistrationService.GetUserList())
-  { 
-    ++i;
-    <tr>
-      <th scope="row">@i</th>
-      <td>@user.Name</td>
-      <td>@user.Lastname</td>
-      <td>@user.Email</td>
-    </tr>
+      <div class="inline"></div>
+      
+         <div>
+            <button class="buttonSub2"  @onclick="RoleChangePressed">Change roles </button>
+            <button class="buttonSub2"  @onclick="LoadRemovableList">Remove users </button>
+        </div>
+  @if(initializeUsers)
+  {
+    i = 0;
+    <br/>
+    <h1>Registered users:</h1>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col"></th>
+            <th scope="col">Name</th>
+            <th scope="col">Last name</th>
+            <th scope="col">Email</th>
+            <th scope="col"> </th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @foreach(User user in users )
+          { 
+            @if(context.User.Identity.Name != user.Email)
+            {
+              ++i;
+              <tr>
+                <th scope="row">@i</th>
+                <td>@user.Name</td>
+                <td>@user.Lastname</td>
+                <td>@user.Email</td>
+                <td><button class="btn btn-danger" @onclick="() => {users.Remove(user); UserRemovePressed();}">-</button></td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
   }
-  </tbody>
-</table>
+  @if(initializeRoles)
+  {
+    i = 0;
+    <br/>
+    <h1>Manage roles:</h1>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col"></th>
+            <th scope="col">Name</th>
+            <th scope="col">Last name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Admin enabled</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @foreach(User user in users )
+          { 
+            @if(context.User.Identity.Name != user.Email)
+            {
+              ++i;
+              <tr>
+                <th scope="row">@i</th>
+                <td>@user.Name</td>
+                <td>@user.Lastname</td>
+                <td>@user.Email</td>
+                @if(user.Role == "admin")
+                {
+                  <label class="switch">
+                    <input type="checkbox" Checked = "true" 
+                      @onchange = "() => {users = adminService.Value.ChangeRole(user.Email, user.Role, users);}"
+                    >
+                    <span class="slider round"></span>
+                  </label>
+                }
+                else
+                {
+                  <label class="switch">
+                    <input type="checkbox" 
+                    @onchange = "() => {users = adminService.Value.ChangeRole(user.Email, user.Role, users);}"
+                    >
+                    <span class="slider round"></span>
+                  </label>
+                }
+              </tr>
+            }
+          }
+        </tbody>
+    </table>
+
+  }
     </Authorized>
     <NotAuthorized>
 
@@ -37,7 +108,28 @@
 </AuthorizeView>
 @code
 {
-    List<User> users = new List<User>();
-    int i = 0;
-      
+  List<User> users = new List<User>();
+  Lazy<AdminService> adminService = new Lazy<AdminService>();
+  int i;
+  Boolean initializeRoles = false;
+  Boolean initializeUsers = false;
+
+  public void RoleChangePressed ()
+  {
+    initializeUsers = false;
+    initializeRoles = true;
+    users = adminService.Value.GetUserList();
+  }
+
+  public void LoadRemovableList()
+  {
+    initializeRoles = false;
+    initializeUsers = true;
+    users = adminService.Value.GetUserList();
+  }
+
+  public void UserRemovePressed()
+  {
+    adminService.Value.writeToFile("UserData.json", users);
+  }   
 }
