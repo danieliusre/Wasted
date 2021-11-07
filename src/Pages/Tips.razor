@@ -1,6 +1,7 @@
 @page "/tips"
 @using System.IO
 @using Wasted.Data
+@using BlazorCustomEventArgs.CustomEvents
 @inject TipsService TipsService
 
 <h1><font color=rbg(0,15,128)><br>TIPS</font>
@@ -14,6 +15,7 @@
 
 @foreach(var tips in allTips)
 		{
+			tipNr = tips.TipNumber;
 			<h2><font color=rbg(24,28,92)><br>@tips.TipName</font>
 				<i @onclick="() => LikePressed(tips.TipNumber)" class="fa fa-thumbs-up">
 					@tips.TipLikes
@@ -41,10 +43,10 @@
 		<hr><hr>
 		<p style="font-size:20px;">Add your own helpful tip!</p>
 		<div> 
-		<input class="form-control tac textField" type="text"  placeholder="Tip number" @bind="@NumberTextField"/>	
         <input class="form-control tac textField" type="text"  placeholder="Tip name" @bind="@NameTextField"/>
         <input class="form-control tac textField" type="text"   placeholder="Tip" @bind="@TipTextField"/>
-        <input class="form-control tac textField" type="text"  placeholder="Link for more information about it"  @bind="@LinkTextField"/>
+        <input class="form-control tac textField" type="text"  placeholder="Link for more information about it"  @bind="@LinkTextField"  @oncustompaste="HandleCustomPaste"/>
+		<p>@message</p>
     	</div>
 		<ul>
         @foreach (string ErrorMesage in @ErrorMessages)
@@ -65,26 +67,32 @@
 @code{
 	public static List<string> ErrorMessages = new List<string>();
 	List<TipsModel> allTips = new();
+
 	public int tipsRead = 0;
 	public int number = 1;
+	public int tipNr = 0;
 	string NameTextField = "";
 	string TipTextField = "";
 	string LinkTextField = "";
-	string NumberTextField;
 	public int clickLikeCount;
 	public int clickDislikeCount;
+	string message;
 
     protected override void OnInitialized()
     {
 		allTips = TipsService.GetTips();
        
     }
+
+	void HandleCustomPaste(CustomPasteEventArgs eventArgs)
+    {
+        message = $"At {eventArgs.EventTimestamp.ToShortTimeString()}, you pasted: {eventArgs.PastedData}";
+    }
 	public void SubmitPressed()
     {
 		ErrorMessages.Clear();
-        ErrorMessages = TipsService.AddTip(NameTextField, TipTextField, LinkTextField, NumberTextField, allTips);
+        ErrorMessages = TipsService.AddTip(NameTextField, TipTextField, LinkTextField, tipNr, allTips);
 		ErrorMessages.Clear();
-		NumberTextField = "";
         NameTextField = "";
         TipTextField = "";
         LinkTextField = "";
@@ -97,10 +105,11 @@
 	public void LikePressed(int nr)
     {
 		if (number != nr){
+			{
 			clickLikeCount = 0;
+			}
 		}
 		number = nr;
-		Console.WriteLine(number);
 		if (clickLikeCount == 0)
 		{
 			clickLikeCount++;

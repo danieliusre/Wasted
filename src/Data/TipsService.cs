@@ -39,15 +39,16 @@ namespace Wasted.Data
             return tips;
         }
 
-         public List<string> AddTip(string NameTextField, string TipTextField, string LinkTextField, string NumberTextField, List<TipsModel> allTips)
+         public List<string> AddTip(string NameTextField, string TipTextField, string LinkTextField, int tipNr, List<TipsModel> allTips)
         {
+            tipNr = tipNr+1;
             try
             {
-                if( DataValid (NameTextField, TipTextField, LinkTextField, NumberTextField))
+                if( DataValid (NameTextField, TipTextField, LinkTextField))
                 {
                 Log.Information("Starting to Tips service");
                         allTips.Add(new TipsModel(){
-                            TipNumber = Int32.Parse(NumberTextField),
+                            TipNumber = tipNr,
                             TipName = NameTextField,
                             Name = TipTextField,
                             TipLikes = 0,
@@ -146,21 +147,15 @@ namespace Wasted.Data
             }
         }
 
-         public bool DataValid (string NameTextField, string TipTextField, string LinkTextField, string NumberTextField)
+         public bool DataValid (string NameTextField, string TipTextField, string LinkTextField)
         {
             ValidationService validate = new ValidationService();
             try
             {
                 Log.Information("Starting to DataValid");
-                if ( validate.EmptyFieldsPresent(NameTextField, TipTextField, LinkTextField, NumberTextField))
+                if ( validate.EmptyFieldsPresent(NameTextField, TipTextField, LinkTextField,  LinkTextField))
                 {
                     Log.Information("Finished DataValid (empty fields present)");
-                    return false;
-                }
-                if(!validate.NumberValid(NumberTextField))
-                {
-                    ErrorMsg.Add("invalid tip number (must be a number)");
-                    Log.Information("Finished dataValid (invalid password)");
                     return false;
                 }
                 if(!validate.LinkValid(LinkTextField))
