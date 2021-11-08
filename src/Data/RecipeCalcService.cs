@@ -16,12 +16,13 @@ namespace Wasted.Data
         {
             _jsonFileService = jsonFileService;
         }
-        public List<RecipeItemModel> GetProducts()
+        public async Task<List<RecipeItemModel>> GetProducts()
         {
             var products =  new List<RecipeItemModel>();
             var filepath =  "RecipeProductList.json";
             try 
             {
+                await Task.Delay(1000);
                 Log.Information("Started reading RecipeProductList");
                 products = JsonConvert.DeserializeObject<List<RecipeItemModel>>(_jsonFileService.ReadJsonFromFile(filepath));
                 Log.Information("Finished reading RecipeProductList");
@@ -41,6 +42,104 @@ namespace Wasted.Data
             var filePath = "RecipeProductList.json";
             foreach(var product in products)
             {
+                ChangeMeasurements(product);
+            } 
+            try 
+            {
+                Log.Information("Starting writing RecipeProductList");
+                _jsonFileService.WriteJsonToFile(JsonConvert.SerializeObject(products, Formatting.Indented),filePath);
+                Log.Information("Finished writing RecipeProductlist");
+            }
+            catch (Exception e)
+            {
+                Log.Error("Exception caught: {0}",e);
+            }
+            return Task.FromResult(products);
+        }
+
+
+        public List<String> FindExpiringProducts(List<RecipeItemModel> products)
+        {
+            List<String> badProducts = new();
+            try 
+            {
+                badProducts = products.Where(product => (DateTime.Parse(product.Date) - DateTime.Today).TotalDays <= 4 && (DateTime.Parse(product.Date) - DateTime.Today).TotalDays >= 0)
+                .Select(product => product.Item).ToList();
+                Log.Information("Found all expiring products");
+            }
+            catch (Exception e)
+            {
+                Log.Error("Exception caught: {0}",e);
+            }
+            return badProducts;
+        }
+
+        public List<String> FindExpiredProducts(List<RecipeItemModel> products)
+        {
+            List<String> badProducts = new();
+            try 
+            {
+                badProducts = products.Where(product => (DateTime.Parse(product.Date) - DateTime.Today).TotalDays < 0)
+                .Select(product => product.Item).ToList();
+                Log.Information("Found all expired products");
+            }
+            catch (Exception e)
+            {
+                Log.Error("Exception caught: {0}",e);
+            }
+            return badProducts;
+        }
+
+        public List<RecipeItemModel> RemoveExpiredProducts(List<RecipeItemModel> products)
+        {
+            List<String> badProducts = new();
+            badProducts = FindExpiredProducts(products);
+            products = products.Where(product => !badProducts.Contains(product.Item)).ToList();
+            return products;
+        }
+
+        public bool haveEnoughIngredients(List<RecipeItemModel> products, DishModel recipe)
+        {
+            int have = 0;
+            foreach (var product in products)
+            {
+                for(int i = 0; i < recipe.numberOfIngredients; i++)
+                {
+                    if(string.Equals(product.Item, recipe.Ingredients[i].Item, StringComparison.OrdinalIgnoreCase) && product.Amount >= recipe.Ingredients[i].Amount)
+                    {
+                        have++;
+                    }
+                }
+            }
+            if(have == recipe.numberOfIngredients)
+                return true;
+            return false;
+        }
+
+        public List<DishModel> FindRecipe(List<RecipeItemModel> products, CanMakeDish makeable)
+        {
+            List<DishModel> recipes = new List<DishModel>();
+            List<DishModel> dishesAbleToMake = new List<DishModel>();
+            try 
+            {
+                Log.Information("Starting to search for Recipes");
+                var filepath = "Recipes.json";
+                recipes = JsonConvert.DeserializeObject<List<DishModel>>(_jsonFileService.ReadJsonFromFile(filepath));
+                dishesAbleToMake = recipes.Where(recipe => haveEnoughIngredients(products, recipe) == true).ToList();
+                Log.Information("Finished finding all recipes");
+            }
+            catch (Exception e)
+            {
+                Log.Error("Exception caught: {0}",e);
+            }
+            dishesAbleToMake.Sort();
+            return dishesAbleToMake;
+        }
+
+
+        public Task<RecipeItemModel> ChangeMeasurements(RecipeItemModel product)
+        // public delegate void ChangeMeasurements<T> (List<T> products)
+            {
                 switch (product.Unit)
                 {
                     case "kg":
@@ -58,114 +157,23 @@ namespace Wasted.Data
                     default:
                         break;
                 }
-            } 
-            try 
-            {
-                Log.Information("Starting writing RecipeProductList");
-                _jsonFileService.WriteJsonToFile(JsonConvert.SerializeObject(products, Formatting.Indented),filePath);
-                Log.Information("Finished writing RecipeProductlist");
+                return Task.FromResult(product);
             }
-            catch (Exception e)
-            {
-                Log.Error("Exception caught: {0}",e);
-            }
-            return Task.FromResult(products);
-        }
-
-        public List<String> FindExpiringProducts(List<RecipeItemModel> products)
-        {
-            List<String> badProducts = new();
-            try 
-            {
-                badProducts = products.Where(product => (DateTime.Parse(product.Date) - DateTime.Today).TotalDays <= 4 && (DateTime.Parse(product.Date) - DateTime.Today).TotalDays >= 0).Select(product => char.ToUpper(product.Item[0]) + product.Item.Substring(1)).ToList();
-                Log.Information("Found all expiring products");
-            }
-            catch (Exception e)
-            {
-                Log.Error("Exception caught: {0}",e);
-            }
-            return badProducts;
-        }
-
-        public List<String> FindExpiredProducts(List<RecipeItemModel> products)
-        {
-            List<String> badProducts = new();
-            try 
-            {
-                badProducts = products.Where(product => (DateTime.Parse(product.Date) - DateTime.Today).TotalDays < 0).Select(product => char.ToUpper(product.Item[0]) + product.Item.Substring(1)).ToList();
-                Log.Information("Found all expired products");
-            }
-            catch (Exception e)
-            {
-                Log.Error("Exception caught: {0}",e);
-            }
-            return badProducts;
-        }
-
-        public List<DishModel> FindRecipe(List<RecipeItemModel> products)
-        {
-            List<DishModel> recipes = new List<DishModel>();
-            List<DishModel> dishes = new List<DishModel>();
-            try 
-            {
-                Log.Information("Starting to search for Recipes");
-                var filepath = "Recipes.json";
-                recipes = JsonConvert.DeserializeObject<List<DishModel>>(_jsonFileService.ReadJsonFromFile(filepath));
-                int have;
-                foreach (var recipe in recipes)
-                {
-                    have = 0;
-                    for(int i = 0; i < recipe.numberOfIngredients; i++)
-                    foreach (var product in products)
-                    {
-                        if(recipe.Ingredients[i].Item == product.Item.ToLower() && recipe.Ingredients[i].Amount <= product.Amount)
-                        {
-                            have++;
-                        }
-                    }
-                    if(have == recipe.numberOfIngredients)
-                    {
-                        recipe.Relevance = recipe.numberOfIngredients;
-                        dishes.Add(recipe);
-                    }
-                }
-                Log.Information("Finished finding all recipes");
-            }
-            catch (Exception e)
-            {
-                Log.Error("Exception caught: {0}",e);
-            }
-            dishes.Sort();
-            return dishes;
-        }
     }
+
     // public class DishType
     // {
-    //     public static string ReturnDishType(string sender)
+    //     public string Type {get; set;}
+    //     public static Lazy<DishType> ReturnDishType(string sender)
     //     {
-    //         string dishType = sender;
-    //         // switch (sender)
-    //         // {
-    //         //     case "All":
-    //         //         dishType = "All";
-    //         //         break;
-    //         //     case "Baked":
-    //         //         dishType = "Baked";
-    //         //         break;
-    //         //     case "Pasta":
-    //         //         dishType = "Pasta";
-    //         //         break;
-    //         //     case "Salad":
-    //         //         dishType = "Salad";
-    //         //         break;
-    //         //     case "Soup":
-    //         //         dishType = "Soup";
-    //         //         break;
-    //         //     default:
-    //         //         dishType = "All";
-    //         //         break;
-    //         // }
+    //         var dishType = new Lazy<DishType>();
+    //         dishType.Value.getDishType(sender);
     //         return dishType;
+    //     }
+
+    //     public string getDishType(string sender)
+    //     {
+    //         return sender;
     //     }
     // }
 }

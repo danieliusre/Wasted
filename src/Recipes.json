@@ -62,5 +62,21 @@
         {"Item": "butter", "Amount": "100", "Unit": "g"},
         {"Item": "vanilla extract", "Amount": "5", "Unit": "ml"}
       ]
+      },
+      {
+        "Name": "IMPOSSIBLE",
+        "Type": "",
+        "numberOfIngredients": 1,
+        "Ingredients":[
+        {"Item": "AAAVVVDADSA", "Amount": "100000", "Unit": "g"}
+      ]
+      },
+      {
+        "Name": "ALWAYS",
+        "Type": "",
+        "numberOfIngredients": 1,
+        "Ingredients":[
+        {"Item": "water", "Amount": "1", "Unit": "ml"}
+      ]
       }
 ]
