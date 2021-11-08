@@ -21,7 +21,7 @@ namespace Wasted.Data
                 {
                     if(newEmail(EmailBox, users) && emailValid(EmailBox))
                     {
-                        users = CreateUserList(users);
+                        users = CreateUserList();
                         users.Add(new User(){
                             Name = NameBox,
                             Lastname = LastNameBox,
@@ -88,8 +88,9 @@ namespace Wasted.Data
             }
         }
 
-        public List<User> CreateUserList(List<User> users)
+        public List<User> CreateUserList()
         {
+            List<User> users = new List<User>();
             try 
             {
                 Log.Information("Starting to CreateUserList");
@@ -110,7 +111,7 @@ namespace Wasted.Data
         public List<User> GetUserList()
         {
             List<User> users = new List<User>();
-            users = CreateUserList(users);
+            users = CreateUserList();
             return users;
         }
 
