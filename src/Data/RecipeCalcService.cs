@@ -57,12 +57,14 @@ namespace Wasted.Data
             return Task.FromResult(products);
         }
 
+
         public List<String> FindExpiringProducts(List<RecipeItemModel> products)
         {
             List<String> badProducts = new();
             try 
             {
-                badProducts = products.Where(product => (DateTime.Parse(product.Date) - DateTime.Today).TotalDays <= 4 && (DateTime.Parse(product.Date) - DateTime.Today).TotalDays >= 0).Select(product => product.Item).ToList();
+                badProducts = products.Where(product => (DateTime.Parse(product.Date) - DateTime.Today).TotalDays <= 4 && (DateTime.Parse(product.Date) - DateTime.Today).TotalDays >= 0)
+                .Select(product => product.Item).ToList();
                 Log.Information("Found all expiring products");
             }
             catch (Exception e)
@@ -77,7 +79,8 @@ namespace Wasted.Data
             List<String> badProducts = new();
             try 
             {
-                badProducts = products.Where(product => (DateTime.Parse(product.Date) - DateTime.Today).TotalDays < 0).Select(product => product.Item).ToList();
+                badProducts = products.Where(product => (DateTime.Parse(product.Date) - DateTime.Today).TotalDays < 0)
+                .Select(product => product.Item).ToList();
                 Log.Information("Found all expired products");
             }
             catch (Exception e)
@@ -133,7 +136,9 @@ namespace Wasted.Data
             return dishesAbleToMake;
         }
 
+
         public Task<RecipeItemModel> ChangeMeasurements(RecipeItemModel product)
+        // public delegate void ChangeMeasurements<T> (List<T> products)
             {
                 switch (product.Unit)
                 {
