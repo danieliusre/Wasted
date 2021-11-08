@@ -91,21 +91,25 @@ else
     protected override async Task OnInitializedAsync()
     {
         products = await ProductService.GetProducts();
-        //await ProductService.SaveProducts(products);
+        
     }
-
+    public delegate bool CheckValidity (Product product);
     public bool IsVisible(Product product)
     {
         // Example of logger usage in .razor files:
         // Log.Information("Checking visibility for product {0}", product.Name); 
-        return 
-            (
-            string.IsNullOrEmpty(Filter) ||
-            product.Name.Contains(Filter, StringComparison.OrdinalIgnoreCase) ||
-            product.Type.Contains(Filter, StringComparison.OrdinalIgnoreCase) 
-            )
-            &&
-            !shoppingList.Exists(x => x.Name == product.Name);
+        CheckValidity textCheck = delegate(Product product) {
+            return  string.IsNullOrEmpty(Filter) ||
+                    product.Name.Contains(Filter, StringComparison.OrdinalIgnoreCase) ||
+                    product.Type.Contains(Filter, StringComparison.OrdinalIgnoreCase);
+        };
+        CheckValidity shoppingListCheck = delegate(Product product) {
+            return !shoppingList.Exists(x => x.Name == product.Name);
+        };
+
+        return  textCheck(product) && shoppingListCheck(product);
+
+            
     }
     public void addToShoppingList(Product product)
     {
