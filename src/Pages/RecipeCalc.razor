@@ -41,13 +41,16 @@
     {
         ValidationService valid = new ValidationService();
         bool emptyFieldsPresent = valid.EmptyFieldsPresent(itemTextField, leftTextField, unitTextField, dateTextField);
+
+        if(emptyFieldsPresent)
+        {
+            RecipeCalcService.MsgToUser = "Empty fields are present, cannot add product";
+            return;
+        }
         
         RecipeItemModel newProduct = new RecipeItemModel(){Item = itemTextField.ToLower().Trim(), Amount = Int32.Parse(leftTextField), Unit = unitTextField, Date = dateTextField};
         newProduct.Item = newProduct.Item[0].ToString().ToUpper() + newProduct.Item.Substring(1);
 
-        if(emptyFieldsPresent)
-            return;
-        
         itemTextField = "";
         leftTextField = "";
         unitTextField = "";
@@ -138,7 +141,7 @@
 {
     <h1><font color=#3a0647><br>Here's what you can make:</font></h1>
         <div>
-            <button id="ButtonAll" class="btn btn-info" @onclick='() => GetDishType("All")'>All</button>
+            <button class="btn btn-info" @onclick='() => GetDishType("All")'>All</button>
             <button class="btn btn-info" @onclick='() => GetDishType("Baked")'>Baked</button>
             <button class="btn btn-info" @onclick='() => GetDishType("Pasta")'>Pasta</button>
             <button class="btn btn-info" @onclick='() => GetDishType("Salad")'>Salad</button>
@@ -193,5 +196,18 @@
     </div>
 }
 
-
+@if(@RecipeCalcService.MsgToUser != "")
+{
+    if(@RecipeCalcService.MsgToUser == @RecipeCalcService.ExpiredListTooLong)
+    {
+        <h1 style="color:red;font-size:25px;text-align:center;">
+            <br>@RecipeCalcService.MsgToUser
+            <button class="btn btn-danger" style="text-align: center;" @onclick="RemoveExpiredProducts">Remove</button>
+        </h1>
+    }
+    else
+    {
+        <h1 style="color:red;font-size:25px;text-align:center;"><br>@RecipeCalcService.MsgToUser</h1>
+    }
+}
     
