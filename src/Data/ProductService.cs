@@ -6,11 +6,14 @@ using System.IO;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Serilog;
+using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace Wasted.Data
 {
     public class ProductService
     {
+        private static readonly HttpClient client = new HttpClient();
         private readonly JsonFileService _jsonFileService;
 
         public ProductService(JsonFileService jsonFileService)
@@ -23,12 +26,11 @@ namespace Wasted.Data
             ProductList products = null;
             try 
             {
-                var filePath = "ProductList.json";
                 Log.Information("Starting to read ProductList");
                 await Task.Delay(5000); // Just for async to really show of :)
                 products =  new ProductList(
                     JsonConvert.DeserializeObject<Product[]>(
-                        _jsonFileService.ReadJsonFromFile(filePath)
+                       await client.GetStringAsync("http://localhost:3000/api/product")
                     ));
                 Log.Information("Finished reading Productlist");
                 
@@ -43,21 +45,5 @@ namespace Wasted.Data
             }
             return products;
         }
-        /* 
-        public Task<ProductList> SaveProducts(ProductList products)
-        {
-            var filePath = "ProductList.json";
-            try 
-            {
-                Log.Information("Starting to read ProductList");
-                _jsonFileService.WriteJsonToFile(JsonConvert.SerializeObject(products, Formatting.Indented),filePath);
-                Log.Information("Finished reading Productlist");
-            }
-            catch (Exception e)
-            {
-                Log.Error("Exception caught: {0}",e);
-            }
-            return Task.FromResult(products);
-        }*/
     }
 }

@@ -1,0 +1,20 @@
+using System;
+using System.ComponentModel.DataAnnotations;
+
+namespace Wasted.API.Dtos
+{
+    public class ProductUpdateDto
+    {
+        [MaxLength(50)]
+        public string Name { get; set; }
+
+        [MaxLength(50)]
+        public string Type { get; set; }
+
+        [MaxLength(10)]
+        public string MeasurementUnits { get; set; }
+
+        [Required]
+        public double EnergyValue { get; set; }
+    }
+}
