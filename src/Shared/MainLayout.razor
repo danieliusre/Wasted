@@ -13,15 +13,18 @@
     </div>
 
     <div class="main">
-        <div class="top-row px-4">
-            <AuthorizeView>
-                <Authorized>
-            <h5>Hello, @RegistrationService.getName(RegistrationService.CreateUserList(), @context.User.Identity.Name)</h5>
-            <button type="submit" class="nav-link btn btn-link" @onclick="LogOut">Log out</button>
-                </Authorized>
-            </AuthorizeView>
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-        </div>
+        <AuthorizeView>
+            <div class="top-row px-4">
+                    <Authorized>
+                            <div class="float-left height:42px">
+                                <h5 class="nav-link btn">Hello, @RegistrationService.getName(RegistrationService.CreateUserList(), @context.User.Identity.Name)!</h5>
+                            </div>
+                            <div class="float-right">
+                                <button type="submit" class="nav-link btn btn-link" @onclick="LogOut">Log out</button>
+                            </div> 
+                    </Authorized>
+            </div>
+        </AuthorizeView>
 
         <div class="content px-4">
             @Body
