@@ -10,13 +10,13 @@
 
 </h1>
 
-<p style="font-size:20px;">The best way to predict the future is to create it!</p>
+<p class = "p">The best way to predict the future is to create it!</p>
 <hr><hr>
 
 @foreach(var tips in allTips)
 		{
 			tipNr = tips.TipNumber;
-			<h2><font color=rbg(24,28,92)><br>@tips.TipName</font>
+			<h2 class = "h2"><br>@tips.TipName
 				<i @onclick="() => LikePressed(tips.TipNumber)" class="fa fa-thumbs-up">
 					@tips.TipLikes
 				</i>
@@ -33,7 +33,7 @@
 			</div>
 			</div>
 			<br>
-			<p style="font-size:20px;">@tips.Name</p> 
+			<p class = "p">@tips.Name</p> 
 			<button class="learnmore" onclick=" window.open('@tips.Link','_blank');">
 			I want to learn more
 			</button>
@@ -41,7 +41,7 @@
 			
 		}
 		<hr><hr>
-		<p style="font-size:20px;">Add your own helpful tip!</p>
+		<p class = "p">Add your own helpful tip!</p>
 		<div> 
         <input class="form-control tac textField" type="text"  placeholder="Tip name" @bind="@NameTextField"/>
         <input class="form-control tac textField" type="text"   placeholder="Tip" @bind="@TipTextField"/>
@@ -67,8 +67,6 @@
 @code{
 	public static List<string> ErrorMessages = new List<string>();
 	List<TipsModel> allTips = new();
-
-	public int tipsRead = 0;
 	public int number = 1;
 	public int tipNr = 0;
 	string NameTextField = "";
