@@ -64,5 +64,11 @@
     "Amount": 6,
     "Unit": "unit(s)",
     "Date": "2021-12-02"
+  },
+  {
+    "Item": "Random",
+    "Amount": 3000,
+    "Unit": "g",
+    "Date": "2021-11-17"
   }
 ]

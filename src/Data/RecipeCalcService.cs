@@ -85,9 +85,10 @@ namespace Wasted.Data
                 .Select(product => product.Item).ToList();
                 Log.Information("Found all expired products");
                 Predicate<List<string>> tooLong = new Predicate<List<string>>(CheckLength);
-                bool Status = tooLong.Invoke(badProducts);
-                if(Status)
+                if(tooLong.Invoke(badProducts))
+                {
                     MsgToUser = ExpiredListTooLong;
+                }
             }
             catch (Exception e)
             {
@@ -119,7 +120,9 @@ namespace Wasted.Data
                 }
             }
             if(have == recipe.numberOfIngredients)
+            {
                 return true;
+            }
             return false;
         }
 
@@ -169,7 +172,9 @@ namespace Wasted.Data
         public static bool CheckLength(List<string> badProducts)
         {
             if(badProducts.Count() > 2)
+            {
                 return true;
+            }
             return false;
         }
     }
