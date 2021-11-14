@@ -145,12 +145,5 @@
     "Email": "emsi@gmail.com",
     "Password": "Ema12345",
     "Role": "user"
-  },
-  {
-    "Name": "kas",
-    "Lastname": "kas",
-    "Email": "kas@gmailc.com",
-    "Password": "Kas123!!",
-    "Role": "user"
   }
 ]

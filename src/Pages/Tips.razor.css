@@ -10,18 +10,18 @@ button.learnmore{
 	letter-spacing: 1px;
 }
 
+
 .fa {
 	cursor: pointer;
 	user-select: none;
-	width: 43px;
+	width: 50px;
+	border: none;
 	height: 43px;
-	margin: 0 auto;
-	border-radius: 50%;
-	color: rgb(97, 12, 71);
-	background-color: rgba(51, 12, 87, 0.3);
-	border-color: rgb(2, 7, 71);
-	border-width: 1px;
-	font-size: 29px;
+	background: rgb(255, 255, 255);
+	color: rgb(102, 5, 73);
+	border-color: rgb(255, 255, 255);
+	border-width: 5px;
+	border: 2px solid #ffffff;
   }
 
 .remove {
@@ -32,12 +32,11 @@ button.learnmore{
 	height: 43px;
 	margin: 0 auto;
 	border-radius: 50%;
-	color: rgb(97, 0, 0);
-	background-color: rgba(255, 0, 0, 0.3);
+	color: rgb(0, 0, 0);
+	background-color: rgba(102, 5, 73);
 	border-color: rgb(0, 0, 0);
 	border-width: 1px;
 	font-size: 29px;
-
 }
   
 .fa:hover {
@@ -62,4 +61,36 @@ button.learnmore{
 	border-color: rgb(2, 7, 71);
 	background-color: rgba(51, 12, 87, 0.3);
 }
+
+.p {
+	font-size:20px;
+}
+
+.h2{
+	font:rbg(24,28,92);
+}
+
+.h2padding {
+	padding-top: 12%;
+	padding-left: 5%;
+}
+
+div.d {
+	text-align: justify;
+}
+
+div.paragraphBlock {
+	border: solid 1px;
+	border-radius: 7px;
+	padding: 3%;
+}
+
+img.image {
+	width: 70%;
+	display: flex;
+	margin-top: 12%;
+	margin-bottom: 3%;
+	margin-left: 3%;
+	margin-right: 3%;
+} 
 
