@@ -1,4 +1,4 @@
-h1 {
+h1{
     color: rgb(0,15,128);
 }
 dd1{
@@ -38,8 +38,17 @@ input[type=number]{
 }
 .expire{
     display: inline-block;
+    font-size: 25px;
     width: 50%;
     vertical-align: top;
+}
+.msgtouser{
+    outline: 3px solid red;
+    color:red;
+    font-size:25px;
+    text-align:center;
+    margin: auto;
+    width: 80%;
 }
 
 

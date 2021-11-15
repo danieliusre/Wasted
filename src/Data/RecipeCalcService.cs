@@ -11,6 +11,8 @@ namespace Wasted.Data
     public class RecipeCalcService
     {
         private JsonFileService _jsonFileService;
+        public string MsgToUser;
+        public string ExpiredListTooLong = "More than 2 of your products have expired, consider removing them from your list!";
 
         public RecipeCalcService(JsonFileService jsonFileService)
         {
@@ -82,6 +84,11 @@ namespace Wasted.Data
                 badProducts = products.Where(product => (DateTime.Parse(product.Date) - DateTime.Today).TotalDays < 0)
                 .Select(product => product.Item).ToList();
                 Log.Information("Found all expired products");
+                Predicate<List<string>> tooLong = new Predicate<List<string>>(CheckLength);
+                if(tooLong.Invoke(badProducts))
+                {
+                    MsgToUser = ExpiredListTooLong;
+                }
             }
             catch (Exception e)
             {
@@ -95,6 +102,7 @@ namespace Wasted.Data
             List<String> badProducts = new();
             badProducts = FindExpiredProducts(products);
             products = products.Where(product => !badProducts.Contains(product.Item)).ToList();
+            MsgToUser = "";
             return products;
         }
 
@@ -112,7 +120,9 @@ namespace Wasted.Data
                 }
             }
             if(have == recipe.numberOfIngredients)
+            {
                 return true;
+            }
             return false;
         }
 
@@ -138,7 +148,6 @@ namespace Wasted.Data
 
 
         public Task<RecipeItemModel> ChangeMeasurements(RecipeItemModel product)
-        // public delegate void ChangeMeasurements<T> (List<T> products)
             {
                 switch (product.Unit)
                 {
@@ -159,6 +168,15 @@ namespace Wasted.Data
                 }
                 return Task.FromResult(product);
             }
+
+        public static bool CheckLength(List<string> badProducts)
+        {
+            if(badProducts.Count() > 2)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 
     // public class DishType
