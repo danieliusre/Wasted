@@ -5,9 +5,6 @@ namespace Wasted.API.Dtos
 {
     public class UserCreateDto
     {
-        [Required]
-        [MaxLength(20)]
-        public string Login { get; set; }
 
         [Required]
         [MaxLength(50)]
@@ -24,5 +21,9 @@ namespace Wasted.API.Dtos
         [Required]
         [MaxLength(50)]
         public string LastName { get; set; }
+
+        [Required]
+        [MaxLength(20)]
+        public string Role { get; set; }
     }
 }
