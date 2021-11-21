@@ -14,6 +14,7 @@ namespace Wasted.API.Data
         public DbSet<Item> Items { get; set; }
         public DbSet<Dish> Dishes { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Tip> Tips { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -25,6 +26,18 @@ namespace Wasted.API.Data
                 new Product { Id = 5, Name = "Cheese", Type = "Dairy", MeasurementUnits = "kg", EnergyValue = 352.698},
                 new Product { Id = 6, Name = "Bass", Type = "Fish", MeasurementUnits = "kg", EnergyValue = 271.745},
                 new Product { Id = 7, Name = "Buttermilk", Type = "Dairy", MeasurementUnits = "l", EnergyValue = 175.1245}
+                );
+
+            modelBuilder.Entity<Tip>().HasData(
+                new Tip { TipId = 1, TipName = "Shop Smart", 
+                        Name = "To avoid buying more food than you need, make frequent trips to the grocery store every few days rather than doing a bulk shopping trip once a week.", 
+                        TipLikes = 4, TipDislikes = 0, Link = "https://en.wikipedia.org/wiki/Smart_shop"},
+                new Tip { TipId = 2, TipName = "Store Food Correctly", 
+                        Name = "Separating foods that produce more ethylene gas from those that don’t is another great way to reduce food spoilage. Ethylene promotes ripening in foods and could lead to spoilage.", 
+                        TipLikes = 4, TipDislikes = 0, Link = "https://www.betterhealth.vic.gov.au/health/healthyliving/food-safety-and-storage"},
+                new Tip { TipId = 3, TipName = "Learn to Preserve", 
+                        Name = "Pickling, drying, canning, fermenting, freezing and curing are all methods you can use to make food last longer, thus reducing waste.", 
+                        TipLikes = 1, TipDislikes = 0, Link = "https://www.masterclass.com/articles/a-guide-to-home-food-preservation-how-to-pickle-can-ferment-dry-and-preserve-at-home"}
                 );
         }
     }
