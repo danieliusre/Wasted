@@ -24,5 +24,9 @@ namespace Wasted.API.Models
         [Required]
         [MaxLength(50)]
         public string LastName { get; set; }
+
+        [Required]
+        [MaxLength(50)]
+        public string Role { get; set; }
     }
 }
