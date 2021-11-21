@@ -8,9 +8,6 @@ namespace Wasted.API.Models
         [Key]
         public int UserId { get; set; }
 
-        [Required]
-        [MaxLength(20)]
-        public string Login { get; set; }
 
         [Required]
         [MaxLength(50)]

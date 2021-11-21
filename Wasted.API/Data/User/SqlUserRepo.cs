@@ -29,9 +29,9 @@ namespace Wasted.API.Data
             return _context.Users.FirstOrDefault(p => p.UserId == id);
         }
 
-        public User GetUserByLogin(string login)
+        public User GetUserByEmail(string email)
         {
-            return _context.Users.FirstOrDefault(p => p.Login == login);
+            return _context.Users.FirstOrDefault(p => p.Email == email);
         }
 
         public void CreateNewUser(User user)
@@ -46,6 +46,16 @@ namespace Wasted.API.Data
         public void UpdateUser(User user)
         {
             //Nothing
+            // Possible for the change of password
+            /*
+            foreach(User user2 in _context.Users)
+            {
+                if(user2.Email == user.Email)
+                {
+                    user2 = user;
+                }
+            }
+            */
         }
 
         public void DeleteUser(User user)

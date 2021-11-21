@@ -8,7 +8,7 @@ namespace Wasted.API.Data
         bool SaveChanges();
         IEnumerable<User> GetUserList();
         User GetUserById(int id);
-        User GetUserByLogin(string login);
+        User GetUserByEmail(string email);
         void CreateNewUser(User user);
         void UpdateUser(User user);
         void DeleteUser(User user);
