@@ -49,7 +49,7 @@ namespace Wasted.API.Controllers
         [HttpPost]
         public ActionResult <UserReadDto> CreateNewUser(UserCreateDto userCreate)
         {
-            var userModelFromRepo = _repository.GetUserByLogin(userCreate.Login);
+            var userModelFromRepo = _repository.GetUserByEmail(userCreate.Email);
             if (userModelFromRepo != null)
             {
                 return Unauthorized();
