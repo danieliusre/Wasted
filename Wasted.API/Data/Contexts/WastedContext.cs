@@ -26,6 +26,10 @@ namespace Wasted.API.Data
                 new Product { Id = 6, Name = "Bass", Type = "Fish", MeasurementUnits = "kg", EnergyValue = 271.745},
                 new Product { Id = 7, Name = "Buttermilk", Type = "Dairy", MeasurementUnits = "l", EnergyValue = 175.1245}
                 );
+            modelBuilder.Entity<Dish>().HasData(
+                new Dish { Id = 1, Name =  "Chocolate Cake", numberOfIngredients = 4, Ingredients = "unknown", Type =  "Baked"},
+                new Dish { Id = 2, Name = "Brownies", numberOfIngredients = 5, Ingredients = "unknown", Type = "Baked"}
+                );
         }
     }
 }

@@ -9,31 +9,33 @@ namespace Wasted.API.Data
         {
             throw new System.NotImplementedException();
         }
-        public IEnumerable<Item> GetDishList()
+        public IEnumerable<Dish> GetDishList()
         {
             List<Dish> Dishes = new List<Dish>
             {
+                new Dish { Id = 1, Name =  "Chocolate Cake", numberOfIngredients = 4, Ingredients = "unknown", Type =  "Baked"},
+                new Dish { Id = 2, Name = "Brownies", numberOfIngredients = 5, Ingredients = "unknown", Type = "Baked"}
             };
             return Dishes;
         }
 
-        public Item GetItemById(int id)
+        public Dish GetDishById(int id)
         {
-            return new Item { Id = 2, Name = "Cocoa", Amount = 75, MeasurementUnits = "g", Date = "2022-06-08"};
+            return new Dish { Id = 2, Name = "Brownies", numberOfIngredients = 5, Ingredients = "unknown", Type = "Baked"};
         }
 
 
-        public void CreateNewItem(Item item)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void UpdateItem(Item item)
+        public void CreateNewDish(Dish dish)
         {
             throw new System.NotImplementedException();
         }
 
-        public void DeleteItem(Item item)
+        public void UpdateDish(Dish dish)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void DeleteDish(Dish dish)
         {
             throw new System.NotImplementedException();
         }
