@@ -28,7 +28,7 @@ namespace Wasted.API.Data
             modelBuilder.Entity<Dish>().HasData(
                 new Dish { Id = 1, Name =  "Chocolate Cake", numberOfIngredients = 4, Ingredients = "unknown", Type =  "Baked"},
                 new Dish { Id = 2, Name = "Brownies", numberOfIngredients = 5, Ingredients = "unknown", Type = "Baked"}
-
+              );
 
             modelBuilder.Entity<Tip>().HasData(
                 new Tip { TipId = 1, TipName = "Shop Smart", 
@@ -40,10 +40,6 @@ namespace Wasted.API.Data
                 new Tip { TipId = 3, TipName = "Learn to Preserve", 
                         Name = "Pickling, drying, canning, fermenting, freezing and curing are all methods you can use to make food last longer, thus reducing waste.", 
                         TipLikes = 1, TipDislikes = 0, Link = "https://www.masterclass.com/articles/a-guide-to-home-food-preservation-how-to-pickle-can-ferment-dry-and-preserve-at-home"}
-
-            modelBuilder.Entity<Dish>().HasData(
-                new Dish { Id = 1, Name =  "Chocolate Cake", numberOfIngredients = 4, Ingredients = "unknown", Type =  "Baked"},
-                new Dish { Id = 2, Name = "Brownies", numberOfIngredients = 5, Ingredients = "unknown", Type = "Baked"}
                 );
         }
     }
