@@ -3,7 +3,7 @@ using System;
 
 namespace Wasted.Data
 {
-    public class RecipeItemModel
+public class RecipeItemModel
     {
         public string Item {get;set;}
         public int Amount {get;set;}
@@ -11,7 +11,7 @@ namespace Wasted.Data
         public string Date {get;set;}
     }
     
-    public class DishModel : IComparable<DishModel>
+public class DishModel : IComparable<DishModel>
     {
         public string Name {get; set;}
 
