@@ -10,9 +10,6 @@ namespace Wasted.API.Data
 
         }
         public DbSet<Product> Products { get; set; }
-
-        public DbSet<Item> Items { get; set; }
-        public DbSet<Dish> Dishes { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Tip> Tips { get; set; }
 
