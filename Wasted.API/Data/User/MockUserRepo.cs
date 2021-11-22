@@ -13,20 +13,20 @@ namespace Wasted.API.Data
         {
             List<User> user = new List<User>
             {
-                new User { UserId = 0, Login = "Test", Password = "pass", Email = "mail", FirstName = "First", LastName = "Last" },
-                new User { UserId = 1, Login = "AAA", Password = "pass", Email = "mail", FirstName = "First", LastName = "Last" },
-                new User { UserId = 2, Login = "Test", Password = "pass", Email = "mail", FirstName = "First", LastName = "Last" }
+                new User { UserId = 0, Password = "pass", Email = "mail", FirstName = "First", LastName = "Last", Role = "admin" },
+                new User { UserId = 1, Password = "pass", Email = "mail", FirstName = "First", LastName = "Last", Role = "user" },
+                new User { UserId = 2, Password = "pass", Email = "mail", FirstName = "First", LastName = "Last", Role = "user" }
             };
             return user;
         }
 
         public User GetUserById(int id)
         {
-            return new User { UserId = 0, Login = "Test", Password = "pass", Email = "mail", FirstName = "First", LastName = "Last" };
+            return new User { UserId = 0, Password = "pass", Email = "mail", FirstName = "First", LastName = "Last", Role = "admin" };
         }
-        public User GetUserByLogin(string login)
+        public User GetUserByEmail(string email)
         {
-            return new User { UserId = 0, Login = "Test", Password = "pass", Email = "mail", FirstName = "First", LastName = "Last" };
+            return new User { UserId = 0, Password = "pass", Email = "mail", FirstName = "First", LastName = "Last", Role = "admin" };
         }
 
 
