@@ -13,12 +13,12 @@ namespace Wasted.Data
 {
     public class ProductService
     {
-        private static readonly HttpClient client = new HttpClient();
-        private readonly JsonFileService _jsonFileService;
 
-        public ProductService(JsonFileService jsonFileService)
+        private readonly HttpHelper _httpHelper;
+
+        public ProductService(HttpHelper httpHelper)
         {
-            _jsonFileService = jsonFileService;
+            _httpHelper = httpHelper;
         }
 
         public async Task<ProductList> GetProducts()
@@ -27,11 +27,8 @@ namespace Wasted.Data
             try 
             {
                 Log.Information("Starting to read ProductList");
-                await Task.Delay(5000); // Just for async to really show of :)
-                products =  new ProductList(
-                    JsonConvert.DeserializeObject<Product[]>(
-                       await client.GetStringAsync("http://localhost:3000/api/product")
-                    ));
+                await Task.Delay(1000); 
+                products =  new ProductList(await _httpHelper.GetArray<Product>("product"));
                 Log.Information("Finished reading Productlist");
                 
             }
