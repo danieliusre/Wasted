@@ -5,12 +5,16 @@ using System.IO;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Serilog;
+using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace Wasted.Data
 {
     public class RecipeCalcService
     {
         private JsonFileService _jsonFileService;
+
+        private static readonly HttpClient client = new HttpClient();
         public string MsgToUser;
         public string ExpiredListTooLong = "More than 2 of your products have expired, consider removing them from your list!";
 
@@ -135,6 +139,7 @@ namespace Wasted.Data
                 Log.Information("Starting to search for Recipes");
                 var filepath = "Recipes.json";
                 recipes = JsonConvert.DeserializeObject<List<DishModel>>(_jsonFileService.ReadJsonFromFile(filepath));
+                //recipes = GetRecipes(); //[Task -> List error]
                 dishesAbleToMake = recipes.Where(recipe => haveEnoughIngredients(products, recipe) == true).ToList();
                 Log.Information("Finished finding all recipes");
             }
@@ -144,6 +149,31 @@ namespace Wasted.Data
             }
             dishesAbleToMake.Sort();
             return dishesAbleToMake;
+        }
+
+        public async Task<List<DishModel>> GetRecipes()
+        {
+            List<DishModel> recipes = new List<DishModel>();
+            try 
+            {
+                Log.Information("Starting to read ");
+                await Task.Delay(1);
+                recipes =  new List<DishModel>(
+                    JsonConvert.DeserializeObject<DishModel[]>(
+                       await client.GetStringAsync("http://localhost:3000/api/dish")
+                    ));
+                Log.Information("Finished reading ");
+                
+            }
+            catch(FileNotFoundException e)
+            {
+                Log.Error(e.Message);
+            }
+            catch (Exception e)
+            {
+                Log.Error("Exception caught: {0}",e);
+            }
+            return recipes;
         }
 
 
