@@ -43,6 +43,7 @@ namespace Wasted
             services.AddSingleton<RegistrationService>();
             services.AddSingleton<ExportService>();
             services.AddSingleton<JsonFileService>();
+            services.AddSingleton<HttpHelper>();
             services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
             services.AddSingleton<AuthenticationResult>();
             services.AddSingleton<Admins>();
