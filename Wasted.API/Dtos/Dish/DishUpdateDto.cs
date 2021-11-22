@@ -10,11 +10,10 @@ namespace Wasted.API.Dtos
         public string Name { get; set; }
 
         [Required]
-        [MaxLength(3)]
         public int numberOfIngredients { get; set; }
 
         [Required]
-        [MaxLength(50)]
+        [MaxLength(500)]
         public string Ingredients { get; set; }
 
         [Required]
