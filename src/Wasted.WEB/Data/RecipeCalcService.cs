@@ -14,7 +14,8 @@ namespace Wasted.Data
     {
         private JsonFileService _jsonFileService;
 
-        private static readonly HttpClient client = new HttpClient();
+        //private static readonly HttpClient client = new HttpClient();
+        private readonly HttpHelper _httpHelper;
         public string MsgToUser;
         public string ExpiredListTooLong = "More than 2 of your products have expired, consider removing them from your list!";
 
@@ -22,6 +23,10 @@ namespace Wasted.Data
         {
             _jsonFileService = jsonFileService;
         }
+        // public RecipeCalcService(HttpHelper httpHelper)
+        // {
+        //     //_httpHelper = httpHelper;
+        // }
         public async Task<List<RecipeItemModel>> GetProducts()
         {
             var products =  new List<RecipeItemModel>();
@@ -140,6 +145,7 @@ namespace Wasted.Data
                 var filepath = "Recipes.json";
                 recipes = JsonConvert.DeserializeObject<List<DishModel>>(_jsonFileService.ReadJsonFromFile(filepath));
                 //recipes = GetRecipes(); //[Task -> List error]
+                //var recipes =  new List<DishModel>(await _httpHelper.GetList<List<DishModel>("dish"));
                 dishesAbleToMake = recipes.Where(recipe => haveEnoughIngredients(products, recipe) == true).ToList();
                 Log.Information("Finished finding all recipes");
             }
@@ -151,28 +157,33 @@ namespace Wasted.Data
             return dishesAbleToMake;
         }
 
-        public async Task<List<DishModel>> GetRecipes()
-        {
-            List<DishModel> recipes = new List<DishModel>();
-            try 
-            {
-                Log.Information("Starting to read ");
-                await Task.Delay(1);
-                recipes =  new List<DishModel>(
-                    JsonConvert.DeserializeObject<DishModel[]>(
-                       await client.GetStringAsync("http://localhost:3000/api/dish")
-                    ));
-                Log.Information("Finished reading ");
+        // public List<DishModel> GetRecipes()
+        // {
+        //     List<DishModel> recipes = new List<DishModel>();
+        //     try 
+        //     {
+        //         Log.Information("Starting to read api/dish");
+        //         await Task.Delay(1);
+        //         recipes =  new List<DishModel>(
+        //             JsonConvert.DeserializeObject<DishModel[]>(
+        //                await client.GetStringAsync("http://localhost:3000/api/dish")
+        //             ));
+        //         Log.Information("Finished reading api/dish");
                 
-            }
-            catch(FileNotFoundException e)
-            {
-                Log.Error(e.Message);
-            }
-            catch (Exception e)
-            {
-                Log.Error("Exception caught: {0}",e);
-            }
+        //     }
+        //     catch(FileNotFoundException e)
+        //     {
+        //         Log.Error(e.Message);
+        //     }
+        //     catch (Exception e)
+        //     {
+        //         Log.Error("Exception caught: {0}",e);
+        //     }
+        //     return recipes;
+        // }
+
+        public List<DishModel> AddRecipe(List<DishModel> recipes)
+        {
             return recipes;
         }
 

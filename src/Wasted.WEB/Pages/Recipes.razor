@@ -1,0 +1,80 @@
+@page "/recipes"
+@using System.IO
+@using Wasted.Data
+@inject RecipeCalcService RecipeCalcService 
+@inject ProductService ProductService
+
+<h1>ADD RECIPE</h1>
+
+<p>Number Of Ingredients:@numberOfIngredients
+<button class="btn btn-primary" @onclick="IncrementCount">+</button>
+<button class="btn btn-danger" @onclick="DecrementCount">-</button>
+</p>
+
+
+
+@code {
+    public int numberOfIngredients = 4;
+
+    private Wasted.Data.ProductList products { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        products = await ProductService.GetProducts();
+        
+    }
+    string Name = "";
+    string IngredientName = "";
+    string ingredientAmount = "";
+    //string ingredientMeasurementUnit = "";
+    string dishType = "";
+
+    public void IncrementCount()
+    {
+        numberOfIngredients++;
+    }
+
+    public void DecrementCount()
+    {
+        numberOfIngredients--;
+    }
+
+    public void AddRecipe()
+    {
+        ;//to be implemented later, since right now recipes are still saved in files
+    }
+}
+@if (products == null)
+{
+    <p><em>Loading...</em></p>
+}
+else{
+<div class="input">
+    <span class="inputSpan">
+        <b>Name:</b>
+        <input class="inputField" type = "text" size="10" @bind="@Name" @oninput="(e) => { Name = e.Value ==null? string.Empty:(string)e.Value;}"/><br>
+        @for(int i=0; i < numberOfIngredients; i++)
+        {
+            <b>Ingredient:</b>
+            <select class="inputField"  @oninput="(e) => { IngredientName = e.Value ==null? string.Empty:(string)e.Value;}">
+                @foreach (var product in products)
+                {
+                    <option value="@product.Name">@product.Name</option>
+                }
+            </select>
+            <b>Amount:</b>
+            <input class="inputField" type = "number" @oninput="(e) => { ingredientAmount = e.Value ==null? string.Empty:(string)e.Value;}" size="1">
+            <br>
+        }
+        <b>Type:</b>
+        <select class="inputField" @bind="@dishType" @oninput="(e) => { dishType = e.Value ==null? string.Empty:(string)e.Value;}">
+                        <option value="All">None</option>
+                        <option value="Baked">Baked</option>
+                        <option value="Pasta">Pasta</option>
+                        <option value="Soup">Soup</option>
+                        <option value="Salad">Salad</option>
+        </select>
+    </span>
+</div>
+<button class="btn btn-success" >Add recipe</button>
+}
