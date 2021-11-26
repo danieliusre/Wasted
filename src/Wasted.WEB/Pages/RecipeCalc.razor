@@ -12,6 +12,7 @@
 
 <button class="btn btn-primary" @onclick="SaveList">Save list</button>
 
+@* <button class="btn btn-primary" @onclick="(async () => await FindRecipe())">Find a recipe!</button> *@
 <button class="btn btn-primary" @onclick="FindRecipe">Find a recipe!</button>
 
 <button class="btn btn-danger" @onclick="RemoveExpiredProducts">Remove Expired</button>
@@ -76,10 +77,10 @@
         RecipeCalcService.SaveProducts(products);
     }
 
-    private void FindRecipe()
+    private async Task FindRecipe()
     {
         CanMakeDish makeable = new CanMakeDish(RecipeCalcService.haveEnoughIngredients);
-        dishes = RecipeCalcService.FindRecipe(products, makeable);
+        dishes = await RecipeCalcService.FindRecipe(products, makeable);
     }
 
     private void GetDishType(string sender)

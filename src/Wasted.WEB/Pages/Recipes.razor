@@ -14,19 +14,23 @@
 
 
 @code {
-    public int numberOfIngredients = 4;
+    DishModel recipe = new DishModel();
+    public int numberOfIngredients = 1;
 
     private Wasted.Data.ProductList products { get; set; }
+    private List<DishModel> recipes { get; set; }
+    
+    List<RecipeItemModel> ingredients = new List<RecipeItemModel>();
 
     protected override async Task OnInitializedAsync()
     {
         products = await ProductService.GetProducts();
-        
+        recipes = await RecipeCalcService.GetRecipes();
     }
-    string Name = "";
-    string IngredientName = "";
+    string dishName = "";
+    string ingredientName = "";
     string ingredientAmount = "";
-    //string ingredientMeasurementUnit = "";
+    string ingredientMeasurementUnit = "";
     string dishType = "";
 
     public void IncrementCount()
@@ -39,9 +43,21 @@
         numberOfIngredients--;
     }
 
+    public void AddIngredient()
+    {
+        RecipeItemModel newIngredient = new RecipeItemModel(){Item = ingredientName, Amount = Int32.Parse(ingredientAmount), Unit = ingredientMeasurementUnit};
+        ingredients.Add(newIngredient);
+        numberOfIngredients++;
+    }
+
     public void AddRecipe()
     {
-        ;//to be implemented later, since right now recipes are still saved in files
+        recipe.Name = dishName;
+        recipe.numberOfIngredients = numberOfIngredients;
+        recipe.Ingredients = ingredients;
+        recipe.Type = dishType;
+        recipes.Add(recipe);
+        RecipeCalcService.SaveRecipes(recipes);
     }
 }
 @if (products == null)
@@ -52,20 +68,24 @@ else{
 <div class="input">
     <span class="inputSpan">
         <b>Name:</b>
-        <input class="inputField" type = "text" size="10" @bind="@Name" @oninput="(e) => { Name = e.Value ==null? string.Empty:(string)e.Value;}"/><br>
-        @for(int i=0; i < numberOfIngredients; i++)
+        <input class="inputField" type = "text" size="10" @bind="@dishName" @oninput="(e) => { dishName = e.Value ==null? string.Empty:(string)e.Value;}"/><br>
+        <b>Ingredients:<br></b>
+        @foreach (var ingredient in ingredients)
         {
+            <b> @ingredient.Item @ingredient.Amount @ingredient.Unit<br></b>
+        }
             <b>Ingredient:</b>
-            <select class="inputField"  @oninput="(e) => { IngredientName = e.Value ==null? string.Empty:(string)e.Value;}">
+            <select class="inputField" @bind="@ingredientName" @oninput="(e) => { ingredientName = e.Value ==null? string.Empty:(string)e.Value;}">
                 @foreach (var product in products)
                 {
                     <option value="@product.Name">@product.Name</option>
+                    ingredientMeasurementUnit = @product.MeasurementUnits;
                 }
             </select>
             <b>Amount:</b>
             <input class="inputField" type = "number" @oninput="(e) => { ingredientAmount = e.Value ==null? string.Empty:(string)e.Value;}" size="1">
+            <button class="btn btn-primary" @onclick="AddIngredient">+</button>
             <br>
-        }
         <b>Type:</b>
         <select class="inputField" @bind="@dishType" @oninput="(e) => { dishType = e.Value ==null? string.Empty:(string)e.Value;}">
                         <option value="All">None</option>
@@ -76,5 +96,5 @@ else{
         </select>
     </span>
 </div>
-<button class="btn btn-success" >Add recipe</button>
+<button class="btn btn-success" @onclick="AddRecipe">Add recipe</button>
 }
