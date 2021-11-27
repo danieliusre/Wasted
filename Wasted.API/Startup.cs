@@ -40,6 +40,7 @@ namespace Wasted.API
             //services.AddScoped<IUserRepo, MockUserRepo>(); could be used to mock DB calls 
             services.AddScoped<IUserRepo, SqlUserRepo>();
             services.AddScoped<IProductRepo, SqlProductRepo>();
+            services.AddScoped<ITipRepo, SqlTipRepo>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

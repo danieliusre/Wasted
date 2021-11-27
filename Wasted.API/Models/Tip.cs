@@ -23,7 +23,7 @@ namespace  Wasted.API.Models
         public int TipDislikes { get; set; }
 
         [Required]
-        [MaxLength(50)]
+        [MaxLength(300)]
         public string Link { get; set; }
     }
 
