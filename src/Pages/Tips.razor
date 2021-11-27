@@ -15,6 +15,8 @@
 
 @foreach(var tips in allTips)
 		{
+			if(tips.AdminApproved == true)
+			{
 			tipNr = tips.TipNumber;
 			<h2 class = "h2"><br>@tips.TipName
 				<i @onclick="() => LikePressed(tips.TipNumber)" class="fa fa-thumbs-up">
@@ -23,7 +25,6 @@
 				<i @onclick="() => DislikePressed(tips.TipNumber)" class="fa fa-thumbs-down">
 					@tips.TipDislikes
 				</i>
-				<button class="from-control tac remove" @onclick="() => allTips.Remove(tips)"> - </button>
 			</h2>
 			<br> 
 			<div class="progress">
@@ -39,6 +40,7 @@
 			</button>
 			<br>
 			
+			}
 		}
 		<hr><hr>
 		<p class = "p">Add your own helpful tip!</p>

@@ -2,10 +2,12 @@
 @using Wasted.Data
 @using System.Collections.Generic
 @inject RegistrationService RegistrationService
+@inject TipsService TipsService
 <style>
     @@import "css/Utils.css"
 </style>
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <AuthorizeView>
     <Authorized>
@@ -14,7 +16,42 @@
          <div>
             <button class="buttonSub2"  @onclick="RoleChangePressed">Change roles </button>
             <button class="buttonSub2"  @onclick="LoadRemovableList">Remove users </button>
+            <button class="buttonSub2"  @onclick="AcceptTipsPressed">Accept tips </button>
+  @if(acceptPressed)
+  {
+    @foreach(var tips in allTips)
+    {
+      tipNr = tips.TipNumber;
+      <h2 class = "h2"><br>@tips.TipName
+        <i  class="fa fa-thumbs-up">
+          @tips.TipLikes
+        </i>
+        <i  class="fa fa-thumbs-down">
+           @tips.TipDislikes
+        </i>
+        <button class="btn btn-danger" @onclick="() => allTips.Remove(tips)"> - </button>
+        <button class="btn btn-success" @onclick="() => AcceptPressed(tips.TipNumber)" > + </button>
+      </h2>
+      <br> 
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" aria-valuenow="70"
+             aria-valuemin="0" aria-valuemax="100" style="width:@tips.TipLikes%">
+           <span class="sr-only">Complete</span>
+          </div>
         </div>
+      <br>
+      <p class = "p">@tips.Name</p> 
+      <button class="learnmore" onclick=" window.open('@tips.Link','_blank');">
+        I want to learn more
+      </button>
+      <br>		
+    }
+    <br>
+		<button class="learnmore" @onclick="SavePressed"> SAVE CHANGES </button>
+		<div id = "vertically-aligned-block"class="flex float">
+    </div>
+  }
+  </div>
   @if(initializeUsers)
   {
     i = 0;
@@ -111,11 +148,16 @@
   List<User> users = new List<User>();
   Lazy<AdminService> adminService = new Lazy<AdminService>();
   int i;
+  public int number = 1;
   Boolean initializeRoles = false;
   Boolean initializeUsers = false;
+  Boolean acceptPressed = false;
+  int tipNr;
+  List<TipsModel> allTips = new();
 
   public void RoleChangePressed ()
   {
+    acceptPressed = false;
     initializeUsers = false;
     initializeRoles = true;
     users = adminService.Value.GetUserList();
@@ -123,13 +165,33 @@
 
   public void LoadRemovableList()
   {
+    acceptPressed = false;
     initializeRoles = false;
     initializeUsers = true;
     users = adminService.Value.GetUserList();
+  }
+
+  public void SavePressed()
+  {
+       TipsService.SaveTips(allTips);
+	}
+  
+  public void AcceptTipsPressed()
+  {
+    acceptPressed = true;
+    initializeRoles = false;
+    initializeUsers = false;
+    allTips = TipsService.GetTips();
   }
 
   public void UserRemovePressed()
   {
     adminService.Value.writeToFile("UserData.json", users);
   }   
+
+  public void AcceptPressed(int nr)
+  {
+		number= nr;
+		TipsService.Approve(allTips, nr);
+  }
 }
