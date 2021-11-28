@@ -17,7 +17,7 @@ namespace Wasted.API.Dtos
         [Required]
         public int TipDislikes { get; set; }
 
-        [MaxLength(100)]
+        [MaxLength(300)]
         public string Link { get; set; }
     }
 }

@@ -41,6 +41,7 @@ namespace Wasted.API
             services.AddScoped<IUserRepo, SqlUserRepo>();
             services.AddScoped<IProductRepo, SqlProductRepo>();
             services.AddScoped<IDishRepo, SqlDishRepo>();
+            services.AddScoped<ITipRepo, SqlTipRepo>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
