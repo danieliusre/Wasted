@@ -15,30 +15,31 @@
 
 @foreach(var tips in allTips)
 		{
-			tipNr = tips.TipNumber;
-			<h2 class = "h2"><br>@tips.TipName
-				<i @onclick="() => LikePressed(tips.TipNumber)" class="fa fa-thumbs-up">
-					@tips.TipLikes
-				</i>
-				<i @onclick="() => DislikePressed(tips.TipNumber)" class="fa fa-thumbs-down">
-					@tips.TipDislikes
-				</i>
-				<button class="from-control tac remove" @onclick="() => allTips.Remove(tips)"> - </button>
-			</h2>
-			<br> 
-			<div class="progress">
-			<div class="progress-bar" role="progressbar" aria-valuenow="70"
-			aria-valuemin="0" aria-valuemax="100" style="width:@tips.TipLikes%">
-				<span class="sr-only">Complete</span>
-			</div>
-			</div>
-			<br>
-			<p class = "p">@tips.Name</p> 
-			<button class="learnmore" onclick=" window.open('@tips.Link','_blank');">
-			I want to learn more
-			</button>
-			<br>
-			
+			if(tips.AdminApproved == true)
+			{
+				tipNr = tips.TipNumber;
+				<h2 class = "h2"><br>@tips.TipName
+					<i @onclick="() => LikePressed(tips.TipNumber)" class="fa fa-thumbs-up">
+						@tips.TipLikes
+					</i>
+					<i @onclick="() => DislikePressed(tips.TipNumber)" class="fa fa-thumbs-down">
+						@tips.TipDislikes
+					</i>
+				</h2>
+				<br> 
+				<div class="progress">
+				<div class="progress-bar" role="progressbar" aria-valuenow="70"
+				aria-valuemin="0" aria-valuemax="100" style="width:@tips.TipLikes%">
+					<span class="sr-only">Complete</span>
+				</div>
+				</div>
+				<br>
+				<p class = "p">@tips.Name</p> 
+				<button class="learnmore" onclick=" window.open('@tips.Link','_blank');">
+				I want to learn more
+				</button>
+				<br>
+			}
 		}
 		<hr><hr>
 		<p class = "p">Add your own helpful tip!</p>

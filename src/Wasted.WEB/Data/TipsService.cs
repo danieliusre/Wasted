@@ -54,6 +54,7 @@ namespace Wasted.Data
                             TipLikes = 0,
                             TipDislikes = 0,
                             Link = LinkTextField,
+                            AdminApproved = false,
                         });
                         writeToFile("TipsList.json", allTips);
                         ErrorMsg.Add("Success! Thank you for the new tip!");
@@ -143,6 +144,17 @@ namespace Wasted.Data
                 if (tips.TipNumber == nr)
                 { 
                     tips.TipDislikes--; 
+                }
+            }
+        }
+
+        public void Approve(List<TipsModel> allTips, int nr)
+        {
+            foreach(var tips in allTips)
+            {
+                if (tips.TipNumber == nr)
+                { 
+                    tips.AdminApproved = true; 
                 }
             }
         }
