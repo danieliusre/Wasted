@@ -53,11 +53,11 @@ namespace Wasted.Data
             }
            
         }
-        public async void Delete(string endpoint)
+        public async void Delete(int id, string endpoint)
         {
             try
             {
-                var response = await client.DeleteAsync(ApiUrl+endpoint);
+                var response = await client.DeleteAsync(ApiUrl+endpoint+"/"+id);
                 if(response.StatusCode == HttpStatusCode.OK)
                 {
                     return;
