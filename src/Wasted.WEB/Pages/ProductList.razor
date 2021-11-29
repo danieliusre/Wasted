@@ -129,7 +129,7 @@
 
     public async Task addProduct()
     {
-        await ProductService.AddProduct(newProduct);
+        newProduct.Id = await ProductService.AddProduct(newProduct);
         products.Add(newProduct);
         newProduct = new Product();
     }

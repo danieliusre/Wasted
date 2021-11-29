@@ -16,14 +16,17 @@ namespace Wasted.Data
         private static readonly HttpClient client = new HttpClient();
         private static readonly string ApiUrl = "http://localhost:3000/api/";
 
-        public async Task<T> Post<T>(T data, string endpoint)
+        public async Task<int> Post<T>(T data, string endpoint)
         {
             try
             {
                 var response = await client.PostAsJsonAsync(ApiUrl+endpoint, data);
-                if(response.StatusCode == HttpStatusCode.OK)
+                if(response.StatusCode == HttpStatusCode.Created)
                 {
-                    return data;
+                    return Int32.Parse(
+                        response.Headers.Location.AbsolutePath.Substring(
+                            response.Headers.Location.AbsolutePath.LastIndexOf('/') + 1
+                        ));
                 }
 
                 throw new Exception();
@@ -31,7 +34,7 @@ namespace Wasted.Data
             catch (Exception e)
             {
                 Log.Error("Exception caught: {0}", e);
-                return default(T);
+                return default(int);
             }
            
         }
@@ -40,7 +43,7 @@ namespace Wasted.Data
             try
             {
                 var response = await client.PutAsJsonAsync(ApiUrl+endpoint, data);
-                if(response.StatusCode == HttpStatusCode.OK)
+                if(response.StatusCode == HttpStatusCode.NoContent)
                 {
                     return;
                 }
@@ -58,7 +61,7 @@ namespace Wasted.Data
             try
             {
                 var response = await client.DeleteAsync(ApiUrl+endpoint+"/"+id);
-                if(response.StatusCode == HttpStatusCode.OK)
+                if(response.StatusCode == HttpStatusCode.NoContent)
                 {
                     return;
                 }

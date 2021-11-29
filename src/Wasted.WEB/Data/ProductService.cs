@@ -32,21 +32,21 @@ namespace Wasted.Data
             }
             return products;
         }
-        public async Task<Product> AddProduct(Product product)
+        public async Task<int> AddProduct(Product product)
         {
-            Product addedProduct = new Product();
             try 
             {
                 Log.Information("Starting to add product: {0}", product.Name);
-                addedProduct =  await _httpHelper.Post<Product>(product,"product");
+                var id =  await _httpHelper.Post<Product>(product,"product");
                 Log.Information("Finished adding product: {0}", product.Name);
-                
+                return id;
             }
             catch (Exception e)
             {
                 Log.Error("Exception caught: {0}",e);
             }
-            return addedProduct;
+            return default(int);
+            
         }
          public void DeleteProduct(int productId)
         {
