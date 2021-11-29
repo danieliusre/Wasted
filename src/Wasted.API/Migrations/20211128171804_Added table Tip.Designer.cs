@@ -9,8 +9,8 @@ using Wasted.API.Data;
 namespace WastedAPI.Migrations
 {
     [DbContext(typeof(WastedContext))]
-    [Migration("20211122113209_Dishes table add")]
-    partial class Dishestableadd
+    [Migration("20211128171804_Added table Tip")]
+    partial class AddedtableTip
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -177,6 +177,68 @@ namespace WastedAPI.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Wasted.API.Models.Tip", b =>
+                {
+                    b.Property<int>("TipId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Link")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("TipDislikes")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TipLikes")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TipName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("TipId");
+
+                    b.ToTable("Tips");
+
+                    b.HasData(
+                        new
+                        {
+                            TipId = 1,
+                            Link = "https://en.wikipedia.org/wiki/Smart_shop",
+                            Name = "To avoid buying more food than you need, make frequent trips to the grocery store every few days rather than doing a bulk shopping trip once a week.",
+                            TipDislikes = 0,
+                            TipLikes = 4,
+                            TipName = "Shop Smart"
+                        },
+                        new
+                        {
+                            TipId = 2,
+                            Link = "https://www.betterhealth.vic.gov.au/health/healthyliving/food-safety-and-storage",
+                            Name = "Separating foods that produce more ethylene gas from those that don’t is another great way to reduce food spoilage. Ethylene promotes ripening in foods and could lead to spoilage.",
+                            TipDislikes = 0,
+                            TipLikes = 4,
+                            TipName = "Store Food Correctly"
+                        },
+                        new
+                        {
+                            TipId = 3,
+                            Link = "https://www.masterclass.com/articles/a-guide-to-home-food-preservation-how-to-pickle-can-ferment-dry-and-preserve-at-home",
+                            Name = "Pickling, drying, canning, fermenting, freezing and curing are all methods you can use to make food last longer, thus reducing waste.",
+                            TipDislikes = 0,
+                            TipLikes = 1,
+                            TipName = "Learn to Preserve"
+                        });
+                });
+
             modelBuilder.Entity("Wasted.API.Models.User", b =>
                 {
                     b.Property<int>("UserId")
@@ -199,12 +261,12 @@ namespace WastedAPI.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("Login")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
                     b.Property<string>("Password")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Role")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
