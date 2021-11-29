@@ -4,90 +4,141 @@
 @inject ProductService ProductService
 @inject ExportService exportService
 @inject Microsoft.JSInterop.IJSRuntime JS
-@using  System.IO;
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@using  System.IO
+@inject Admins Admins
 
-<h1>PRODUCT LIST</h1>
+<AuthorizeView>
+    <Authorized>
+    <h1>PRODUCT LIST</h1>
 
-<p>You can search for your favourite products here</p>
+    <p>You can search for your favourite products here</p>
 
-@if (products == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <div class="form-group">
-        <input class="form-control" type="text" placeholder="Filter..."
-            @bind="Filter"
-            @bind:event="oninput">
-    </div>
-    <table class="table table-striped">
-        <thead class="thead-light">
-            <tr>
-                <th scope="col">Product name</th>
-                <th scope="col">Type</th>
-                <th scope="col">Measurement units</th>
-                <th scope="col">Energy value (kcal/g)</th>
-                <th scope="col">Add to shopping list</th>
-            </tr>
-        </thead>
-        <tbody>
-            @{
-                foreach (var product in products)
-                {
-                    if (!IsVisible(product))
-                        continue;
-                    <tr>
-                        <td>@product.Name</td>
-                        <td>@product.Type</td>
-                        <td>@product.MeasurementUnits</td>
-                        <td>@((int)product.EnergyValue)</td>
-                        <td>
-                            <button class="btn btn-success" @onclick="() => addToShoppingList(product)">+</button>
-                        </td>
-                    </tr>
-                }
-            }
-            
-        </tbody>
-    </table>
-    @if(shoppingList.Any())
+    @if (products == null)
     {
-        <h1>Shopping list:</h1>
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        <div class="form-group">
+            <input class="form-control" type="text" placeholder="Filter..."
+                @bind="Filter"
+                @bind:event="oninput">
+        </div>
         <table class="table table-striped">
             <thead class="thead-light">
                 <tr>
                     <th scope="col">Product name</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Measurement units</th>
+                    <th scope="col">Energy value (kcal/g)</th>
+                    <th scope="col">Add to shopping list</th>
+                    @if(Admins.IsAdmin(context.User.Claims))
+                    {
+                        <th scope="col"></th>
+                    }
+                   
                 </tr>
             </thead>
             <tbody>
                 @{
-
-                    foreach (var product in shoppingList.OrderBy(x => x.Name))
+                    foreach (var product in products)
                     {
+                        if (!IsVisible(product))
+                            continue;
                         <tr>
                             <td>@product.Name</td>
+                            <td>@product.Type</td>
+                            <td>@product.MeasurementUnits</td>
+                            <td>@((int)product.EnergyValue)</td>
+                            <td>
+                                <button class="btn btn-success" @onclick="() => addToShoppingList(product)">+</button>
+                            </td>
+                            @if(Admins.IsAdmin(context.User.Claims))
+                            {
+                                <td>
+                                    <button class="btn btn-danger" @onclick="() => deleteProduct(product.Id)">Delete</button>
+                                </td>
+                            }
                         </tr>
                     }
                 }
                 
             </tbody>
         </table>
-        <button class="btn btn-primary" @onclick="@ExportToPdf">Export to PDF</button>
-    }
-    
-    
-}
+        @if(shoppingList.Any())
+        {
+            <h1>Shopping list:</h1>
+            <table class="table table-striped">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Product name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
 
+                        foreach (var product in shoppingList.OrderBy(x => x.Name))
+                        {
+                            <tr>
+                                <td>@product.Name</td>
+                            </tr>
+                        }
+                    }
+                    
+                </tbody>
+            </table>
+            <button class="btn btn-primary mg-50" @onclick="ExportToPdf">Export to PDF</button>
+        }
+        @if(Admins.IsAdmin(context.User.Claims))
+        {
+            <h3>Add products</h3>
+            <div class="row g-3 mg-50">
+                <div class="col">
+                    <input type="text" class="form-control" placeholder="Name" aria-label="Name" @bind="@newProduct.Name">
+                </div>
+                <div class="col">
+                    <input type="text" class="form-control" placeholder="Type" aria-label="Type"  @bind="@newProduct.Type">
+                </div>
+                <div class="col">
+                    <input type="text" class="form-control" placeholder="Measurement units" aria-label="Measurement units"  @bind="@newProduct.MeasurementUnits">
+                </div>
+                <div class="col">
+                    <input type="text" class="form-control" placeholder="Energy value" aria-label="Energy value"  @bind="@newProduct.EnergyValue">
+                </div>
+                <div class="col">
+                    <button type="submit" class="btn btn-success" @onclick="async () => await addProduct()">Add</button>
+                </div>
+            </div>
+        }
+
+    }
+    </Authorized>
+</AuthorizeView>
 @code {
     public int index { get; set; }
     
-    private Wasted.Data.ProductList products { get; set; }
+    private List<Product> products { get; set; }
+
+    public Product newProduct = new Product();
 
     private List<Product> shoppingList = new List<Product>();
      
     public string Filter { get; set; }
 
+    public async Task addProduct()
+    {
+        newProduct.Id = await ProductService.AddProduct(newProduct);
+        products.Add(newProduct);
+        newProduct = new Product();
+    }
+
+    public void deleteProduct(int Id)
+    {
+        ProductService.DeleteProduct(Id);
+        products.RemoveAll(item => item.Id == Id);
+    }
     protected override async Task OnInitializedAsync()
     {
         products = await ProductService.GetProducts();

@@ -9,8 +9,8 @@ using Wasted.API.Data;
 namespace WastedAPI.Migrations
 {
     [DbContext(typeof(WastedContext))]
-    [Migration("20211128171804_Added table Tip")]
-    partial class AddedtableTip
+    [Migration("20211129113606_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -274,6 +274,35 @@ namespace WastedAPI.Migrations
                     b.HasKey("UserId");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = 1,
+                            Email = "mail1",
+                            FirstName = "First1",
+                            LastName = "Last",
+                            Password = "pass1",
+                            Role = "user"
+                        },
+                        new
+                        {
+                            UserId = 2,
+                            Email = "mail2",
+                            FirstName = "First2",
+                            LastName = "Last1",
+                            Password = "pass2",
+                            Role = "user"
+                        },
+                        new
+                        {
+                            UserId = 3,
+                            Email = "mail3",
+                            FirstName = "First",
+                            LastName = "Last2",
+                            Password = "pass3",
+                            Role = "admin"
+                        });
                 });
 #pragma warning restore 612, 618
         }

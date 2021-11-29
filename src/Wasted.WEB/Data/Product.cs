@@ -4,6 +4,7 @@ namespace Wasted.Data
 {
     public struct Product
     {
+        public int Id;
         private string _name;
         private string _type;
         private string _measurementUnits;

@@ -1,13 +1,8 @@
 using System;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Threading;
-using System.IO;
-using System.Collections.Generic;
-using Newtonsoft.Json;
 using Serilog;
-using System.Net.Http;
-using System.Net.Http.Headers;
+using System.Collections.Generic;
+
 
 namespace Wasted.Data
 {
@@ -21,26 +16,51 @@ namespace Wasted.Data
             _httpHelper = httpHelper;
         }
 
-        public async Task<ProductList> GetProducts()
+        public async Task<List<Product>> GetProducts()
         {
-            ProductList products = null;
+            List<Product> products = null;
             try 
             {
                 Log.Information("Starting to read ProductList");
-                await Task.Delay(1000); 
-                products =  new ProductList(await _httpHelper.GetArray<Product>("product"));
+                products =  new List<Product>(await _httpHelper.GetList<Product>("product"));
                 Log.Information("Finished reading Productlist");
                 
-            }
-            catch(FileNotFoundException e)
-            {
-                Log.Error(e.Message);
             }
             catch (Exception e)
             {
                 Log.Error("Exception caught: {0}",e);
             }
             return products;
+        }
+        public async Task<int> AddProduct(Product product)
+        {
+            try 
+            {
+                Log.Information("Starting to add product: {0}", product.Name);
+                var id =  await _httpHelper.Post<Product>(product,"product");
+                Log.Information("Finished adding product: {0}", product.Name);
+                return id;
+            }
+            catch (Exception e)
+            {
+                Log.Error("Exception caught: {0}",e);
+            }
+            return default(int);
+            
+        }
+         public void DeleteProduct(int productId)
+        {
+            try 
+            {
+                Log.Information("Starting to delete product id: {0}", productId);
+                _httpHelper.Delete(productId,"product");
+                Log.Information("Finished reading Productlist");
+                
+            }
+            catch (Exception e)
+            {
+                Log.Error("Exception caught: {0}",e);
+            }
         }
     }
 }
