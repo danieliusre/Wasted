@@ -103,12 +103,12 @@ namespace Wasted.Data
             }
            
         }
-        public async Task<T> GetById<T>(string endpoint)
+        public async Task<T> GetById<T>(int id, string endpoint)
         {
             try
             {
                 return JsonConvert.DeserializeObject<T>(
-                    await client.GetStringAsync(ApiUrl+endpoint)
+                    await client.GetStringAsync(ApiUrl+endpoint+"/"+id)
                 );
             }
             catch (Exception e)
