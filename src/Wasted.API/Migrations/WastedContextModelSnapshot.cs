@@ -272,6 +272,35 @@ namespace WastedAPI.Migrations
                     b.HasKey("UserId");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = 1,
+                            Email = "mail1",
+                            FirstName = "First1",
+                            LastName = "Last",
+                            Password = "pass1",
+                            Role = "user"
+                        },
+                        new
+                        {
+                            UserId = 2,
+                            Email = "mail2",
+                            FirstName = "First2",
+                            LastName = "Last1",
+                            Password = "pass2",
+                            Role = "user"
+                        },
+                        new
+                        {
+                            UserId = 3,
+                            Email = "mail3",
+                            FirstName = "First",
+                            LastName = "Last2",
+                            Password = "pass3",
+                            Role = "admin"
+                        });
                 });
 #pragma warning restore 612, 618
         }

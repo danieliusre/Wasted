@@ -12,8 +12,8 @@
     @@import "css/Utils.css"
 </style>
 
-<div class = "flex">
-    <div id="one">
+<div class = "flex paragraphBlock">
+    <div >
         <h1 class="tac">Sign in</h1>
         <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
         <form method="post" action="submitscrip.php" target="dummyframe">
@@ -22,7 +22,7 @@
             <input class="form-control tac regField" type="password" placeholder="Password" @bind="@SignInPasswordBox"/>
         </div>
         <div>
-            <input class="buttonSub" type="submit" @onclick="SignInSubmitPressed"> </input>
+            <button class="buttonSub" @onclick="SignInSubmitPressed">Submit</button>
         </div>
         </form>
     </div>

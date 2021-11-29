@@ -44,6 +44,11 @@ namespace Wasted.API.Data
                         Name = "Pickling, drying, canning, fermenting, freezing and curing are all methods you can use to make food last longer, thus reducing waste.", 
                         TipLikes = 1, TipDislikes = 0, Link = "https://www.masterclass.com/articles/a-guide-to-home-food-preservation-how-to-pickle-can-ferment-dry-and-preserve-at-home"}
                 );
+            modelBuilder.Entity<User>().HasData(
+                new User { UserId = 1, Password = "pass1", Email = "mail1", FirstName = "First1", LastName = "Last", Role = "user" },
+                new User { UserId = 2, Password = "pass2", Email = "mail2", FirstName = "First2", LastName = "Last1", Role = "user" },
+                new User { UserId = 3, Password = "pass3", Email = "mail3", FirstName = "First", LastName = "Last2", Role = "admin" }
+              );
         }
     }
 }

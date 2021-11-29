@@ -8,12 +8,13 @@
 
 
 <div class="page">
-    <div class="sidebar">
+    @* <div class="sidebar">
         <NavMenu />
-    </div>
-
+    </div> *@
+ 
     <div class="main">
-        <AuthorizeView>
+    <NavMenu></NavMenu>
+        @* <AuthorizeView>
             <div class="top-row px-4">
                     <Authorized>
                             <div class="float-left height:42px">
@@ -24,7 +25,7 @@
                             </div> 
                     </Authorized>
             </div>
-        </AuthorizeView>
+        </AuthorizeView> *@
 
         <div class="content px-4">
             @Body
