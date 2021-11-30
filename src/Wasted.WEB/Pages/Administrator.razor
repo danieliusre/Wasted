@@ -23,7 +23,7 @@
   {
     @foreach(var tips in allTips)
     {
-      tipNr = tips.TipNumber;
+      tipNr = tips.TipId;
       <h2 class = "h2"><br>@tips.TipName
         <i  class="fa fa-thumbs-up">
           @tips.TipLikes
@@ -31,8 +31,8 @@
         <i  class="fa fa-thumbs-down">
            @tips.TipDislikes
         </i>
-        <button class="btn btn-danger" @onclick="() => allTips.Remove(tips)"> - </button>
-        <button class="btn btn-success" @onclick="() => AcceptPressed(tips.TipNumber)" > + </button>
+        <button class="btn btn-danger" @onclick="() => deleteTip(tips.TipId)"> REMOVE </button>
+        <button class="btn btn-success" @onclick="() => AcceptPressed(tips.TipId)" > + </button>
       </h2>
       <br> 
         <div class="progress">
@@ -49,7 +49,6 @@
       <br>		
     }
     <br>
-		<button class="learnmore" @onclick="SavePressed"> SAVE CHANGES </button>
 		<div id = "vertically-aligned-block"class="flex float">
     </div>
   }
@@ -148,7 +147,7 @@
 @code
 {
   List<User> users = new List<User>();
-  List<TipsModel> allTips = new();
+  List<Tip> allTips = new();
   Lazy<AdminService> adminService = new Lazy<AdminService>();
   int i;
   public int number = 1;
@@ -172,17 +171,22 @@
     users = adminService.Value.GetUserList();
   }
 
-  public void SavePressed()
-  {
-       TipsService.SaveTips(allTips);
-	}
+  public void deleteTip(int Id)
+    {
+        TipsService.DeleteTip(Id);
+        allTips.RemoveAll(item => item.TipId == Id);
+    }
   
+  protected override async Task OnInitializedAsync()
+  {
+		allTips = await TipsService.GetTips();
+  }
+
   public void AcceptTipsPressed()
   {
     acceptPressed = true;
     initializeRoles = false;
     initializeUsers = false;
-    allTips = TipsService.GetTips();
   }
 
   public void AcceptPressed(int nr)

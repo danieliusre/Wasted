@@ -2,9 +2,9 @@ using System;
 
 namespace Wasted.Data
 {
-    public class TipsModel
+    public class Tip
     {
-        public int TipNumber { get; set; }
+        public int TipId {get; set;}
         public string TipName { get; set; }
         public string Name { get; set; }
         public int TipLikes { get; set; }
