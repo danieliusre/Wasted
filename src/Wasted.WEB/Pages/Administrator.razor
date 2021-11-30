@@ -32,7 +32,10 @@
            @tips.TipDislikes
         </i>
         <button class="btn btn-danger" @onclick="() => deleteTip(tips.TipId)"> REMOVE </button>
-        <button class="btn btn-success" @onclick="() => AcceptPressed(tips.TipId)" > + </button>
+        @if (!tips.AdminApproved)
+        {
+        <button class="btn btn-success" @onclick="() => AcceptPressed(tips.TipId)" > APPROVE </button>
+        }
       </h2>
       <br> 
         <div class="progress">
