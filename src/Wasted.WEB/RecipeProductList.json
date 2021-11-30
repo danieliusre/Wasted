@@ -70,5 +70,11 @@
     "Amount": 3000,
     "Unit": "g",
     "Date": "2021-11-17"
+  },
+  {
+    "Item": "Troat",
+    "Amount": 2000,
+    "Unit": "ml",
+    "Date": "2021-12-09"
   }
 ]
