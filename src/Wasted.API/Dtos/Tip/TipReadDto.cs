@@ -11,5 +11,6 @@ namespace Wasted.API.Dtos
         public int TipLikes { get; set; }
         public int TipDislikes { get; set; }
         public string Link { get; set; }
+        public Boolean AdminApproved {get; set;}
     }
 }
