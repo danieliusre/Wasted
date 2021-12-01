@@ -112,13 +112,18 @@ namespace Wasted.Data
             }
         }
 
-        public void Approve(List<Tip> allTips, int nr)
+        public void Approve(List<Tip> allTips, Tip newTip, int nr)
         {
             foreach(var tips in allTips)
             {
                 if (tips.TipId == nr)
                 { 
-                    tips.AdminApproved = true; 
+                    newTip.Name = tips.Name;
+                    newTip.TipName = tips.TipName;
+                    newTip.Link = tips.Link;
+                    newTip.TipLikes = tips.TipLikes;
+                    newTip.TipDislikes = tips.TipDislikes;
+                    newTip.AdminApproved = true;
                 }
             }
         }
