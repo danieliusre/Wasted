@@ -239,7 +239,7 @@ namespace WastedAPI.Migrations
 
             modelBuilder.Entity("Wasted.API.Models.User", b =>
                 {
-                    b.Property<int>("UserId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -269,37 +269,55 @@ namespace WastedAPI.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.HasKey("UserId");
+                    b.HasKey("Id");
 
                     b.ToTable("Users");
 
                     b.HasData(
                         new
                         {
-                            UserId = 1,
-                            Email = "mail1",
-                            FirstName = "First1",
-                            LastName = "Last",
-                            Password = "pass1",
+                            Id = 1,
+                            Email = "julius.nar@gmail.com",
+                            FirstName = "Julius",
+                            LastName = "Narkunas",
+                            Password = "JuliusNer1",
                             Role = "user"
                         },
                         new
                         {
-                            UserId = 2,
-                            Email = "mail2",
-                            FirstName = "First2",
-                            LastName = "Last1",
-                            Password = "pass2",
-                            Role = "user"
-                        },
-                        new
-                        {
-                            UserId = 3,
-                            Email = "mail3",
-                            FirstName = "First",
-                            LastName = "Last2",
-                            Password = "pass3",
+                            Id = 2,
+                            Email = "danielius.rekus@gmail.com",
+                            FirstName = "Danielius",
+                            LastName = "Rekus",
+                            Password = "Danius123",
                             Role = "admin"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Email = "mariuks@gmail.com",
+                            FirstName = "Marius",
+                            LastName = "Ivanausas",
+                            Password = "Jhbj433h",
+                            Role = "user"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Email = "karolis@gmail.com",
+                            FirstName = "Karolis",
+                            LastName = "Valkauskas",
+                            Password = "Karolis123",
+                            Role = "admin"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Email = "kajus@outlook.com",
+                            FirstName = "Kajus",
+                            LastName = "Orsauskas",
+                            Password = "Kaj47474p",
+                            Role = "user"
                         });
                 });
 #pragma warning restore 612, 618

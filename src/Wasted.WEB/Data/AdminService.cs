@@ -3,81 +3,55 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using Serilog;
 using System.IO;
+using System.Threading.Tasks;
+using System.Linq;
 
 namespace Wasted.Data
 {
-
-
     class AdminService
     {   
-        private JsonFileService _jsonFileService = new JsonFileService();
-
-        public List<User> removeUser(string userToRemove)
+        private readonly HttpHelper _httpHelper;
+        public AdminService (HttpHelper httpHelper)
         {
-            List<User> users = GetUserList();
-            {
-                foreach (User user in users)
-                {
-                    if(user.Email == userToRemove)
-                    {
-                        users.Remove(user);
-                    }   
-                }
-            }
-
-            writeToFile("UserData.json", users);
-            foreach (User user in users)
-            {
-                Console.WriteLine("{0}", user.Email);
-            }
-            Console.WriteLine("{0} removed from the list", userToRemove);
-            return users;
+            _httpHelper = httpHelper;
         }
-        public List<User> GetUserList()
+        public void removeUser(int id)
         {
-            List<User>users = new List<User>();
             try 
             {
-                Log.Information("Starting to CreateUserList in AdminService");
-                string json = _jsonFileService.ReadJsonFromFile(@"UserData.json");
-                users = JsonConvert.DeserializeObject<List<User>>(json);
-                Log.Information("Finished to CreateUserList in AdminService");
+                Log.Information("Starting to delete product email: {0}", id);
+                _httpHelper.Delete(id,"user");
+                Log.Information("Finished reading UserList");
+                
             }
-            catch(FileNotFoundException e)
+            catch (Exception e)
             {
-                Log.Error(e.Message);
+                Log.Error("Exception caught: {0}",e);
             }
-            catch(Exception e)
+        }
+        public async Task<List<User>> GetUserList()
+        {
+            List<User> users = null;
+            try 
+            {
+                Log.Information("Starting to read UserList");
+                users =  await _httpHelper.GetList<User>("user");
+                Log.Information("Finished reading UserList");
+            }
+            catch (Exception e)
             {
                 Log.Error("Exception caught: {0}",e);
             }
             return users;
         }
 
-        public void writeToFile(string filePath, List<User> fileUsers)
-        {
-            try
-            {
-                Log.Information("Starting to writeToFile(AdminService)");
-                string json = JsonConvert.SerializeObject(fileUsers, Formatting.Indented);
-                File.WriteAllText(filePath, json);
-                Log.Information("Finished writing to file(AdminService)");
-            }
-            catch (Exception e)
-            {
-                Log.Error("Exception caught {0}", e);
-            }
-        }
-        public List<User> ChangeRole (string email, string role, List<User> users)
+        public void ChangeRole (User user)
         {
             try
             {
                 Log.Information("Starting to changeRole");
-                 foreach (User user in users)
-                {
-                    if(user.Email == email)
-                    {
-                        switch (role)
+                
+                        switch (user.Role)
                         {
                             case "admin":
                                 user.Role = "user";
@@ -86,16 +60,14 @@ namespace Wasted.Data
                                 user.Role = "admin";
                                 break;
                         }
-                    }
-                }
-                writeToFile("UserData.json", users);
+                _httpHelper.Put<User>(user, "user/"+user.Id);
+
                 Log.Information("Finished changeRole");
             }
             catch (Exception e)
             {
                 Log.Error("Exception caught: {0}", e);
             }
-            return users;
         }
 
 

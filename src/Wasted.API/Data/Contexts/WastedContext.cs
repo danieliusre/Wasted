@@ -44,10 +44,12 @@ namespace Wasted.API.Data
                         Name = "Pickling, drying, canning, fermenting, freezing and curing are all methods you can use to make food last longer, thus reducing waste.", 
                         TipLikes = 1, TipDislikes = 0, Link = "https://www.masterclass.com/articles/a-guide-to-home-food-preservation-how-to-pickle-can-ferment-dry-and-preserve-at-home"}
                 );
-            modelBuilder.Entity<User>().HasData(
-                new User { UserId = 1, Password = "pass1", Email = "mail1", FirstName = "First1", LastName = "Last", Role = "user" },
-                new User { UserId = 2, Password = "pass2", Email = "mail2", FirstName = "First2", LastName = "Last1", Role = "user" },
-                new User { UserId = 3, Password = "pass3", Email = "mail3", FirstName = "First", LastName = "Last2", Role = "admin" }
+           modelBuilder.Entity<User>().HasData(
+                new User { Id = 1, Email = "julius.nar@gmail.com", FirstName = "Julius", LastName = "Narkunas", Password = "JuliusNer1", Role = "user" },
+                new User { Id = 2, Email = "danielius.rekus@gmail.com", FirstName = "Danielius", LastName = "Rekus", Password = "Danius123", Role = "admin" },
+                new User { Id = 3, Email = "mariuks@gmail.com", FirstName = "Marius", LastName = "Ivanausas", Password = "Jhbj433h", Role = "user"},
+                new User { Id = 4, Email = "karolis@gmail.com", FirstName = "Karolis", LastName = "Valkauskas", Password = "Karolis123", Role = "admin"},
+                new User { Id = 5, Email = "kajus@outlook.com", FirstName = "Kajus", LastName = "Orsauskas", Password = "Kaj47474p", Role = "user"}
               );
         }
     }

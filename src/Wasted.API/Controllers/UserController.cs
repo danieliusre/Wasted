@@ -49,11 +49,6 @@ namespace Wasted.API.Controllers
         [HttpPost]
         public ActionResult <UserReadDto> CreateNewUser(UserCreateDto userCreate)
         {
-            var userModelFromRepo = _repository.GetUserByEmail(userCreate.Email);
-            if (userModelFromRepo != null)
-            {
-                return Unauthorized();
-            }
             var userModel = _mapper.Map<User>(userCreate);
 
             _repository.CreateNewUser(userModel);
@@ -61,7 +56,7 @@ namespace Wasted.API.Controllers
 
             var userReadDto = _mapper.Map<UserReadDto>(userModel);
 
-            return CreatedAtRoute (nameof(GetUserById), new {Id = userModel.UserId}, userReadDto);
+            return CreatedAtRoute (nameof(GetUserById), new {Id = userModel.Id}, userReadDto);
         }
 
         //PUT api/user/{id}
@@ -73,6 +68,15 @@ namespace Wasted.API.Controllers
             {
                 return NotFound();
             }
+             switch (userModelFromRepo.Role)
+                        {
+                            case "admin":
+                                userModelFromRepo.Role = "user";
+                                break;
+                            case "user":
+                                userModelFromRepo.Role = "admin";
+                                break;
+                        }
             _mapper.Map(userUpdateDto, userModelFromRepo);
 
             _repository.UpdateUser(userModelFromRepo);

@@ -26,7 +26,7 @@ namespace Wasted.API.Data
 
         public User GetUserById(int id)
         {
-            return _context.Users.FirstOrDefault(p => p.UserId == id);
+            return _context.Users.FirstOrDefault(p => p.Id == id);
         }
 
         public User GetUserByEmail(string email)
