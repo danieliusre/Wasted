@@ -35,7 +35,7 @@ namespace Wasted.Data
             return ingredients;
         }
 
-        public async Task<List<DishModel>> AddRecipe(List<DishModel> recipes, List<RecipeItemModel> ingredients, string dishName, string dishType, int numberOfIngredients)
+        public async Task<DishModel> CreateRecipe(List<RecipeItemModel> ingredients, string dishName, string dishType, int numberOfIngredients)
         {
             await Task.Delay(1);
             DishModel recipe = new DishModel();
@@ -43,8 +43,7 @@ namespace Wasted.Data
             recipe.numberOfIngredients = numberOfIngredients;
             recipe.Ingredients = ingredients;
             recipe.Type = dishType;
-            recipes.Add(recipe);
-            return recipes;
+            return recipe;
         }
     }
 }

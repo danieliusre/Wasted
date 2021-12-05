@@ -31,8 +31,8 @@ namespace Wasted.API.Data
                 );
 
             modelBuilder.Entity<Dish>().HasData(
-                new Dish { Id = 1, Name =  "Chocolate Cake", numberOfIngredients = 4, Ingredients = "unknown", Type =  "Baked"},
-                new Dish { Id = 2, Name = "Brownies", numberOfIngredients = 5, Ingredients = "unknown", Type = "Baked"}
+                new Dish { Id = 1, Name =  "TEST1", numberOfIngredients = 4, /*Ingredients = "unknown",*/ Type =  "Baked"},
+                new Dish { Id = 2, Name = "TEST2", numberOfIngredients = 5, /*Ingredients = "unknown",*/ Type = "Baked"}
               );
 
                           modelBuilder.Entity<Ingredient>()

@@ -62,12 +62,29 @@ namespace Wasted.API.Controllers
 
         //GET api/dish/{id}
         [HttpGet("{id}", Name = "GetDishById")]
-        public ActionResult <DishReadDto> GetDishById(int id)
+        public ActionResult <DishReadDto> GetDishById(int Id)
         {
-            var dishModelFromRepo = _repository.GetDishById(id);
+            DishWEB dish = new DishWEB();
+            var dishModelFromRepo = _repository.GetDishById(Id);
             if (dishModelFromRepo != null)
             {
-                return Ok(_mapper.Map<DishReadDto>(dishModelFromRepo));
+                var ingredients = _ingredientRepository.GetIngredientListByDishId(Id);
+                    List<IngredientWEB> dishIngredients = new List<IngredientWEB>();
+                    foreach (var ingredient in ingredients)
+                    {
+                        IngredientWEB newItem = new IngredientWEB();
+                        var product = _productRepository.GetProductById(ingredient.ProductId);
+                        newItem.Item = product.Name;
+                        newItem.Amount = ingredient.Amount;
+                        newItem.Unit = product.MeasurementUnits;
+                        dishIngredients.Add(newItem); 
+                    }
+                dish.Id = dishModelFromRepo.Id;
+                dish.Name = dishModelFromRepo.Name;
+                dish.numberOfIngredients = dishModelFromRepo.numberOfIngredients;
+                dish.Type = dishModelFromRepo.Type;
+                dish.Ingredients = dishIngredients;
+                return Ok(dish);
             }
             return NotFound();
         }
@@ -77,7 +94,6 @@ namespace Wasted.API.Controllers
         public ActionResult <DishReadDto> CreateNewDish(DishCreateDto dishCreate)
         {
             var dishModel = _mapper.Map<Dish>(dishCreate);
-
             _repository.CreateNewDish(dishModel);
             _repository.SaveChanges();
 

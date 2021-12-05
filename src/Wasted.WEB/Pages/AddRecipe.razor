@@ -37,8 +37,9 @@
 
     public async Task AddNewRecipe()
     {
-        recipes = await AddRecipeService.AddRecipe(recipes, ingredients, dishName, dishType, numberOfIngredients);
-        await RecipeCalcService.SaveRecipes(recipes);
+        DishModel recipe = new DishModel();
+        recipe = await AddRecipeService.CreateRecipe(ingredients, dishName, dishType, numberOfIngredients);
+        await RecipeCalcService.SaveRecipe(recipe);
         dishName = "";
         ingredientAmount = "";
         dishType = "";
