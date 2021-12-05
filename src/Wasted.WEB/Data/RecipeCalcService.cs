@@ -64,13 +64,13 @@ namespace Wasted.Data
             return Task.FromResult(products);
         }
 
-        public async Task<DishModel> SaveRecipe(DishModel recipe)
+        public async Task<DishModel> AddRecipe(DishModel recipe)
         {
             var filePath = "Recipes.json";
             try 
             {
                 Log.Information("Starting writing Recipes.json");
-                await _httpHelper.Post<DishModel>(recipe, "dish");
+                var dish = await _httpHelper.Post<DishModel>(recipe, "dish");
                 _jsonFileService.WriteJsonToFile(JsonConvert.SerializeObject(recipe, Formatting.Indented),filePath);
                 Log.Information("Finished writing Recipes.json");
             }

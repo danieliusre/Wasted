@@ -1,11 +1,11 @@
 {
   "numberOfIngredients": 1,
   "Id": 0,
-  "Name": "ADDEDINWEBSITE",
+  "Name": "WEB",
   "Ingredients": [
     {
       "Item": "Apple",
-      "Amount": 3,
+      "Amount": 2,
       "Unit": "kg",
       "Date": null
     }

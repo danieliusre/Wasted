@@ -43,13 +43,13 @@ namespace Wasted.API.Data
             //Nothing
         }
 
-        public void DeleteIngredient(IEnumerable<Ingredient> ingredient)
+        public void DeleteIngredients(IEnumerable<Ingredient> ingredients)
         {
-            if (ingredient == null){
-                throw new ArgumentException(nameof(ingredient));
+            if (ingredients == null){
+                throw new ArgumentException(nameof(ingredients));
             }
 
-            _context.Ingredients.RemoveRange(ingredient);
+            _context.Ingredients.RemoveRange(ingredients);
         }
     }
 }

@@ -39,7 +39,7 @@
     {
         DishModel recipe = new DishModel();
         recipe = await AddRecipeService.CreateRecipe(ingredients, dishName, dishType, numberOfIngredients);
-        await RecipeCalcService.SaveRecipe(recipe);
+        await RecipeCalcService.AddRecipe(recipe);
         dishName = "";
         ingredientAmount = "";
         dishType = "";

@@ -10,6 +10,6 @@ namespace Wasted.API.Data
         IEnumerable<Ingredient> GetIngredientListByDishId(int DishId);
         void CreateNewIngredient(IEnumerable<Ingredient> Ingredient);
         void UpdateIngredient(IEnumerable<Ingredient> Ingredient);
-        void DeleteIngredient(IEnumerable<Ingredient> Ingredient);
+        void DeleteIngredients(IEnumerable<Ingredient> Ingredients);
     }
 }

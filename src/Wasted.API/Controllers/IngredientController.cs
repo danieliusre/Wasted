@@ -76,15 +76,15 @@ namespace Wasted.API.Controllers
 
         //DELETE api/ingredient/{id}
         [HttpDelete("{id}")]
-        public ActionResult DeleteIngredient(int DishId)
+        public ActionResult DeleteIngredient(int dishId)
         {
-            var ingredientModelFromRepo = _repository.GetIngredientListByDishId(DishId);
+            var ingredientModelFromRepo = _repository.GetIngredientListByDishId(dishId);
             if (ingredientModelFromRepo == null)
             {
                 return NotFound();
             }
 
-            _repository.DeleteIngredient(ingredientModelFromRepo);
+            _repository.DeleteIngredients(ingredientModelFromRepo);
             _repository.SaveChanges();
 
             return NoContent();
