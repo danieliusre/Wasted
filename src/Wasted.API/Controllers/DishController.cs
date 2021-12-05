@@ -13,22 +13,49 @@ namespace Wasted.API.Controllers
     public class DishController : ControllerBase
     {
         private readonly IDishRepo _repository;
+        private readonly IProductRepo _productRepository;
+        private readonly IIngredientRepo _ingredientRepository;
         private readonly IMapper _mapper;
 
-        public DishController(IDishRepo repository, IMapper mapper)
+        public DishController(IDishRepo repository, IProductRepo productRepository, IIngredientRepo ingredientRepository, IMapper mapper)
         {
             _repository = repository;
+            _productRepository = productRepository;
+            _ingredientRepository = ingredientRepository;
             _mapper = mapper;
         }
 
         //GET api/dish
         [HttpGet]
-        public ActionResult <IEnumerable<DishReadDto>> GetDishList()
+        public ActionResult <List<DishReadDto>> GetDishList()
         {
+            List<DishWEB> finalDishList = new List<DishWEB>();
             var dishList = _repository.GetDishList();
             if (dishList != null)
             {
-                return Ok(_mapper.Map<IEnumerable<DishReadDto>>(dishList));
+                foreach (var dish in dishList)
+                {
+                    DishWEB newDish = new DishWEB();
+                    newDish.Id = dish.Id;
+                    newDish.Name = dish.Name;
+                    newDish.numberOfIngredients = dish.numberOfIngredients;
+                    newDish.Type = dish.Type;
+                    
+                    var ingredients = _ingredientRepository.GetIngredientListByDishId(dish.Id);
+                    List<IngredientWEB> dishIngredients = new List<IngredientWEB>();
+                    foreach (var ingredient in ingredients)
+                    {
+                        IngredientWEB newItem = new IngredientWEB();
+                        var product = _productRepository.GetProductById(ingredient.ProductId);
+                        newItem.Item = product.Name;
+                        newItem.Amount = ingredient.Amount;
+                        newItem.Unit = product.MeasurementUnits;
+                        dishIngredients.Add(newItem); 
+                    }
+                    newDish.Ingredients = dishIngredients;
+                    finalDishList.Add(newDish);
+                }
+                return Ok(finalDishList);
             }
             return NotFound();
         }

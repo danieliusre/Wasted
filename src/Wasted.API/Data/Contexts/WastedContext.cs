@@ -11,10 +11,12 @@ namespace Wasted.API.Data
         }
         public DbSet<Product> Products { get; set; }
 
-        public DbSet<Item> Items { get; set; }
+        public DbSet<Ingredient> Ingredients { get; set; }
         public DbSet<Dish> Dishes { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Tip> Tips { get; set; }
+
+        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -32,6 +34,16 @@ namespace Wasted.API.Data
                 new Dish { Id = 1, Name =  "Chocolate Cake", numberOfIngredients = 4, Ingredients = "unknown", Type =  "Baked"},
                 new Dish { Id = 2, Name = "Brownies", numberOfIngredients = 5, Ingredients = "unknown", Type = "Baked"}
               );
+
+                          modelBuilder.Entity<Ingredient>()
+            .HasKey(c => new { c.DishId, c.ProductId });
+
+            modelBuilder.Entity<Ingredient>().HasData(
+                new Ingredient { DishId = 1, ProductId =  1, Amount =  100 },
+                new Ingredient { DishId = 1, ProductId =  3, Amount =  200 }
+              );
+
+
 
             modelBuilder.Entity<Tip>().HasData(
                 new Tip { TipId = 1, TipName = "Shop Smart", 

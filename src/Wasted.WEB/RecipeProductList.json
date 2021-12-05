@@ -36,12 +36,6 @@
     "Date": "2022-01-08"
   },
   {
-    "Item": "Apples",
-    "Amount": 2002,
-    "Unit": "g",
-    "Date": "2023-06-29"
-  },
-  {
     "Item": "Water",
     "Amount": 20000,
     "Unit": "ml",
@@ -76,5 +70,29 @@
     "Amount": 2000,
     "Unit": "ml",
     "Date": "2021-12-09"
+  },
+  {
+    "Item": "Apple",
+    "Amount": 110000,
+    "Unit": "g",
+    "Date": "2021-12-28"
+  },
+  {
+    "Item": "Orange",
+    "Amount": 10000,
+    "Unit": "g",
+    "Date": "2021-12-22"
+  },
+  {
+    "Item": "Blackberry",
+    "Amount": 30000,
+    "Unit": "g",
+    "Date": "2021-12-24"
+  },
+  {
+    "Item": "Cheese",
+    "Amount": 60000,
+    "Unit": "g",
+    "Date": "2021-12-25"
   }
 ]

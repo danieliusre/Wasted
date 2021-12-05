@@ -153,14 +153,15 @@ namespace Wasted.Data
         public async Task<List<DishModel>> FindRecipe(List<RecipeItemModel> products, CanMakeDish makeable)
         {
             List<DishModel> dishesAbleToMake = new List<DishModel>();
+            //var recipes = await GetRecipes();
             try 
             {
                 await Task.Delay(1);
                 Log.Information("Starting to search for Recipes");
-                //var recipes =  new List<DishModel>(await _httpHelper.GetList<DishModel>("dish"));
+                var recipes =  new List<DishModel>(await _httpHelper.GetList<DishModel>("dish"));
                 //var recipes = await GetRecipes();
-                var filepath = "Recipes.json";
-                var recipes = JsonConvert.DeserializeObject<List<DishModel>>(_jsonFileService.ReadJsonFromFile(filepath));
+                //var filepath = "Recipes.json";
+                //var recipes = JsonConvert.DeserializeObject<List<DishModel>>(_jsonFileService.ReadJsonFromFile(filepath));
                 //to be removed when DB is fixed
                 dishesAbleToMake = recipes.Where(recipe => haveEnoughIngredients(products, recipe) == true).ToList();
                 Log.Information("Finished finding all recipes");
@@ -180,9 +181,9 @@ namespace Wasted.Data
             {
                 Log.Information("Starting to read api/dish");
                 await Task.Delay(1);
-                //recipes =  new List<DishModel>(await _httpHelper.GetList<DishModel>("dish"));
-                var filepath = "Recipes.json";
-                recipes = JsonConvert.DeserializeObject<List<DishModel>>(_jsonFileService.ReadJsonFromFile(filepath));
+                recipes =  new List<DishModel>(await _httpHelper.GetList<DishModel>("dish"));
+                //var filepath = "Recipes.json";
+                //recipes = JsonConvert.DeserializeObject<List<DishModel>>(_jsonFileService.ReadJsonFromFile(filepath));
                 //to be removed when DB is fixed
                 Log.Information("Finished reading api/dish");
             }
