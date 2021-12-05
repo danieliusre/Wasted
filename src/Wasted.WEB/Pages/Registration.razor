@@ -2,34 +2,36 @@
 
 @using Wasted.Data
 @using Microsoft.AspNetCore.Components.Authorization
+@inject RegistrationService RegistrationService
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
-@inject RegistrationService RegistrationService
 
 
 <div class="flex">
 </div>
 <AuthorizeView>
     <NotAuthorized>
-    <div class="paragraphBlock">
-        <h1 class="tac">Sign up</h1>
+    <div class="container">
+        <div class = "flex paragraphBlock" style="width:50%">
+            <h1 class="tac">Sign up</h1>
 
-        <style>
-            @@import "css/Utils.css"
-        </style>
+            <style>
+                @@import "css/Utils.css"
+            </style>
 
-        <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
-        <form method="post" action="submitscrip.php" target="dummyframe">
-        <div> 
-            <input class="form-control tac regField" type="text"  placeholder="Name" @bind="@NameBox"/>
-            <input class="form-control tac regField" type="text"   placeholder="Last name" @bind="@LastNameBox"/>
-            <input class="form-control tac regField" type="email"  placeholder="Email"  @bind="@EmailBox"/>
-            <input class="form-control tac regField" type="password" placeholder="Password" @bind="@PasswordBox"/>
+            <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
+            <form method="post" action="submitscrip.php" target="dummyframe">
+            <div> 
+                <input class="form-control tac regField" type="text"  placeholder="Name" @bind="@NameBox"/>
+                <input class="form-control tac regField" type="text"   placeholder="Last name" @bind="@LastNameBox"/>
+                <input class="form-control tac regField" type="email"  placeholder="Email"  @bind="@EmailBox"/>
+                <input class="form-control tac regField" type="password" placeholder="Password" @bind="@PasswordBox"/>
+            </div>
+            <div>
+                <button class="buttonSub" @onclick="submitPressed">Submit</button>
+            </div>
+            </form>
         </div>
-        <div>
-            <button class="buttonSub" @onclick="submitPressed">Submit</button>
-        </div>
-        </form>
     </div>
     </NotAuthorized>
 </AuthorizeView>
@@ -54,15 +56,13 @@
     static string PasswordBox ;
     static List<User> users = new List<User>();
     
-    RegistrationService service = new RegistrationService();
 
 
-    public void submitPressed()
+    public async Task submitPressed()
     {
         ErrorMessages.Clear();
-        ErrorMessages = service.AddUserData(NameBox, LastNameBox, EmailBox, PasswordBox, users);
-        ErrorMessages = service.getErrorMess();
-        if(ErrorMessages[0] == "Success! Welcome to the Wasted family!")
+        ErrorMessages = await RegistrationService.AddUserData(NameBox, LastNameBox, EmailBox, PasswordBox);
+        if(ErrorMessages.Any() && ErrorMessages[0] == "Success! Welcome to the Wasted family!")
         {
             ErrorMessages.Clear();
             NameBox = "";

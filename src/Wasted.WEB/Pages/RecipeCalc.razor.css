@@ -22,7 +22,7 @@ input[type=number]{
     margin-right: 180px;
 }
 .input{
-    background-color: rgb(214, 214, 214);
+    background-color: #5d067327;
     height: 60px;
     line-height: 60px;
 }
@@ -36,11 +36,13 @@ input[type=number]{
     font-size: 20px;
     text-align: center;
 }
-.expire{
+.expired{
     display: inline-block;
+    border: solid 1px;
+    border-radius: 7px;
+    padding: 2%;
     font-size: 25px;
-    width: 50%;
-    vertical-align: top;
+    vertical-align: middle;
 }
 .msgtouser{
     outline: 3px solid red;
@@ -50,7 +52,20 @@ input[type=number]{
     margin: auto;
     width: 80%;
 }
-
+div.distributeEvenly {
+  display: table;
+  width: 100%;
+  table-layout: fixed; 
+}
+div.distributeEvenly span {
+  display: table-cell;
+  text-align: center;
+}
+center{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
 
 table{
     width:100%;
@@ -95,6 +110,7 @@ table{
     width: 100%;
     table-layout: fixed;
   }
+
 
 
 

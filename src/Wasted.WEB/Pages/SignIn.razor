@@ -11,32 +11,33 @@
 <style>
     @@import "css/Utils.css"
 </style>
-
-<div class = "flex paragraphBlock">
-    <div >
-        <h1 class="tac">Sign in</h1>
-        <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
-        <form method="post" action="submitscrip.php" target="dummyframe">
-        <div> 
-            <input class="form-control tac regField" type="email" placeholder="Email" @bind="@SignInEmailBox"/>
-            <input class="form-control tac regField" type="password" placeholder="Password" @bind="@SignInPasswordBox"/>
+<div class="container">
+    <div class = "flex paragraphBlock" style="width:50%">
+        <div >
+            <h1 class="tac">Sign in</h1>
+            <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
+            <form method="post" action="submitscrip.php" target="dummyframe">
+            <div> 
+                <input class="form-control tac regField" type="email" placeholder="Email" @bind="@SignInEmailBox"/>
+                <input class="form-control tac regField" type="password" placeholder="Password" @bind="@SignInPasswordBox"/>
+            </div>
+            <div>
+                <button class="buttonSub" @onclick="SignInSubmitPressed">Submit</button>
+            </div>
+            </form>
         </div>
-        <div>
-            <button class="buttonSub" @onclick="SignInSubmitPressed">Submit</button>
-        </div>
-        </form>
-    </div>
-    <div id = "vertically-aligned-block">
-        @if(ErrorMessages.Any())
-        {
-            <ul  class="list-style-type: none">
-            @foreach(string message in ErrorMessages)
+        <div id = "vertically-aligned-block">
+            @if(ErrorMessages.Any())
             {
-                    @message
-                    <br>
+                <ul  class="list-style-type: none">
+                @foreach(string message in ErrorMessages)
+                {
+                        @message
+                        <br>
+                }
+                </ul>
             }
-            </ul>
-        }
+        </div>
     </div>
 </div>
 @code
@@ -47,10 +48,10 @@
     public bool signInSuccess = false;
     public static List<string> ErrorMessages = new List<string>();
 
-    public void SignInSubmitPressed()
+    public async Task SignInSubmitPressed()
     {
         ErrorMessages.Clear();
-        users = RegistrationService.CreateUserList();
+        users = await RegistrationService.GetUserList();
         signInSuccess = RegistrationService.CheckSignIn(SignInEmailBox, SignInPasswordBox, users);
         if(signInSuccess)
         {
