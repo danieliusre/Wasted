@@ -1,0 +1,119 @@
+﻿@page "/fridge/{email}"
+
+@using Wasted.Data
+@inject ProductService ProductService
+@inject ExportService exportService
+@inject Microsoft.JSInterop.IJSRuntime JS
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@using  System.IO
+@inject Admins Admins
+@inject RegistrationService RegistrationService
+@inject FridgeService FridgeService
+
+<AuthorizeView>
+    <Authorized>
+        <h1>Your Fridge</h1>
+
+
+        @if(fridgeItems == null)
+        {
+            <p>Loading....</p>
+        }
+        else
+        {
+
+            <div class="form-group">
+                <input class="form-control" type="text" placeholder="Filter..."
+                    @bind="Filter"
+                    @bind:event="oninput">
+            </div>
+            <table class="table table-striped">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Product name</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Amount</th>
+                        <th scope="col">Measurement units</th>
+                        <th scope="col">Expiration date</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        foreach (var fridgeItem in fridgeItems)
+                        {
+                            if (!IsVisible(fridgeItem))
+                                continue;
+                            <tr>
+                                <td>@fridgeItem.Name</td>
+                                <td>@fridgeItem.Type</td>
+                                <td>@fridgeItem.Amount</td>
+                                <td>@fridgeItem.MeasurementUnits</td>
+                                <td>@fridgeItem.Date</td>
+                                <td>
+                                    <button class="btn btn-danger" @onclick="() => deleteFridgeItem(fridgeItem.ProductId)">Delete</button>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    
+                </tbody>
+            </table>
+            <h3>Add products</h3>
+                <div class="row g-3 mg-50">
+                    <select @bind="newFridgeItem.ProductId">
+                        @foreach (var product in products)
+                        {
+                            <option value="@product.Id">@product.Name (@product.MeasurementUnits)</option>
+                        }
+                    </select>
+                    <div class="col">
+                        <input type="text" class="form-control" placeholder="Expiration date" aria-label="Expiration date"  @bind="@newFridgeItem.Date">
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" placeholder="Amount" aria-label="Amount"  @bind="@newFridgeItem.Amount">
+                    </div>
+                    <div class="col">
+                        <button type="submit" class="btn btn-success" @onclick="async () => await addFridgeItem()">Add</button>
+                    </div>
+                </div>
+        }
+    </Authorized>
+</AuthorizeView>
+@code {
+    [Parameter]
+    public string Email { get; set; }
+    private int UserId { get; set; } 
+    public string Filter { get; set; }
+    public List<FridgeItem> fridgeItems { get; set; }
+    private List<Product> products { get; set; }
+
+    public FridgeItem newFridgeItem = new FridgeItem();
+    
+     public bool IsVisible(FridgeItem fridgeItem)
+    {
+        return  string.IsNullOrEmpty(Filter) ||
+                fridgeItem.Name.Contains(Filter, StringComparison.OrdinalIgnoreCase) ||
+                fridgeItem.Type.Contains(Filter, StringComparison.OrdinalIgnoreCase);    
+            
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        UserId = await RegistrationService.GetUserId(Email);
+        fridgeItems = (await FridgeService.GetFridgeItems(UserId)).OrderBy(o => o.Date).ToList();
+        products = await ProductService.GetProducts();
+    }
+    public async Task addFridgeItem()
+    {
+        await FridgeService.AddFridgeItem(newFridgeItem, UserId);
+        fridgeItems = await FridgeService.GetFridgeItems(UserId);
+        newFridgeItem = new FridgeItem();
+    }
+
+    public void deleteFridgeItem(int productId)
+    {
+        FridgeService.DeleteFridgeItem(productId, UserId);
+        fridgeItems.RemoveAll(item => item.ProductId == productId);
+    }
+}

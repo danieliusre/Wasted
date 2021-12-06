@@ -15,6 +15,7 @@ namespace Wasted.API.Data
         public DbSet<Dish> Dishes { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Tip> Tips { get; set; }
+        public DbSet<FridgeItem> FridgeItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -51,6 +52,9 @@ namespace Wasted.API.Data
                 new User { Id = 4, Email = "karolis@gmail.com", FirstName = "Karolis", LastName = "Valkauskas", Password = "Karolis123", Role = "admin"},
                 new User { Id = 5, Email = "kajus@outlook.com", FirstName = "Kajus", LastName = "Orsauskas", Password = "Kaj47474p", Role = "user"}
               );
+            modelBuilder.Entity<FridgeItem>().HasKey(
+                o => new { o.UserId, o.ProductId}
+            );
         }
     }
 }
