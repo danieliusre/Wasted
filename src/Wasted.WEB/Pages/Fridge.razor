@@ -69,7 +69,7 @@
                         }
                     </select>
                     <div class="col">
-                        <input type="text" class="form-control" placeholder="Expiration date" aria-label="Expiration date"  @bind="@newFridgeItem.Date">
+                        <input type="date" class="form-control" placeholder="Expiration date" aria-label="Expiration date"  @bind="@newDate">
                     </div>
                     <div class="col">
                         <input type="text" class="form-control" placeholder="Amount" aria-label="Amount"  @bind="@newFridgeItem.Amount">
@@ -88,6 +88,7 @@
     public string Filter { get; set; }
     public List<FridgeItem> fridgeItems { get; set; }
     private List<Product> products { get; set; }
+    private DateTime newDate { get; set; }
 
     public FridgeItem newFridgeItem = new FridgeItem();
     
@@ -103,12 +104,15 @@
         UserId = await RegistrationService.GetUserId(Email);
         fridgeItems = (await FridgeService.GetFridgeItems(UserId)).OrderBy(o => o.Date).ToList();
         products = await ProductService.GetProducts();
+        newDate = DateTime.Now;
     }
     public async Task addFridgeItem()
     {
+        newFridgeItem.Date= newDate.ToShortDateString();
         await FridgeService.AddFridgeItem(newFridgeItem, UserId);
         fridgeItems = await FridgeService.GetFridgeItems(UserId);
         newFridgeItem = new FridgeItem();
+        newDate = DateTime.Now;
     }
 
     public void deleteFridgeItem(int productId)
