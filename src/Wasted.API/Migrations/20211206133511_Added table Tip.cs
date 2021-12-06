@@ -2,7 +2,7 @@
 
 namespace WastedAPI.Migrations
 {
-    public partial class Initial : Migration
+    public partial class AddedtableTip : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -14,7 +14,6 @@ namespace WastedAPI.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     numberOfIngredients = table.Column<int>(type: "int", maxLength: 3, nullable: false),
-                    Ingredients = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Type = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
@@ -23,17 +22,16 @@ namespace WastedAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Items",
+                name: "Ingredients",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Amount = table.Column<int>(type: "int", maxLength: 50, nullable: false),
-                    Date = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    DishId = table.Column<int>(type: "int", nullable: false),
+                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    Amount = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Items", x => x.Id);
+                    table.PrimaryKey("PK_Ingredients", x => new { x.DishId, x.ProductId });
                 });
 
             migrationBuilder.CreateTable(
@@ -62,7 +60,8 @@ namespace WastedAPI.Migrations
                     Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     TipLikes = table.Column<int>(type: "int", nullable: false),
                     TipDislikes = table.Column<int>(type: "int", nullable: false),
-                    Link = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false)
+                    Link = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
+                    AdminApproved = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -88,11 +87,22 @@ namespace WastedAPI.Migrations
 
             migrationBuilder.InsertData(
                 table: "Dishes",
-                columns: new[] { "Id", "Ingredients", "Name", "Type", "numberOfIngredients" },
+                columns: new[] { "Id", "Name", "Type", "numberOfIngredients" },
                 values: new object[,]
                 {
-                    { 1, "unknown", "Chocolate Cake", "Baked", 4 },
-                    { 2, "unknown", "Brownies", "Baked", 5 }
+                    { 1, "TEST1", "Baked", 2 },
+                    { 2, "TEST2", "Baked", 2 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Ingredients",
+                columns: new[] { "DishId", "ProductId", "Amount" },
+                values: new object[,]
+                {
+                    { 1, 1, 1 },
+                    { 1, 3, 2 },
+                    { 2, 4, 3 },
+                    { 2, 5, 3 }
                 });
 
             migrationBuilder.InsertData(
@@ -100,10 +110,10 @@ namespace WastedAPI.Migrations
                 columns: new[] { "Id", "EnergyValue", "MeasurementUnits", "Name", "Type" },
                 values: new object[,]
                 {
-                    { 6, 271.745, "kg", "Bass", "Fish" },
-                    { 5, 352.69799999999998, "kg", "Cheese", "Dairy" },
-                    { 4, 262.178, "kg", "Blackberry", "Berry" },
                     { 7, 175.12450000000001, "l", "Buttermilk", "Dairy" },
+                    { 6, 271.745, "kg", "Bass", "Fish" },
+                    { 4, 262.178, "kg", "Blackberry", "Berry" },
+                    { 5, 352.69799999999998, "kg", "Cheese", "Dairy" },
                     { 2, 284.54599999999999, "kg", "Troat", "Fish" },
                     { 1, 158.48699999999999, "kg", "Apple", "Fruit" },
                     { 3, 120.69199999999999, "g", "Orange", "Fruit" }
@@ -111,12 +121,12 @@ namespace WastedAPI.Migrations
 
             migrationBuilder.InsertData(
                 table: "Tips",
-                columns: new[] { "TipId", "Link", "Name", "TipDislikes", "TipLikes", "TipName" },
+                columns: new[] { "TipId", "AdminApproved", "Link", "Name", "TipDislikes", "TipLikes", "TipName" },
                 values: new object[,]
                 {
-                    { 1, "https://en.wikipedia.org/wiki/Smart_shop", "To avoid buying more food than you need, make frequent trips to the grocery store every few days rather than doing a bulk shopping trip once a week.", 0, 4, "Shop Smart" },
-                    { 2, "https://www.betterhealth.vic.gov.au/health/healthyliving/food-safety-and-storage", "Separating foods that produce more ethylene gas from those that don’t is another great way to reduce food spoilage. Ethylene promotes ripening in foods and could lead to spoilage.", 0, 4, "Store Food Correctly" },
-                    { 3, "https://www.masterclass.com/articles/a-guide-to-home-food-preservation-how-to-pickle-can-ferment-dry-and-preserve-at-home", "Pickling, drying, canning, fermenting, freezing and curing are all methods you can use to make food last longer, thus reducing waste.", 0, 1, "Learn to Preserve" }
+                    { 1, true, "https://en.wikipedia.org/wiki/Smart_shop", "To avoid buying more food than you need, make frequent trips to the grocery store every few days rather than doing a bulk shopping trip once a week.", 0, 4, "Shop Smart" },
+                    { 2, true, "https://www.betterhealth.vic.gov.au/health/healthyliving/food-safety-and-storage", "Separating foods that produce more ethylene gas from those that don’t is another great way to reduce food spoilage. Ethylene promotes ripening in foods and could lead to spoilage.", 0, 4, "Store Food Correctly" },
+                    { 3, true, "https://www.masterclass.com/articles/a-guide-to-home-food-preservation-how-to-pickle-can-ferment-dry-and-preserve-at-home", "Pickling, drying, canning, fermenting, freezing and curing are all methods you can use to make food last longer, thus reducing waste.", 0, 1, "Learn to Preserve" }
                 });
 
             migrationBuilder.InsertData(
@@ -138,7 +148,7 @@ namespace WastedAPI.Migrations
                 name: "Dishes");
 
             migrationBuilder.DropTable(
-                name: "Items");
+                name: "Ingredients");
 
             migrationBuilder.DropTable(
                 name: "Products");

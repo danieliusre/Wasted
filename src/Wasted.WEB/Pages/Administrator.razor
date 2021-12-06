@@ -150,7 +150,7 @@
 @code
 {
   List<User> users = new List<User>();
-  List<TipsModel> allTips = new();
+  List<Tip> allTips = new();
   int i;
   public int number = 1;
   int tipNr;
@@ -158,13 +158,12 @@
   Boolean initializeUsers = false;
   Boolean acceptPressed = false;
   public Tip newTip = new Tip();
-  public void RoleChangePressed ()
+  public async Task RoleChangePressed ()
   {
     acceptPressed = false;
     initializeUsers = false;
     initializeRoles = true;
     users = await AdminService.GetUserList();@*adminService.Value.GetUserList().Result;*@
-    
   }
 
   public async Task LoadRemovableList()
