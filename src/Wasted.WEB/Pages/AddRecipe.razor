@@ -1,0 +1,89 @@
+@page "/addrecipe"
+@using System.IO
+@using Wasted.Data
+@inject RecipeCalcService RecipeCalcService 
+@inject ProductService ProductService
+@inject AddRecipeService AddRecipeService
+
+<h1>ADD RECIPE</h1>
+
+<p>Number Of Ingredients: @numberOfIngredients</p>
+
+@code {
+    public int numberOfIngredients = 0;
+    private List<Product> products { get; set; }
+    private List<DishModel> recipes { get; set; }
+
+    List<RecipeItemModel> ingredients = new List<RecipeItemModel>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        products = await ProductService.GetProducts();
+        recipes = await RecipeCalcService.GetRecipes();
+    }
+    
+    int selectedProductID = 0;
+    string prodID = "";
+    string dishName = "";
+    string ingredientAmount = "";
+    string dishType = "";
+
+    public async Task AddIngredient()
+    {
+        selectedProductID = Int32.Parse(prodID);
+        ingredients = await AddRecipeService.AddIngredient(ingredients, selectedProductID, ingredientAmount);
+        numberOfIngredients++;
+    }
+
+    public async Task AddNewRecipe()
+    {
+        DishModel recipe = new DishModel();
+        recipe = await AddRecipeService.CreateRecipe(ingredients, dishName, dishType, numberOfIngredients);
+        await RecipeCalcService.AddRecipe(recipe);
+        dishName = "";
+        ingredientAmount = "";
+        dishType = "";
+        ingredients.Clear();
+        numberOfIngredients = 0;
+    }
+}
+@if (products == null)
+{
+    <p><em>Loading products...</em></p>
+}
+else{
+<div class="input">
+    <span class="inputSpan">
+        <b>Name:</b>
+        <input class="inputField" type = "text" size="10" @bind="@dishName" @oninput="(e) => { dishName = e.Value ==null? string.Empty:(string)e.Value;}"/>
+        <br><br>
+        <b>Type:</b>
+        <select class="inputField" @bind="@dishType" @oninput="(e) => { dishType = e.Value ==null? string.Empty:(string)e.Value;}">
+                        <option value="All">None</option>
+                        <option value="Baked">Baked</option>
+                        <option value="Pasta">Pasta</option>
+                        <option value="Soup">Soup</option>
+                        <option value="Salad">Salad</option>
+        </select>
+        <br><br>
+        <b>Ingredients:</b>
+        <br>
+        @foreach (var ingredient in ingredients)
+        {
+            <b> @ingredient.Item @ingredient.Amount @ingredient.Unit</b><br>
+        }
+            <br><b>NEW INGREDIENT:</b>
+            <select class="inputField" @bind="@prodID" @oninput="(e) => { prodID = e.Value ==null? string.Empty:(string)e.Value; }">
+                @foreach (var product in products)
+                {
+                    <option value="@product.Id">@product.Name</option>
+                }
+            </select>
+            <b>Amount:</b>
+            <input class="inputField" type = "number" @oninput="(e) => { ingredientAmount = e.Value ==null? string.Empty:(string)e.Value;}" size="1">
+            <button class="btn btn-primary" @onclick="AddIngredient">+</button>
+            <br>
+    </span>
+</div>
+<button class="btn btn-success" @onclick="AddNewRecipe">Add recipe</button>
+}

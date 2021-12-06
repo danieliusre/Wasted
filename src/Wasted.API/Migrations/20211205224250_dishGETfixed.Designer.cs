@@ -2,15 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Wasted.API.Data;
 
 namespace WastedAPI.Migrations
 {
     [DbContext(typeof(WastedContext))]
-    partial class WastedContextModelSnapshot : ModelSnapshot
+    [Migration("20211205224250_dishGETfixed")]
+    partial class dishGETfixed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,14 +51,14 @@ namespace WastedAPI.Migrations
                             Id = 1,
                             Name = "TEST1",
                             Type = "Baked",
-                            numberOfIngredients = 2
+                            numberOfIngredients = 4
                         },
                         new
                         {
                             Id = 2,
                             Name = "TEST2",
                             Type = "Baked",
-                            numberOfIngredients = 2
+                            numberOfIngredients = 5
                         });
                 });
 
@@ -80,25 +82,13 @@ namespace WastedAPI.Migrations
                         {
                             DishId = 1,
                             ProductId = 1,
-                            Amount = 1
+                            Amount = 100
                         },
                         new
                         {
                             DishId = 1,
                             ProductId = 3,
-                            Amount = 2
-                        },
-                        new
-                        {
-                            DishId = 2,
-                            ProductId = 4,
-                            Amount = 3
-                        },
-                        new
-                        {
-                            DishId = 2,
-                            ProductId = 5,
-                            Amount = 3
+                            Amount = 200
                         });
                 });
 
@@ -197,9 +187,6 @@ namespace WastedAPI.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<bool>("AdminApproved")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Link")
                         .IsRequired()
                         .HasMaxLength(300)
@@ -229,7 +216,6 @@ namespace WastedAPI.Migrations
                         new
                         {
                             TipId = 1,
-                            AdminApproved = true,
                             Link = "https://en.wikipedia.org/wiki/Smart_shop",
                             Name = "To avoid buying more food than you need, make frequent trips to the grocery store every few days rather than doing a bulk shopping trip once a week.",
                             TipDislikes = 0,
@@ -239,7 +225,6 @@ namespace WastedAPI.Migrations
                         new
                         {
                             TipId = 2,
-                            AdminApproved = true,
                             Link = "https://www.betterhealth.vic.gov.au/health/healthyliving/food-safety-and-storage",
                             Name = "Separating foods that produce more ethylene gas from those that don’t is another great way to reduce food spoilage. Ethylene promotes ripening in foods and could lead to spoilage.",
                             TipDislikes = 0,
@@ -249,7 +234,6 @@ namespace WastedAPI.Migrations
                         new
                         {
                             TipId = 3,
-                            AdminApproved = true,
                             Link = "https://www.masterclass.com/articles/a-guide-to-home-food-preservation-how-to-pickle-can-ferment-dry-and-preserve-at-home",
                             Name = "Pickling, drying, canning, fermenting, freezing and curing are all methods you can use to make food last longer, thus reducing waste.",
                             TipDislikes = 0,

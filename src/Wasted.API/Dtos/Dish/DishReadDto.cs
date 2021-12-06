@@ -8,7 +8,7 @@ namespace Wasted.API.Dtos
         public int Id { get; set; }
         public string Name { get; set; }
         public int numberOfIngredients { get; set; }
-        public string Ingredients { get; set; }
+        // public string Ingredients { get; set; }
         public string Type { get; set; }
     }
 }
