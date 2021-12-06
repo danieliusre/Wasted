@@ -13,20 +13,20 @@ namespace Wasted.API.Data
         {
             List<User> user = new List<User>
             {
-                new User { UserId = 0, Password = "pass", Email = "mail", FirstName = "First", LastName = "Last", Role = "admin" },
-                new User { UserId = 1, Password = "pass", Email = "mail", FirstName = "First", LastName = "Last", Role = "user" },
-                new User { UserId = 2, Password = "pass", Email = "mail", FirstName = "First", LastName = "Last", Role = "user" }
+                new User { Id = 0, Password = "PassW0rd", Email = "one@mail.com", FirstName = "Alan", LastName = "Smith", Role = "admin" },
+                new User { Id = 1, Password = "PassW0rd", Email = "two@mail.com", FirstName = "John", LastName = "Crosby", Role = "user" },
+                new User { Id = 2, Password = "PassW0rd", Email = "three@mail.com", FirstName = "Catherine", LastName = "Whelan", Role = "user" }
             };
             return user;
         }
 
         public User GetUserById(int id)
         {
-            return new User { UserId = 0, Password = "pass", Email = "mail", FirstName = "First", LastName = "Last", Role = "admin" };
+            return new User { Id = 0, Password = "PassW0rd", Email = "three@mail.com", FirstName = "Catherine", LastName = "Whelan", Role = "user" };
         }
         public User GetUserByEmail(string email)
         {
-            return new User { UserId = 0, Password = "pass", Email = "mail", FirstName = "First", LastName = "Last", Role = "admin" };
+            return new User { Id = 0, Password = "PassW0rd", Email = "three@mail.com", FirstName = "Catherine", LastName = "Whelan", Role = "user" };
         }
 
 

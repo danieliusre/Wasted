@@ -3,21 +3,19 @@
 @using Wasted.Data
 @inject RecipeCalcService RecipeCalcService 
 
-<h1>RECIPE CALCULATOR</h1>
+ <style>
+    @@import "css/Utils.css";
+ </style>
 
-<p style="font-size:20px;">Reduce food waste by using leftover products!</p>
+<div class="justify para">
+    <h1>RECIPE CALCULATOR</h1>
 
-<p style="font-size:20px;">Using this page you will be able to enter (or upload) the produce, and we will provide you with endless recipes, where you can use them!</p>
-<hr><hr>
+    <p style="font-size:20px;">Reduce food waste by using leftover products!</p>
 
-<button class="btn btn-primary" @onclick="SaveList">Save list</button>
+    <p style="font-size:20px;">Using this page you will be able to enter (or upload) the produce, and we will provide you with endless recipes, where you can use them!</p>
+</div>
 
-@* <button class="btn btn-primary" @onclick="(async () => await FindRecipe())">Find a recipe!</button> *@
-<button class="btn btn-primary" @onclick="FindRecipe">Find a recipe!</button>
-
-<button class="btn btn-danger" @onclick="RemoveExpiredProducts">Remove Expired</button>
-
-<hr>
+<div class="inline"></div>
 
 @code {
 
@@ -26,6 +24,7 @@
     string unitTextField = "";
     string dateTextField = "";
     string dishFilter = "All";
+    bool FindRecipePressed = false;
     List<RecipeItemModel> products = new();
     List<String> expiringProducts = new();
     List<String> expiredProducts = new();
@@ -81,6 +80,7 @@
     {
         CanMakeDish makeable = new CanMakeDish(RecipeCalcService.haveEnoughIngredients);
         dishes = await RecipeCalcService.FindRecipe(products, makeable);
+        FindRecipePressed = true;
     }
 
     private void GetDishType(string sender)
@@ -95,109 +95,143 @@
         expiredProducts.Clear();
     }
 }
-<table class="table">
-    <thead>
-        <tr>
-            <th>Item</th>
-            <th>Amount</th>
-            <th>Measurement</th>
-            <th>Best until</th>
-            <th>Add/Remove</th>
-        </tr>
-    </thead>
-    <tbody>
-    @foreach (var product in products)
-    {
-        <tr>
-            <td>@product.Item</td>
-            <td>@product.Amount</td>
-            <td>@product.Unit</td> 
-            <td>@product.Date</td> 
-            <td>
-            <button class="btn btn-danger" @onclick="() => products.Remove(product)">-</button>
-            </td>
-        </tr>
-    }
-    </tbody>
-</table>
-
-<div class="input">
-    <span class="inputSpan">
-        <input class="inputField" type = "text" size="10" id="itemfieldid" @bind="@itemTextField" @oninput="(e) => { itemTextField = e.Value ==null? string.Empty:(string)e.Value;}"/> 
-        <input class="inputField" type = "number" id="leftfieldid" @bind="@leftTextField" @oninput="(e) => { leftTextField = e.Value ==null? string.Empty:(string)e.Value;}"/> 
-        <select class="inputField" @bind="@unitTextField" @oninput="(e) => { unitTextField = e.Value ==null? string.Empty:(string)e.Value;}" name="unit" id="unit">
-                        <option value="g">g</option>
-                        <option value="kg">kg</option>
-                        <option value="l">l</option>
-                        <option value="ml">ml</option>
-                        <option value="oz">oz</option>
-                        <option value="unit(s)"></option>
-        </select>
-        <input class="inputField" @oninput="(e) => { dateTextField = e.Value ==null? string.Empty:(string)e.Value;}" type="date" id="bestuntilday" name="bestuntilday" size="1">
-        <button class="btn btn-primary" @onclick="AddProduct">+</button>
-    </span>
-</div>
-
-@if(dishes.Any())
-{
-    <h1><font color=#3a0647><br>Here's what you can make:</font></h1>
-        <div>
-            <button class="btn btn-info" @onclick='() => GetDishType("All")'>All</button>
-            <button class="btn btn-info" @onclick='() => GetDishType("Baked")'>Baked</button>
-            <button class="btn btn-info" @onclick='() => GetDishType("Pasta")'>Pasta</button>
-            <button class="btn btn-info" @onclick='() => GetDishType("Salad")'>Salad</button>
-            <button class="btn btn-info" @onclick='() => GetDishType("Soup")'>Soup</button> 
-        </div>
-    <h1><font style="color:#3a0647;font-size:20px">(Showing @dishFilter)</font></h1>
-}
-
-@if(dishes.Any())
-{
-    <dl class="Recipes" >
-    @foreach (var dish in dishes) 
-    {
-        if(dishFilter == "All" || dishFilter == dish.Type)
+<div class="paragraphBlock">
+    <h2 style="text-align:center">YOUR PRODUCTS</h2>
+    <br>
+    <table class="table table-striped" style="text-align:left">
+        <thead class="thead-light">
+            <tr>
+                <th>Item</th>
+                <th>Amount</th>
+                <th>Measurement</th>
+                <th>Best until</th>
+                <th>Add/Remove</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var product in products)
         {
-        <dt style="color:#3a0647;font-size:30px;">@dish.Name</dt>
-            <dd1>You will need:</dd1>
-                <ul>
-                    @foreach (var Ingredient in dish.Ingredients)
-                    {
-                        <li style="color:#3a0647;font-size:20px;">@Ingredient.Item @Ingredient.Amount @Ingredient.Unit</li>
-                    }
-                </ul>
+            <tr>
+                <td>@product.Item</td>
+                <td>@product.Amount</td>
+                <td>@product.Unit</td> 
+                <td>@product.Date</td> 
+                <td>
+                <button class="btn btn-danger" @onclick="() => products.Remove(product)">-</button>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+    <br>
+
+    <div class="input distributeEvenly">
+        <span class="inputSpan">
+            <input class="inputField" type = "text" size="10"  placeholder = "Product" @bind="@itemTextField" @oninput="(e) => { itemTextField = e.Value ==null? string.Empty:(string)e.Value;}"/> 
+        </span>
+
+        <span class="inputSpan">
+            <input class="inputField" type = "number" @bind="@leftTextField" placeholder = "Amount" @oninput="(e) => { leftTextField = e.Value ==null? string.Empty:(string)e.Value;}"/> 
+        </span>
+
+        <span class="inputSpan">
+            <select class="inputField" @bind="@unitTextField" @oninput="(e) => { unitTextField = e.Value ==null? string.Empty:(string)e.Value;}" name="unit" >
+                            <option value="g">g</option>
+                            <option value="kg">kg</option>
+                            <option value="l">l</option>
+                            <option value="ml">ml</option>
+                            <option value="oz">oz</option>
+                            <option value="unit(s)"></option>
+            </select>
+        </span>
+
+        <span class="inputSpan">
+            <input class="inputField" @oninput="(e) => { dateTextField = e.Value ==null? string.Empty:(string)e.Value;}" type="date"  name="bestuntilday" size="1">
+        </span>
+
+        <span class="inputSpan">
+             <button class="btn btn-primary" @onclick="AddProduct">+</button>
+        </span>
+    </div>
+    <br>
+    <div class="text-align: center">
+        <button class="learnmore" @onclick="SaveList">Save list</button>
+    </div>
+</div>
+<br>
+<div class="container">
+    @if(expiredProducts.Any())
+    {
+        <div class="expired" style="margin-right:3%" >
+            <h2><font style="color:red;">Be careful! These products have already expired:</font></h2>
+            <font style="color:#3a0647;">
+            <ul>
+                @foreach (string expiredProduct in expiredProducts)
+                {
+                    <li style="color:#3a0647;font-size:25px;">@expiredProduct</li>
+                }
+            </ul>
+            <button class="learnmore" @onclick="RemoveExpiredProducts">Remove Expired</button>
+            </font>
+        </div>
+    }
+    @if(expiringProducts.Any())
+    {
+        <div class="expired">
+            <h2><font style="color:#3a0647;">These products have 4 or less days left, before they expire:</font></h2>
+            <ul>
+                @foreach (string expiringProduct in expiringProducts)
+                {
+                    <li style="color:#3a0647;font-size:25px;">@expiringProduct</li>
+                }
+            </ul>
+        </div>
+    }
+</div>
+<br>
+<div class="paragraphBlock">
+    @if(!FindRecipePressed)
+    {
+        <button class="learnmore" @onclick="FindRecipe">Find a recipe!</button>
+    }
+    @if(dishes.Any())
+    {
+        <h1><font color=#3a0647>Here's what you can make:</font></h1>
+            <div>
+                <button class="btn btn-info" @onclick='() => GetDishType("All")'>All</button>
+                <button class="btn btn-info" @onclick='() => GetDishType("Baked")'>Baked</button>
+                <button class="btn btn-info" @onclick='() => GetDishType("Pasta")'>Pasta</button>
+                <button class="btn btn-info" @onclick='() => GetDishType("Salad")'>Salad</button>
+                <button class="btn btn-info" @onclick='() => GetDishType("Soup")'>Soup</button> 
+            </div>
+        <h1><font style="color:#3a0647;font-size:20px">(Showing @dishFilter)</font></h1>
+    }
+
+    @if(dishes.Any())
+    {
+        <dl class="Recipes" >
+            @foreach (var dish in dishes) 
+            {
+                if(dishFilter == "All" || dishFilter == dish.Type)
+                {
+                    <dt style="color:#3a0647;font-size:30px;">@dish.Name</dt>
+                    <dd1>You will need:</dd1>
+                    <ul>
+                        @foreach (var Ingredient in dish.Ingredients)
+                        {
+                            <li style="color:#3a0647;font-size:20px;">@Ingredient.Item @Ingredient.Amount @Ingredient.Unit</li>
+                        }
+                    </ul>
                 }
             }
-            </dl> 
-}
+        </dl> 
+    }
+</div>
+<br>
 
-@if(expiredProducts.Any())
-{
-    <div class="expire">
-        <h2><font style="color:red;"><br>Be careful! These products have already expired:</font></h2>
-        <ul>
-            @foreach (string expiredProduct in expiredProducts)
-            {
-                <li style="color:red;font-size:25px;">@expiredProduct</li>
-            }
-        </ul>
-    </div>
-}
+@* @if(@RecipeCalcService.MsgToUser != "")
 
-@if(expiringProducts.Any())
-{
-    <div class="expire">
-        <h2><font style="color:#ff9900;"><br>These products have 4 or less days left, before they expire:</font></h2>
-        <ul>
-            @foreach (string expiringProduct in expiringProducts)
-            {
-                <li style="color:#ff9900;font-size:25px;">@expiringProduct</li>
-            }
-        </ul>
-    </div>
-}
-@* 
-@if(@RecipeCalcService.MsgToUser != "")
 {
     if(@RecipeCalcService.MsgToUser == @RecipeCalcService.ExpiredListTooLong)
     {
@@ -215,5 +249,6 @@
             <h2><br>@RecipeCalcService.MsgToUser</h2>
         </div>
     }
-}
-*@
+} *@
+    
+

@@ -1,8 +1,8 @@
 @page "/admin"
 @using Wasted.Data
 @using System.Collections.Generic
-@inject RegistrationService RegistrationService
 @inject TipsService TipsService
+@inject AdminService AdminService
 <style>
     @@import "css/Utils.css"
 </style>
@@ -80,10 +80,10 @@
               ++i;
               <tr>
                 <th scope="row">@i</th>
-                <td>@user.Name</td>
+                <td>@user.FirstName</td>
                 <td>@user.Lastname</td>
                 <td>@user.Email</td>
-                <td><button class="btn btn-danger" @onclick="() => {users.Remove(user); UserRemovePressed();}">-</button></td>
+                <td><button class="btn btn-danger" @onclick="() => {UserRemovePressed(user.Id);}">-</button></td>
               </tr>
             }
           }
@@ -114,14 +114,14 @@
               ++i;
               <tr>
                 <th scope="row">@i</th>
-                <td>@user.Name</td>
+                <td>@user.FirstName</td>
                 <td>@user.Lastname</td>
                 <td>@user.Email</td>
                 @if(user.Role == "admin")
                 {
                   <label class="switch">
                     <input type="checkbox" Checked = "true" 
-                      @onchange = "() => {users = adminService.Value.ChangeRole(user.Email, user.Role, users);}"
+                      @onchange = "() => AdminService.ChangeRole(user)"
                     >
                     <span class="slider round"></span>
                   </label>
@@ -130,7 +130,7 @@
                 {
                   <label class="switch">
                     <input type="checkbox" 
-                    @onchange = "() => {users = adminService.Value.ChangeRole(user.Email, user.Role, users);}"
+                    @onchange = "() => AdminService.ChangeRole(user)"
                     >
                     <span class="slider round"></span>
                   </label>
@@ -150,8 +150,7 @@
 @code
 {
   List<User> users = new List<User>();
-  List<Tip> allTips = new();
-  Lazy<AdminService> adminService = new Lazy<AdminService>();
+  List<TipsModel> allTips = new();
   int i;
   public int number = 1;
   int tipNr;
@@ -164,15 +163,16 @@
     acceptPressed = false;
     initializeUsers = false;
     initializeRoles = true;
-    users = adminService.Value.GetUserList();
+    users = await AdminService.GetUserList();@*adminService.Value.GetUserList().Result;*@
+    
   }
 
-  public void LoadRemovableList()
+  public async Task LoadRemovableList()
   {
     acceptPressed = false;
     initializeRoles = false;
     initializeUsers = true;
-    users = adminService.Value.GetUserList();
+    users = await AdminService.GetUserList();
   }
 
   public void deleteTip(int Id)
@@ -204,8 +204,9 @@
     newTip = new Tip();
   }
 
-  public void UserRemovePressed()
+  public void UserRemovePressed(int id)
   {
-    adminService.Value.writeToFile("UserData.json", users);
-  }   
+    AdminService.removeUser(id);
+    users.RemoveAll(user => user.Id == id);
+  }  
 }

@@ -73,7 +73,7 @@ namespace WastedAPI.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    UserId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Password = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
@@ -83,7 +83,7 @@ namespace WastedAPI.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users", x => x.UserId);
+                    table.PrimaryKey("PK_Users", x => x.Id);
                 });
 
             migrationBuilder.InsertData(
@@ -100,13 +100,13 @@ namespace WastedAPI.Migrations
                 columns: new[] { "Id", "EnergyValue", "MeasurementUnits", "Name", "Type" },
                 values: new object[,]
                 {
-                    { 1, 158.48699999999999, "kg", "Apple", "Fruit" },
-                    { 2, 284.54599999999999, "kg", "Troat", "Fish" },
-                    { 3, 120.69199999999999, "g", "Orange", "Fruit" },
-                    { 4, 262.178, "kg", "Blackberry", "Berry" },
-                    { 5, 352.69799999999998, "kg", "Cheese", "Dairy" },
                     { 6, 271.745, "kg", "Bass", "Fish" },
-                    { 7, 175.12450000000001, "l", "Buttermilk", "Dairy" }
+                    { 5, 352.69799999999998, "kg", "Cheese", "Dairy" },
+                    { 4, 262.178, "kg", "Blackberry", "Berry" },
+                    { 7, 175.12450000000001, "l", "Buttermilk", "Dairy" },
+                    { 2, 284.54599999999999, "kg", "Troat", "Fish" },
+                    { 1, 158.48699999999999, "kg", "Apple", "Fruit" },
+                    { 3, 120.69199999999999, "g", "Orange", "Fruit" }
                 });
 
             migrationBuilder.InsertData(
@@ -121,12 +121,14 @@ namespace WastedAPI.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "UserId", "Email", "FirstName", "LastName", "Password", "Role" },
+                columns: new[] { "Id", "Email", "FirstName", "LastName", "Password", "Role" },
                 values: new object[,]
                 {
-                    { 1, "mail1", "First1", "Last", "pass1", "user" },
-                    { 2, "mail2", "First2", "Last1", "pass2", "user" },
-                    { 3, "mail3", "First", "Last2", "pass3", "admin" }
+                    { 4, "karolis@gmail.com", "Karolis", "Valkauskas", "Karolis123", "admin" },
+                    { 1, "julius.nar@gmail.com", "Julius", "Narkunas", "JuliusNer1", "user" },
+                    { 2, "danielius.rekus@gmail.com", "Danielius", "Rekus", "Danius123", "admin" },
+                    { 3, "mariuks@gmail.com", "Marius", "Ivanausas", "Jhbj433h", "user" },
+                    { 5, "kajus@outlook.com", "Kajus", "Orsauskas", "Kaj47474p", "user" }
                 });
         }
 

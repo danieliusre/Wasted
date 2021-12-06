@@ -2,18 +2,25 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Net.Mail;
-using Newtonsoft.Json;
+using System.Threading.Tasks;
 using Serilog;
 
 
 namespace Wasted.Data
 {
+    
     public class RegistrationService
     { 
-        private JsonFileService _jsonFileService = new JsonFileService();
-        public List<string> ErrMsg = new List<string>();
-        public List<string> AddUserData(string NameBox, string LastNameBox, string EmailBox, string PasswordBox, List<User> users)
+        private readonly HttpHelper _httpHelper;
+
+        public RegistrationService(HttpHelper httpHelper)
         {
+            _httpHelper = httpHelper;
+        }
+        public List<string> ErrMsg = new List<string>();
+        public async Task<List<string>> AddUserData(string NameBox, string LastNameBox, string EmailBox, string PasswordBox)
+        {
+            List<User> users = new();
             try
             {
                 Log.Information("Starting to Registration service");
@@ -21,15 +28,16 @@ namespace Wasted.Data
                 {
                     if(newEmail(EmailBox, users) && emailValid(EmailBox))
                     {
-                        users = CreateUserList();
-                        users.Add(new User(){
-                            Name = NameBox,
-                            Lastname = LastNameBox,
-                            Email = EmailBox,
-                            Password = PasswordBox,
-                            Role = "user"
-                        });
-                        writeToFile("UserData.json", users);
+                        users = await GetUserList();
+                        User user = new ();
+                       
+                            user.FirstName = NameBox;
+                            user.Lastname = LastNameBox;
+                            user.Email = EmailBox;
+                            user.Password = PasswordBox;
+                            user.Role = "user";
+                       
+                        var id =  await _httpHelper.Post<User>(user,"user");
                         ErrMsg.Clear();
                         ErrMsg.Add("Success! Welcome to the Wasted family!");
                     }
@@ -88,30 +96,19 @@ namespace Wasted.Data
             }
         }
 
-        public List<User> CreateUserList()
+        public async Task<List<User>> GetUserList()
         {
-            List<User> users = new List<User>();
+            List<User> users = new();
             try 
             {
-                Log.Information("Starting to CreateUserList");
-                string json = _jsonFileService.ReadJsonFromFile(@"UserData.json");
-                users = JsonConvert.DeserializeObject<List<User>>(json);
-                Log.Information("Finished to CreateUserList");
+                Log.Information("Starting to read UserList");
+                users =  new List<User>(await _httpHelper.GetList<User>("user"));
+                Log.Information("Finished reading UserList");
             }
-            catch(FileNotFoundException e)
-            {
-                Log.Error(e.Message);
-            }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Log.Error("Exception caught: {0}",e);
             }
-            return users;
-        }
-        public List<User> GetUserList()
-        {
-            List<User> users = new List<User>();
-            users = CreateUserList();
             return users;
         }
 
@@ -159,20 +156,6 @@ namespace Wasted.Data
             }
 
         }
-        public void writeToFile(string filePath, List<User> users)
-        {
-            try
-            {
-                Log.Information("Starting to writeToFile(RegisteringService)");
-                string json = JsonConvert.SerializeObject(users, Formatting.Indented);
-                File.WriteAllText(filePath, json);
-                Log.Information("Finished writing to file");
-            }
-            catch (Exception e)
-            {
-                Log.Error("Exception caught {0}", e);
-            }
-        }
 
         public bool CheckSignIn(string SignInEmailBox, string SignInPasswordBox, List<User> users)
         {
@@ -195,20 +178,6 @@ namespace Wasted.Data
             return false;
         }
 
-        public string getName (List<User> users, string email)
-        {
-            Log.Information("Starting to getName(Sign in)");
-            foreach(User user in users)
-            {
-                if(user.Email == email)
-                {
-                    Log.Information("Finished getName(Sign in)-success");
-                    return user.Name;
-                }
-            }
-            Log.Information("Finished getName(Sign in)-failure");
-            return "";
-        }
 
         public string GetRole(string email, List<User> users)
         {
