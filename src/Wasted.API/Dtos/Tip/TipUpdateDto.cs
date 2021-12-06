@@ -19,5 +19,8 @@ namespace Wasted.API.Dtos
 
         [MaxLength(300)]
         public string Link { get; set; }
+
+        [Required]
+        public Boolean AdminApproved {get; set;}
     }
 }

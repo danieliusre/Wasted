@@ -2,15 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Wasted.API.Data;
 
 namespace WastedAPI.Migrations
 {
     [DbContext(typeof(WastedContext))]
-    partial class WastedContextModelSnapshot : ModelSnapshot
+    [Migration("20211130164130_Added table Tip")]
+    partial class AddedtableTip
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,6 +26,11 @@ namespace WastedAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Ingredients")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -47,59 +54,39 @@ namespace WastedAPI.Migrations
                         new
                         {
                             Id = 1,
-                            Name = "TEST1",
+                            Ingredients = "unknown",
+                            Name = "Chocolate Cake",
                             Type = "Baked",
-                            numberOfIngredients = 2
+                            numberOfIngredients = 4
                         },
                         new
                         {
                             Id = 2,
-                            Name = "TEST2",
+                            Ingredients = "unknown",
+                            Name = "Brownies",
                             Type = "Baked",
-                            numberOfIngredients = 2
+                            numberOfIngredients = 5
                         });
                 });
 
-            modelBuilder.Entity("Wasted.API.Models.Ingredient", b =>
+            modelBuilder.Entity("Wasted.API.Models.Item", b =>
                 {
-                    b.Property<int>("DishId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("Amount")
+                        .HasMaxLength(50)
                         .HasColumnType("int");
 
-                    b.HasKey("DishId", "ProductId");
+                    b.Property<string>("Date")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.ToTable("Ingredients");
+                    b.HasKey("Id");
 
-                    b.HasData(
-                        new
-                        {
-                            DishId = 1,
-                            ProductId = 1,
-                            Amount = 1
-                        },
-                        new
-                        {
-                            DishId = 1,
-                            ProductId = 3,
-                            Amount = 2
-                        },
-                        new
-                        {
-                            DishId = 2,
-                            ProductId = 4,
-                            Amount = 3
-                        },
-                        new
-                        {
-                            DishId = 2,
-                            ProductId = 5,
-                            Amount = 3
-                        });
+                    b.ToTable("Items");
                 });
 
             modelBuilder.Entity("Wasted.API.Models.Product", b =>
@@ -260,7 +247,7 @@ namespace WastedAPI.Migrations
 
             modelBuilder.Entity("Wasted.API.Models.User", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("UserId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -290,55 +277,37 @@ namespace WastedAPI.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.HasKey("Id");
+                    b.HasKey("UserId");
 
                     b.ToTable("Users");
 
                     b.HasData(
                         new
                         {
-                            Id = 1,
-                            Email = "julius.nar@gmail.com",
-                            FirstName = "Julius",
-                            LastName = "Narkunas",
-                            Password = "JuliusNer1",
+                            UserId = 1,
+                            Email = "mail1",
+                            FirstName = "First1",
+                            LastName = "Last",
+                            Password = "pass1",
                             Role = "user"
                         },
                         new
                         {
-                            Id = 2,
-                            Email = "danielius.rekus@gmail.com",
-                            FirstName = "Danielius",
-                            LastName = "Rekus",
-                            Password = "Danius123",
+                            UserId = 2,
+                            Email = "mail2",
+                            FirstName = "First2",
+                            LastName = "Last1",
+                            Password = "pass2",
+                            Role = "user"
+                        },
+                        new
+                        {
+                            UserId = 3,
+                            Email = "mail3",
+                            FirstName = "First",
+                            LastName = "Last2",
+                            Password = "pass3",
                             Role = "admin"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Email = "mariuks@gmail.com",
-                            FirstName = "Marius",
-                            LastName = "Ivanausas",
-                            Password = "Jhbj433h",
-                            Role = "user"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Email = "karolis@gmail.com",
-                            FirstName = "Karolis",
-                            LastName = "Valkauskas",
-                            Password = "Karolis123",
-                            Role = "admin"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Email = "kajus@outlook.com",
-                            FirstName = "Kajus",
-                            LastName = "Orsauskas",
-                            Password = "Kaj47474p",
-                            Role = "user"
                         });
                 });
 #pragma warning restore 612, 618

@@ -22,10 +22,7 @@ namespace Wasted.Data
              _jsonFileService = jsonFileService;
              _httpHelper = httpHelper;
         }
-        // public RecipeCalcService(HttpHelper httpHelper)
-        // {
-        //      _httpHelper = httpHelper;
-        // }
+
         public async Task<List<RecipeItemModel>> GetProducts()
         {
             var products =  new List<RecipeItemModel>();
@@ -67,20 +64,21 @@ namespace Wasted.Data
             return Task.FromResult(products);
         }
 
-        public Task<List<DishModel>> SaveRecipes(List<DishModel> recipes)
+        public async Task<DishModel> AddRecipe(DishModel recipe)
         {
             var filePath = "Recipes.json";
             try 
             {
-                Log.Information("Starting writing Recipes.json");
-                _jsonFileService.WriteJsonToFile(JsonConvert.SerializeObject(recipes, Formatting.Indented),filePath);
-                Log.Information("Finished writing Recipes.json");
+                Log.Information("Starting writing recipe");
+                var dish = await _httpHelper.Post<DishModel>(recipe, "dish");
+                _jsonFileService.WriteJsonToFile(JsonConvert.SerializeObject(recipe, Formatting.Indented),filePath);
+                Log.Information("Finished writing recipe");
             }
             catch (Exception e)
             {
                 Log.Error("Exception caught: {0}",e);
             }
-            return Task.FromResult(recipes);
+            return recipe;
         }
 
 
@@ -156,12 +154,8 @@ namespace Wasted.Data
             try 
             {
                 await Task.Delay(1);
-                Log.Information("Starting to search for Recipes");
-                //var recipes =  new List<DishModel>(await _httpHelper.GetList<DishModel>("dish"));
-                //var recipes = await GetRecipes();
-                var filepath = "Recipes.json";
-                var recipes = JsonConvert.DeserializeObject<List<DishModel>>(_jsonFileService.ReadJsonFromFile(filepath));
-                //to be removed when DB is fixed
+                Log.Information("Starting to search for recipes");
+                var recipes = await GetRecipes();
                 dishesAbleToMake = recipes.Where(recipe => haveEnoughIngredients(products, recipe) == true).ToList();
                 Log.Information("Finished finding all recipes");
             }
@@ -180,10 +174,7 @@ namespace Wasted.Data
             {
                 Log.Information("Starting to read api/dish");
                 await Task.Delay(1);
-                //recipes =  new List<DishModel>(await _httpHelper.GetList<DishModel>("dish"));
-                var filepath = "Recipes.json";
-                recipes = JsonConvert.DeserializeObject<List<DishModel>>(_jsonFileService.ReadJsonFromFile(filepath));
-                //to be removed when DB is fixed
+                recipes =  new List<DishModel>(await _httpHelper.GetList<DishModel>("dish"));
                 Log.Information("Finished reading api/dish");
             }
             catch(FileNotFoundException e)
@@ -229,20 +220,4 @@ namespace Wasted.Data
             return false;
         }
     }
-
-    // public class DishType
-    // {
-    //     public string Type {get; set;}
-    //     public static Lazy<DishType> ReturnDishType(string sender)
-    //     {
-    //         var dishType = new Lazy<DishType>();
-    //         dishType.Value.getDishType(sender);
-    //         return dishType;
-    //     }
-
-    //     public string getDishType(string sender)
-    //     {
-    //         return sender;
-    //     }
-    // }
 }

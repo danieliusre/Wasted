@@ -12,9 +12,9 @@ namespace Wasted.API.Dtos
         [Required]
         public int numberOfIngredients { get; set; }
 
-        [Required]
-        [MaxLength(500)]
-        public string Ingredients { get; set; }
+        // [Required]
+        // [MaxLength(500)]
+        // public string Ingredients { get; set; }
 
         [Required]
         [MaxLength(50)]
