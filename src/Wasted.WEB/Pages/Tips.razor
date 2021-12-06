@@ -17,12 +17,12 @@
 		{
 			if(tips.AdminApproved == true)
 			{
-				tipNr = tips.TipNumber;
+				tipNr = tips.TipId;
 				<h2 class = "h2"><br>@tips.TipName
-					<i @onclick="() => LikePressed(tips.TipNumber)" class="fa fa-thumbs-up">
+					<i @onclick="() => LikePressed(tips.TipId)" class="fa fa-thumbs-up">
 						@tips.TipLikes
 					</i>
-					<i @onclick="() => DislikePressed(tips.TipNumber)" class="fa fa-thumbs-down">
+					<i @onclick="() => DislikePressed(tips.TipId)" class="fa fa-thumbs-down">
 						@tips.TipDislikes
 					</i>
 				</h2>
@@ -44,9 +44,9 @@
 		<hr><hr>
 		<p class = "p">Add your own helpful tip!</p>
 		<div> 
-        <input class="form-control tac textField" type="text"  placeholder="Tip name" @bind="@NameTextField"/>
-        <input class="form-control tac textField" type="text"   placeholder="Tip" @bind="@TipTextField"/>
-        <input class="form-control tac textField" type="text"  placeholder="Link for more information about it"  @bind="@LinkTextField"  @oncustompaste="HandleCustomPaste"/>
+        <input class="form-control tac textField" type="text"  placeholder="Tip name" @bind="@newTip.TipName"/>
+        <input class="form-control tac textField" type="text"   placeholder="Tip" @bind="@newTip.Name"/>
+        <input class="form-control tac textField" type="text"  placeholder="Link for more information about it"  @bind="@newTip.Link"  @oncustompaste="HandleCustomPaste"/>
 		<p>@message</p>
     	</div>
 		<ul>
@@ -59,47 +59,37 @@
 		<div>
         <button class="learnmore" type="submit" @onclick="SubmitPressed"> Submit </button>
 		</div>
-		<br>
 		<div id = "vertically-aligned-block"class="flex float">
 </div>
     	
 
 @code{
 	public static List<string> ErrorMessages = new List<string>();
-	List<TipsModel> allTips = new();
+	private List<Tip> allTips = new ();
 	public int number = 1;
 	public int tipNr = 0;
-	string NameTextField = "";
-	string TipTextField = "";
-	string LinkTextField = "";
 	public int clickLikeCount;
 	public int clickDislikeCount;
 	string message;
 
-    protected override void OnInitialized()
+	public Tip newTip = new Tip();
+
+  	protected override async Task OnInitializedAsync()
     {
-		allTips = TipsService.GetTips();
-       
+		allTips = await TipsService.GetTips();
     }
 
 	void HandleCustomPaste(CustomPasteEventArgs eventArgs)
     {
         message = $"At {eventArgs.EventTimestamp.ToShortTimeString()}, you pasted: {eventArgs.PastedData}";
     }
-	public void SubmitPressed()
-    {
-		ErrorMessages.Clear();
-        ErrorMessages = TipsService.AddTip(NameTextField, TipTextField, LinkTextField, tipNr, allTips);
-		ErrorMessages.Clear();
-        NameTextField = "";
-        TipTextField = "";
-        LinkTextField = "";
-	}
 
-	public void SavePressed()
+	public async Task SubmitPressed()
     {
-       TipsService.SaveTips(allTips);
-	}
+        newTip.TipId = await TipsService.AddTip(newTip);
+        allTips.Add(newTip);
+        newTip = new Tip();
+    }
 	public void LikePressed(int nr)
     {
 		if (number != nr){

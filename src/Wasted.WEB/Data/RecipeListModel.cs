@@ -13,8 +13,8 @@ namespace Wasted.Data
     
     public class DishModel : IComparable<DishModel>
     {
+        public int Id {get; set;}
         public string Name {get; set;}
-
         public int numberOfIngredients;
         public List<RecipeItemModel> Ingredients {get; set;}
 

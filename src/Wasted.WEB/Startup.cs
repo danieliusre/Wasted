@@ -48,6 +48,8 @@ namespace Wasted
             services.AddSingleton<Admins>();
             services.AddSingleton<AdminService>();
             services.AddSingleton<FridgeService>();
+            services.AddSingleton<AddRecipeService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -2,15 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Wasted.API.Data;
 
 namespace WastedAPI.Migrations
 {
     [DbContext(typeof(WastedContext))]
-    partial class WastedContextModelSnapshot : ModelSnapshot
+    [Migration("20211206123151_context")]
+    partial class context
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -197,9 +199,6 @@ namespace WastedAPI.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<bool>("AdminApproved")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Link")
                         .IsRequired()
                         .HasMaxLength(300)
@@ -229,7 +228,6 @@ namespace WastedAPI.Migrations
                         new
                         {
                             TipId = 1,
-                            AdminApproved = true,
                             Link = "https://en.wikipedia.org/wiki/Smart_shop",
                             Name = "To avoid buying more food than you need, make frequent trips to the grocery store every few days rather than doing a bulk shopping trip once a week.",
                             TipDislikes = 0,
@@ -239,7 +237,6 @@ namespace WastedAPI.Migrations
                         new
                         {
                             TipId = 2,
-                            AdminApproved = true,
                             Link = "https://www.betterhealth.vic.gov.au/health/healthyliving/food-safety-and-storage",
                             Name = "Separating foods that produce more ethylene gas from those that don’t is another great way to reduce food spoilage. Ethylene promotes ripening in foods and could lead to spoilage.",
                             TipDislikes = 0,
@@ -249,7 +246,6 @@ namespace WastedAPI.Migrations
                         new
                         {
                             TipId = 3,
-                            AdminApproved = true,
                             Link = "https://www.masterclass.com/articles/a-guide-to-home-food-preservation-how-to-pickle-can-ferment-dry-and-preserve-at-home",
                             Name = "Pickling, drying, canning, fermenting, freezing and curing are all methods you can use to make food last longer, thus reducing waste.",
                             TipDislikes = 0,
@@ -260,7 +256,7 @@ namespace WastedAPI.Migrations
 
             modelBuilder.Entity("Wasted.API.Models.User", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("UserId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -290,55 +286,37 @@ namespace WastedAPI.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.HasKey("Id");
+                    b.HasKey("UserId");
 
                     b.ToTable("Users");
 
                     b.HasData(
                         new
                         {
-                            Id = 1,
-                            Email = "julius.nar@gmail.com",
-                            FirstName = "Julius",
-                            LastName = "Narkunas",
-                            Password = "JuliusNer1",
+                            UserId = 1,
+                            Email = "mail1",
+                            FirstName = "First1",
+                            LastName = "Last",
+                            Password = "pass1",
                             Role = "user"
                         },
                         new
                         {
-                            Id = 2,
-                            Email = "danielius.rekus@gmail.com",
-                            FirstName = "Danielius",
-                            LastName = "Rekus",
-                            Password = "Danius123",
+                            UserId = 2,
+                            Email = "mail2",
+                            FirstName = "First2",
+                            LastName = "Last1",
+                            Password = "pass2",
+                            Role = "user"
+                        },
+                        new
+                        {
+                            UserId = 3,
+                            Email = "mail3",
+                            FirstName = "First",
+                            LastName = "Last2",
+                            Password = "pass3",
                             Role = "admin"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Email = "mariuks@gmail.com",
-                            FirstName = "Marius",
-                            LastName = "Ivanausas",
-                            Password = "Jhbj433h",
-                            Role = "user"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Email = "karolis@gmail.com",
-                            FirstName = "Karolis",
-                            LastName = "Valkauskas",
-                            Password = "Karolis123",
-                            Role = "admin"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Email = "kajus@outlook.com",
-                            FirstName = "Kajus",
-                            LastName = "Orsauskas",
-                            Password = "Kaj47474p",
-                            Role = "user"
                         });
                 });
 #pragma warning restore 612, 618

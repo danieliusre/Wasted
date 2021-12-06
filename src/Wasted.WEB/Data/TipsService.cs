@@ -5,27 +5,27 @@ using System.IO;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Serilog;
+using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace Wasted.Data
 {
     public class TipsService
     {
-        private readonly JsonFileService _jsonFileService;
-
         public List<string> ErrorMsg = new List<string>();
-        public TipsService(JsonFileService jsonFileService)
-        {
-            _jsonFileService = jsonFileService;
-        }
+        private readonly HttpHelper _httpHelper;
 
-        public List<TipsModel> GetTips()
+        public TipsService(HttpHelper httpHelper)
         {
-            var tips =  new List<TipsModel>();
-            var filepath =  "TipsList.json";
+            _httpHelper = httpHelper;
+        }
+        public async Task<List<Tip>> GetTips()
+        {
+            var tips =  new List<Tip>();
             try 
             {
                 Log.Information("Started reading TipList");
-                tips = JsonConvert.DeserializeObject<List<TipsModel>>(_jsonFileService.ReadJsonFromFile(filepath));
+                tips =  new List<Tip>(await _httpHelper.GetList<Tip>("tip"));
                 Log.Information("Finished reading TipList");
             }
             catch(FileNotFoundException e)
@@ -38,123 +38,92 @@ namespace Wasted.Data
             }
             return tips;
         }
-
-         public List<string> AddTip(string NameTextField, string TipTextField, string LinkTextField, int tipNr, List<TipsModel> allTips)
+        public async Task<int> AddTip(Tip tips)
         {
-            tipNr = tipNr+1;
-            try
-            {
-                if( DataValid (NameTextField, TipTextField, LinkTextField))
-                {
-                Log.Information("Starting to Tips service");
-                        allTips.Add(new TipsModel(){
-                            TipNumber = tipNr,
-                            TipName = NameTextField,
-                            Name = TipTextField,
-                            TipLikes = 0,
-                            TipDislikes = 0,
-                            Link = LinkTextField,
-                            AdminApproved = false,
-                        });
-                        writeToFile("TipsList.json", allTips);
-                        ErrorMsg.Add("Success! Thank you for the new tip!");
-                }
-                else
-                {
-                    ErrorMsg.Clear();
-                    ErrorMsg.Add("Correct your tip!");
-                }
-            }
-            catch (Exception e)
-            {
-                Log.Error("Exception caught: {0}", e);
-            }
-            return ErrorMsg;
-        }
-
-        public void writeToFile(string filePath, List<TipsModel> allTips)
-        {
-            try
-            {
-                Log.Information("Starting to writeToFile(TipsList)");
-                string json = JsonConvert.SerializeObject(allTips, Formatting.Indented);
-                File.WriteAllText(filePath, json);
-                Log.Information("Finished writing to file");
-            }
-            catch (Exception e)
-            {
-                Log.Error("Exception caught {0}", e);
-            }
-        }
-
-        public Task<List<TipsModel>> SaveTips(List<TipsModel> allTips)
-        {
-            var filePath = "TipsList.json";
             try 
             {
-                Log.Information("Starting writing TipsList");
-                _jsonFileService.WriteJsonToFile(JsonConvert.SerializeObject(allTips, Formatting.Indented),filePath);
-                Log.Information("Finished writing TipsList");
+                Log.Information("Starting to add tip: {0}", tips.Name);
+                var id =  await _httpHelper.Post<Tip>(tips,"tip");
+                Log.Information("Finished adding tip: {0}", tips.Name);
+                return id;
             }
             catch (Exception e)
             {
                 Log.Error("Exception caught: {0}",e);
             }
-            return Task.FromResult(allTips);
+            return default(int);
+            
         }
-
-
-        public void Like(List<TipsModel> allTips, int nr, int clickLikeCount)
+        public void DeleteTip(int tipId)
+        {
+            try 
+            {
+                Log.Information("Starting to delete tip id: {0}", tipId);
+                _httpHelper.Delete(tipId,"tip");
+                Log.Information("Finished reading Tiplist");
+                
+            }
+            catch (Exception e)
+            {
+                Log.Error("Exception caught: {0}",e);
+            }
+        }
+        public void Like(List<Tip> allTips, int nr, int clickLikeCount)
         {
             foreach(var tips in allTips)
             {
-                if (tips.TipNumber == nr)
+                if (tips.TipId == nr)
                 { 
                     tips.TipLikes++; 
                 }
             }
         }
 
-         public void UnLike(List<TipsModel> allTips, int nr, int clickLikeCount)
+         public void UnLike(List<Tip> allTips, int nr, int clickLikeCount)
         {
             foreach(var tips in allTips)
             {
-                if (tips.TipNumber == nr)
+                if (tips.TipId == nr)
                 { 
                     tips.TipLikes--; 
                 }
             }
         }
 
-        public void Dislike(List<TipsModel> allTips, int nr, int clickDislikeCount)
+        public void Dislike(List<Tip> allTips, int nr, int clickDislikeCount)
         {
             foreach(var tips in allTips)
             {
-                if (tips.TipNumber == nr)
+                if (tips.TipId == nr)
                 { 
                     tips.TipDislikes++; 
                 }
             }
         }
 
-        public void UnDislike(List<TipsModel> allTips, int nr, int clickDislikeCount)
+        public void UnDislike(List<Tip> allTips, int nr, int clickDislikeCount)
         {
             foreach(var tips in allTips)
             {
-                if (tips.TipNumber == nr)
+                if (tips.TipId == nr)
                 { 
                     tips.TipDislikes--; 
                 }
             }
         }
 
-        public void Approve(List<TipsModel> allTips, int nr)
+        public void Approve(List<Tip> allTips, Tip newTip, int nr)
         {
             foreach(var tips in allTips)
             {
-                if (tips.TipNumber == nr)
+                if (tips.TipId == nr)
                 { 
-                    tips.AdminApproved = true; 
+                    newTip.Name = tips.Name;
+                    newTip.TipName = tips.TipName;
+                    newTip.Link = tips.Link;
+                    newTip.TipLikes = tips.TipLikes;
+                    newTip.TipDislikes = tips.TipDislikes;
+                    newTip.AdminApproved = true;
                 }
             }
         }
