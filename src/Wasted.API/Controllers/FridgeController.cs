@@ -27,9 +27,9 @@ namespace Wasted.API.Controllers
 
         //GET api/product/{userId}
         [HttpGet("{userId}")]
-        public ActionResult <IEnumerable<FridgeItemWEB>> GetFridgeItemList()
+        public ActionResult <IEnumerable<FridgeItemWEB>> GetFridgeItemList(int userId)
         {
-            var fridgeItemList = _repository.GetFridgeItemList();
+            var fridgeItemList = _repository.GetFridgeItemList(userId);
             var products = _productRepository.GetProductList();
             var fridgeItemWEBList = new List<FridgeItemWEB>();
             if (fridgeItemList != null)

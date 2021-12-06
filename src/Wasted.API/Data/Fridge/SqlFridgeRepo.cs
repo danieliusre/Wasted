@@ -19,9 +19,9 @@ namespace Wasted.API.Data
             return _context.SaveChanges() >= 0;
         }
 
-        public IEnumerable<FridgeItem> GetFridgeItemList()
+        public IEnumerable<FridgeItem> GetFridgeItemList(int userId)
         {
-            return _context.FridgeItems.ToList();
+            return _context.FridgeItems.Where(item => item.UserId == userId).ToList();
         }
         public FridgeItem GetFridgeItem(int userId, int productId)
         {
