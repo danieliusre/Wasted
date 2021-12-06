@@ -69,10 +69,10 @@ namespace Wasted.Data
             var filePath = "Recipes.json";
             try 
             {
-                Log.Information("Starting writing Recipes.json");
+                Log.Information("Starting writing recipe");
                 var dish = await _httpHelper.Post<DishModel>(recipe, "dish");
                 _jsonFileService.WriteJsonToFile(JsonConvert.SerializeObject(recipe, Formatting.Indented),filePath);
-                Log.Information("Finished writing Recipes.json");
+                Log.Information("Finished writing recipe");
             }
             catch (Exception e)
             {

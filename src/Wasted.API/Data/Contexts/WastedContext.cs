@@ -10,7 +10,6 @@ namespace Wasted.API.Data
 
         }
         public DbSet<Product> Products { get; set; }
-
         public DbSet<Ingredient> Ingredients { get; set; }
         public DbSet<Dish> Dishes { get; set; }
         public DbSet<User> Users { get; set; }
@@ -31,16 +30,17 @@ namespace Wasted.API.Data
                 );
 
             modelBuilder.Entity<Dish>().HasData(
-                new Dish { Id = 1, Name =  "TEST1", numberOfIngredients = 4, /*Ingredients = "unknown",*/ Type =  "Baked"},
-                new Dish { Id = 2, Name = "TEST2", numberOfIngredients = 5, /*Ingredients = "unknown",*/ Type = "Baked"}
+                new Dish { Id = 1, Name =  "TEST1", numberOfIngredients = 2, Type =  "Baked"},
+                new Dish { Id = 2, Name = "TEST2", numberOfIngredients = 2, Type = "Baked"}
               );
 
-                          modelBuilder.Entity<Ingredient>()
-            .HasKey(c => new { c.DishId, c.ProductId });
+            modelBuilder.Entity<Ingredient>().HasKey(c => new { c.DishId, c.ProductId });
 
             modelBuilder.Entity<Ingredient>().HasData(
-                new Ingredient { DishId = 1, ProductId =  1, Amount =  100 },
-                new Ingredient { DishId = 1, ProductId =  3, Amount =  200 }
+                new Ingredient { DishId = 1, ProductId =  1, Amount =  1 },
+                new Ingredient { DishId = 1, ProductId =  3, Amount =  2 },
+                new Ingredient { DishId = 2, ProductId =  4, Amount =  3},
+                new Ingredient { DishId = 2, ProductId =  5, Amount =  3}
               );
 
 
