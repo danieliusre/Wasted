@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using Serilog;
-
+using System.Linq;
 
 namespace Wasted.Data
 {
@@ -189,6 +189,12 @@ namespace Wasted.Data
                 }
             }
             return "user";
+        }
+        public async Task<int> GetUserId(string email)
+        {
+            var users =  await GetUserList();
+            return users.Where(x => x.Email == email).Select(x => x.Id).FirstOrDefault();
+            
         }
  
     }

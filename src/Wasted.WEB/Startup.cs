@@ -36,7 +36,6 @@ namespace Wasted
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSingleton<WeatherForecastService>();
             services.AddSingleton<ProductService>();
             services.AddSingleton<RecipeCalcService>();
             services.AddSingleton<TipsService>();
@@ -48,7 +47,9 @@ namespace Wasted
             services.AddSingleton<AuthenticationResult>();
             services.AddSingleton<Admins>();
             services.AddSingleton<AdminService>();
+            services.AddSingleton<FridgeService>();
             services.AddSingleton<AddRecipeService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
