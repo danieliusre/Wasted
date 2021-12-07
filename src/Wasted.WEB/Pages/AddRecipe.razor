@@ -70,13 +70,13 @@ else{
         <br>
         @foreach (var ingredient in ingredients)
         {
-            <b> @ingredient.Item @ingredient.Amount @ingredient.Unit</b><br>
+            <b> @ingredient.Item @ingredient.Amount@ingredient.Unit</b><br>
         }
             <br><b>NEW INGREDIENT:</b>
             <select class="inputField" @bind="@prodID" @oninput="(e) => { prodID = e.Value ==null? string.Empty:(string)e.Value; }">
                 @foreach (var product in products)
                 {
-                    <option value="@product.Id">@product.Name</option>
+                    <option value="@product.Id">@product.Name (@product.MeasurementUnits)</option>
                 }
             </select>
             <b>Amount:</b>
