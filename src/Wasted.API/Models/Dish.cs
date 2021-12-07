@@ -13,12 +13,7 @@ namespace Wasted.API.Models
         public string Name { get; set; }
 
         [Required]
-        [MaxLength(3)]
         public int numberOfIngredients { get; set; }
-
-        // [Required]
-        // [MaxLength(50)]
-        // public string Ingredients { get; set; }
 
         [Required]
         [MaxLength(50)]

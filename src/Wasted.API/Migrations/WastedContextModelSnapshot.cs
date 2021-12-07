@@ -36,7 +36,6 @@ namespace WastedAPI.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("numberOfIngredients")
-                        .HasMaxLength(3)
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -58,6 +57,27 @@ namespace WastedAPI.Migrations
                             Type = "Baked",
                             numberOfIngredients = 2
                         });
+                });
+
+            modelBuilder.Entity("Wasted.API.Models.FridgeItem", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Amount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Date")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.HasKey("UserId", "ProductId");
+
+                    b.ToTable("FridgeItems");
                 });
 
             modelBuilder.Entity("Wasted.API.Models.Ingredient", b =>

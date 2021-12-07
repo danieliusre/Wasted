@@ -15,7 +15,7 @@ namespace Wasted.Data
     {
         public int Id {get; set;}
         public string Name {get; set;}
-        public int numberOfIngredients;
+        public int numberOfIngredients {get; set;}
         public List<RecipeItemModel> Ingredients {get; set;}
 
         public int Relevance {get; set;} //easy to make (least ingredients required)

@@ -1,7 +1,11 @@
 @page "/recipecalc"
 @using System.IO
 @using Wasted.Data
+@using System.Collections.Generic
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject RecipeCalcService RecipeCalcService 
+@inject RegistrationService RegistrationService
 
  <style>
     @@import "css/Utils.css";
@@ -18,13 +22,14 @@
 <div class="inline"></div>
 
 @code {
-
+    public string Email { get; set; }
     string itemTextField = "";
     string leftTextField = "";
     string unitTextField = "";
     string dateTextField = "";
     string dishFilter = "All";
     bool FindRecipePressed = false;
+    private int UserId { get; set; } 
     List<RecipeItemModel> products = new();
     List<String> expiringProducts = new();
     List<String> expiredProducts = new();
@@ -32,7 +37,9 @@
 
     protected override async Task OnInitializedAsync()
     {
-        products = await RecipeCalcService.GetProducts();
+        await Task.Delay(1000);
+        UserId = await RegistrationService.GetUserId(Email);
+        products = await RecipeCalcService.GetFridgeItems(UserId);
         expiringProducts = RecipeCalcService.FindExpiringProducts(products);
         expiredProducts = RecipeCalcService.FindExpiredProducts(products);
     }
@@ -71,10 +78,13 @@
         expiredProducts = RecipeCalcService.FindExpiredProducts(products);
     }
 
-    private void SaveList()
+    @* private async Task SaveList()
     {
-        RecipeCalcService.SaveProducts(products);
-    }
+        UserId = await RegistrationService.GetUserId(Email);
+        Console.WriteLine(UserId);
+        products = await RecipeCalcService.GetFridgeItems(UserId);
+        //RecipeCalcService.SaveProducts(products);
+    } *@
 
     private async Task FindRecipe()
     {
@@ -85,7 +95,6 @@
 
     private void GetDishType(string sender)
     {
-        //dishType = DishType.ReturnDishType(sender);
         dishFilter = sender;
     }
 
@@ -95,6 +104,17 @@
         expiredProducts.Clear();
     }
 }
+<AuthorizeView>
+    <Authorized>
+         @if (true)
+         {
+             Email = context.User.Identity.Name;
+         }
+    </Authorized>
+    <NotAuthorized>
+    </NotAuthorized>
+</AuthorizeView>
+
 <div class="paragraphBlock">
     <h2 style="text-align:center">YOUR PRODUCTS</h2>
     <br>
@@ -105,7 +125,7 @@
                 <th>Amount</th>
                 <th>Measurement</th>
                 <th>Best until</th>
-                <th>Add/Remove</th>
+                @* <th>Add/Remove</th> *@
             </tr>
         </thead>
         <tbody>
@@ -116,17 +136,18 @@
                 <td>@product.Amount</td>
                 <td>@product.Unit</td> 
                 <td>@product.Date</td> 
-                <td>
+                @* <td>
                 <button class="btn btn-danger" @onclick="() => products.Remove(product)">-</button>
-                </td>
+                </td> *@
             </tr>
         }
         </tbody>
     </table>
 
     <br>
+    <h2 style="text-align:center;font-size:20px;">YOU CAN ADD MORE IN 'MY FRIDGE'</h2>
 
-    <div class="input distributeEvenly">
+    @* <div class="input distributeEvenly">
         <span class="inputSpan">
             <input class="inputField" type = "text" size="10"  placeholder = "Product" @bind="@itemTextField" @oninput="(e) => { itemTextField = e.Value ==null? string.Empty:(string)e.Value;}"/> 
         </span>
@@ -157,8 +178,8 @@
     <br>
     <div class="text-align: center">
         <button class="learnmore" @onclick="SaveList">Save list</button>
-    </div>
-</div>
+    </div> *@
+</div> 
 <br>
 <div class="container">
     @if(expiredProducts.Any())

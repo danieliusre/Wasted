@@ -5,6 +5,8 @@ using Wasted.API.Data;
 using Wasted.API.Dtos;
 using Wasted.API.Models;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System;
 
 namespace Wasted.API.Controllers
 {
@@ -91,15 +93,18 @@ namespace Wasted.API.Controllers
 
         //POST api/dish
         [HttpPost]
-        public ActionResult <DishReadDto> CreateNewDish(DishCreateDto dishCreate)
+        public ActionResult <DishReadDto> CreateNewDish(DishWEB dish)
         {
-            var dishModel = _mapper.Map<Dish>(dishCreate);
-            _repository.CreateNewDish(dishModel);
+            Dish newDish = new Dish();
+            newDish.Name = dish.Name;
+            newDish.numberOfIngredients = dish.numberOfIngredients;
+            newDish.Type = dish.Type;
+            _repository.CreateNewDish(newDish);
             _repository.SaveChanges();
 
-            var dishReadDto = _mapper.Map<DishReadDto>(dishModel);
+            var dishReadDto = _mapper.Map<DishReadDto>(newDish);
 
-            return CreatedAtRoute (nameof(GetDishById), new {Id = dishModel.Id}, dishReadDto);
+            return CreatedAtRoute (nameof(GetDishById), new {Id = newDish.Id}, dishReadDto);
         }
 
         //PUT api/dish/{id}
