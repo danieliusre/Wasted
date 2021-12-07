@@ -14,7 +14,6 @@ namespace Wasted.API.Controllers
     public class IngredientController : ControllerBase
     {
         private readonly IIngredientRepo _repository;
-        private readonly IDishRepo _dishRepository;
         private readonly IProductRepo _productRepository;
 
         private readonly IMapper _mapper;

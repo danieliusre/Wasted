@@ -78,14 +78,6 @@
         expiredProducts = RecipeCalcService.FindExpiredProducts(products);
     }
 
-    @* private async Task SaveList()
-    {
-        UserId = await RegistrationService.GetUserId(Email);
-        Console.WriteLine(UserId);
-        products = await RecipeCalcService.GetFridgeItems(UserId);
-        //RecipeCalcService.SaveProducts(products);
-    } *@
-
     private async Task FindRecipe()
     {
         CanMakeDish makeable = new CanMakeDish(RecipeCalcService.haveEnoughIngredients);
@@ -125,7 +117,6 @@
                 <th>Amount</th>
                 <th>Measurement</th>
                 <th>Best until</th>
-                @* <th>Add/Remove</th> *@
             </tr>
         </thead>
         <tbody>
@@ -136,9 +127,6 @@
                 <td>@product.Amount</td>
                 <td>@product.Unit</td> 
                 <td>@product.Date</td> 
-                @* <td>
-                <button class="btn btn-danger" @onclick="() => products.Remove(product)">-</button>
-                </td> *@
             </tr>
         }
         </tbody>

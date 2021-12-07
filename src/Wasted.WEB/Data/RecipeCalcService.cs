@@ -1,49 +1,21 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using System.IO;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 using Serilog;
-using System.Net.Http;
-using System.Net.Http.Headers;
 
 namespace Wasted.Data
 {
     public class RecipeCalcService
     {
-        private JsonFileService _jsonFileService;
         private readonly HttpHelper _httpHelper;
         public string MsgToUser;
         public string ExpiredListTooLong = "More than 2 of your products have expired, consider removing them from your list!";
 
-        public RecipeCalcService(JsonFileService jsonFileService, HttpHelper httpHelper)
+        public RecipeCalcService(HttpHelper httpHelper)
         {
-             _jsonFileService = jsonFileService;
              _httpHelper = httpHelper;
         }
-
-        // public async Task<List<RecipeItemModel>> GetProducts()
-        // {
-        //     var products =  new List<RecipeItemModel>();
-        //     var filepath =  "RecipeProductList.json";
-        //     try 
-        //     {
-        //         await Task.Delay(1);
-        //         Log.Information("Started reading RecipeProductList");
-        //         products = JsonConvert.DeserializeObject<List<RecipeItemModel>>(_jsonFileService.ReadJsonFromFile(filepath));
-        //         Log.Information("Finished reading RecipeProductList");
-        //     }
-        //     catch(FileNotFoundException e)
-        //     {
-        //         Log.Error(e.Message);
-        //     }
-        //     catch (Exception e)
-        //     {
-        //         Log.Error("Exception caught: {0}",e);
-        //     }
-        //     return products;
-        // }
 
         public async Task<List<RecipeItemModel>> GetFridgeItems(int userId)
         {
@@ -61,6 +33,7 @@ namespace Wasted.Data
                     newProduct.Amount = Int32.Parse(fridgeItem.Amount);
                     newProduct.Unit = fridgeItem.MeasurementUnits;
                     newProduct.Date = fridgeItem.Date;
+                    newProduct = await ChangeMeasurements(newProduct);
                     products.Add(newProduct);
                 }
             }
@@ -70,26 +43,6 @@ namespace Wasted.Data
             }
             return products;
         }
-        public Task<List<RecipeItemModel>> SaveProducts(List<RecipeItemModel> products)
-        {
-            var filePath = "RecipeProductList.json";
-            foreach(var product in products)
-            {
-                ChangeMeasurements(product);
-            } 
-            try 
-            {
-                Log.Information("Starting writing RecipeProductList");
-                _jsonFileService.WriteJsonToFile(JsonConvert.SerializeObject(products, Formatting.Indented),filePath);
-                Log.Information("Finished writing RecipeProductlist");
-            }
-            catch (Exception e)
-            {
-                Log.Error("Exception caught: {0}",e);
-            }
-            return Task.FromResult(products);
-        }
-
         public async Task<DishModel> AddRecipe(DishModel recipe)
         {
             try 
