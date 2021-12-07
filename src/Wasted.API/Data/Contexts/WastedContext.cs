@@ -27,21 +27,45 @@ namespace Wasted.API.Data
                 new Product { Id = 4, Name = "Blackberry", Type = "Berry", MeasurementUnits = "kg", EnergyValue = 262.178},
                 new Product { Id = 5, Name = "Cheese", Type = "Dairy", MeasurementUnits = "kg", EnergyValue = 352.698},
                 new Product { Id = 6, Name = "Bass", Type = "Fish", MeasurementUnits = "kg", EnergyValue = 271.745},
-                new Product { Id = 7, Name = "Buttermilk", Type = "Dairy", MeasurementUnits = "l", EnergyValue = 175.1245}
+                new Product { Id = 7, Name = "Buttermilk", Type = "Dairy", MeasurementUnits = "l", EnergyValue = 175.1245},
+
+                new Product { Id = 8, Name = "Flour", Type = "Grain", MeasurementUnits = "g", EnergyValue = 175.1245},
+                new Product { Id = 9, Name = "Sugar", Type = "idk", MeasurementUnits = "g", EnergyValue = 175.1245},
+                new Product { Id = 10, Name = "Milk", Type = "Dairy", MeasurementUnits = "ml", EnergyValue = 175.1245},
+                new Product { Id = 11, Name = "Eggs", Type = "Dairy", MeasurementUnits = "unit(s)", EnergyValue = 175.1245},
+                new Product { Id = 12, Name = "Butter", Type = "Dairy", MeasurementUnits = "g", EnergyValue = 175.1245},
+                new Product { Id = 13, Name = "Salt", Type = "Spice", MeasurementUnits = "g", EnergyValue = 175.1245},
+                new Product { Id = 14, Name = "Vanilla extract", Type = "Spice", MeasurementUnits = "g", EnergyValue = 175.1245},
+                new Product { Id = 15, Name = "Cocoa", Type = "idk", MeasurementUnits = "g", EnergyValue = 175.1245}
                 );
 
             modelBuilder.Entity<Dish>().HasData(
-                new Dish { Id = 1, Name =  "TEST1", numberOfIngredients = 2, Type =  "Baked"},
-                new Dish { Id = 2, Name = "TEST2", numberOfIngredients = 2, Type = "Baked"}
+                new Dish { Id = 1, Name =  "Pancakes", numberOfIngredients = 5, Type =  "Baked"},
+                new Dish { Id = 2, Name = "Chocolate Cake", numberOfIngredients = 4, Type = "Baked"},
+                new Dish { Id = 3, Name = "Waffles", numberOfIngredients = 7, Type = "All"}
               );
 
             modelBuilder.Entity<Ingredient>().HasKey(c => new { c.DishId, c.ProductId });
 
             modelBuilder.Entity<Ingredient>().HasData(
-                new Ingredient { DishId = 1, ProductId =  1, Amount =  1 },
-                new Ingredient { DishId = 1, ProductId =  3, Amount =  2 },
-                new Ingredient { DishId = 2, ProductId =  4, Amount =  3},
-                new Ingredient { DishId = 2, ProductId =  5, Amount =  3}
+                new Ingredient { DishId = 1, ProductId =  8, Amount =  300 },
+                new Ingredient { DishId = 1, ProductId =  9, Amount =  30 },
+                new Ingredient { DishId = 1, ProductId =  10, Amount =  250 },
+                new Ingredient { DishId = 1, ProductId =  11, Amount =  1 },
+                new Ingredient { DishId = 1, ProductId =  12, Amount =  50 },
+
+                new Ingredient { DishId = 2, ProductId =  8, Amount =  230 },
+                new Ingredient { DishId = 2, ProductId =  15, Amount =  75 },
+                new Ingredient { DishId = 2, ProductId =  9, Amount =  410 },
+                new Ingredient { DishId = 2, ProductId =  11, Amount =  2 },
+
+                new Ingredient { DishId = 3, ProductId =  8, Amount =  400 },
+                new Ingredient { DishId = 3, ProductId =  13, Amount =  5 },
+                new Ingredient { DishId = 3, ProductId =  9, Amount =  20 },
+                new Ingredient { DishId = 3, ProductId =  11, Amount =  2 },
+                new Ingredient { DishId = 3, ProductId =  10, Amount =  300 },
+                new Ingredient { DishId = 3, ProductId =  12, Amount =  100 },
+                new Ingredient { DishId = 3, ProductId =  14, Amount =  5 }
               );
 
 

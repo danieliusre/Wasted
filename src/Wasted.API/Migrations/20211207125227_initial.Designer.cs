@@ -9,7 +9,7 @@ using Wasted.API.Data;
 namespace WastedAPI.Migrations
 {
     [DbContext(typeof(WastedContext))]
-    [Migration("20211206210536_initial")]
+    [Migration("20211207125227_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -48,16 +48,23 @@ namespace WastedAPI.Migrations
                         new
                         {
                             Id = 1,
-                            Name = "TEST1",
+                            Name = "Pancakes",
                             Type = "Baked",
-                            numberOfIngredients = 2
+                            numberOfIngredients = 5
                         },
                         new
                         {
                             Id = 2,
-                            Name = "TEST2",
+                            Name = "Chocolate Cake",
                             Type = "Baked",
-                            numberOfIngredients = 2
+                            numberOfIngredients = 4
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Waffles",
+                            Type = "All",
+                            numberOfIngredients = 7
                         });
                 });
 
@@ -101,26 +108,98 @@ namespace WastedAPI.Migrations
                         new
                         {
                             DishId = 1,
-                            ProductId = 1,
+                            ProductId = 8,
+                            Amount = 300
+                        },
+                        new
+                        {
+                            DishId = 1,
+                            ProductId = 9,
+                            Amount = 30
+                        },
+                        new
+                        {
+                            DishId = 1,
+                            ProductId = 10,
+                            Amount = 250
+                        },
+                        new
+                        {
+                            DishId = 1,
+                            ProductId = 11,
                             Amount = 1
                         },
                         new
                         {
                             DishId = 1,
-                            ProductId = 3,
+                            ProductId = 12,
+                            Amount = 50
+                        },
+                        new
+                        {
+                            DishId = 2,
+                            ProductId = 8,
+                            Amount = 230
+                        },
+                        new
+                        {
+                            DishId = 2,
+                            ProductId = 15,
+                            Amount = 75
+                        },
+                        new
+                        {
+                            DishId = 2,
+                            ProductId = 9,
+                            Amount = 410
+                        },
+                        new
+                        {
+                            DishId = 2,
+                            ProductId = 11,
                             Amount = 2
                         },
                         new
                         {
-                            DishId = 2,
-                            ProductId = 4,
-                            Amount = 3
+                            DishId = 3,
+                            ProductId = 8,
+                            Amount = 400
                         },
                         new
                         {
-                            DishId = 2,
-                            ProductId = 5,
-                            Amount = 3
+                            DishId = 3,
+                            ProductId = 13,
+                            Amount = 5
+                        },
+                        new
+                        {
+                            DishId = 3,
+                            ProductId = 9,
+                            Amount = 20
+                        },
+                        new
+                        {
+                            DishId = 3,
+                            ProductId = 11,
+                            Amount = 2
+                        },
+                        new
+                        {
+                            DishId = 3,
+                            ProductId = 10,
+                            Amount = 300
+                        },
+                        new
+                        {
+                            DishId = 3,
+                            ProductId = 12,
+                            Amount = 100
+                        },
+                        new
+                        {
+                            DishId = 3,
+                            ProductId = 14,
+                            Amount = 5
                         });
                 });
 
@@ -209,6 +288,70 @@ namespace WastedAPI.Migrations
                             MeasurementUnits = "l",
                             Name = "Buttermilk",
                             Type = "Dairy"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            EnergyValue = 175.12450000000001,
+                            MeasurementUnits = "g",
+                            Name = "Flour",
+                            Type = "Grain"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            EnergyValue = 175.12450000000001,
+                            MeasurementUnits = "g",
+                            Name = "Sugar",
+                            Type = "idk"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            EnergyValue = 175.12450000000001,
+                            MeasurementUnits = "ml",
+                            Name = "Milk",
+                            Type = "Dairy"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            EnergyValue = 175.12450000000001,
+                            MeasurementUnits = "unit(s)",
+                            Name = "Eggs",
+                            Type = "Dairy"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            EnergyValue = 175.12450000000001,
+                            MeasurementUnits = "g",
+                            Name = "Butter",
+                            Type = "Dairy"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            EnergyValue = 175.12450000000001,
+                            MeasurementUnits = "g",
+                            Name = "Salt",
+                            Type = "Spice"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            EnergyValue = 175.12450000000001,
+                            MeasurementUnits = "g",
+                            Name = "Vanilla extract",
+                            Type = "Spice"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            EnergyValue = 175.12450000000001,
+                            MeasurementUnits = "g",
+                            Name = "Cocoa",
+                            Type = "idk"
                         });
                 });
 

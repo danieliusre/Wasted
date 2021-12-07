@@ -104,8 +104,9 @@ namespace WastedAPI.Migrations
                 columns: new[] { "Id", "Name", "Type", "numberOfIngredients" },
                 values: new object[,]
                 {
-                    { 1, "TEST1", "Baked", 2 },
-                    { 2, "TEST2", "Baked", 2 }
+                    { 1, "Pancakes", "Baked", 5 },
+                    { 2, "Chocolate Cake", "Baked", 4 },
+                    { 3, "Waffles", "All", 7 }
                 });
 
             migrationBuilder.InsertData(
@@ -113,10 +114,22 @@ namespace WastedAPI.Migrations
                 columns: new[] { "DishId", "ProductId", "Amount" },
                 values: new object[,]
                 {
-                    { 1, 1, 1 },
-                    { 1, 3, 2 },
-                    { 2, 4, 3 },
-                    { 2, 5, 3 }
+                    { 3, 14, 5 },
+                    { 3, 12, 100 },
+                    { 3, 10, 300 },
+                    { 3, 11, 2 },
+                    { 3, 9, 20 },
+                    { 3, 13, 5 },
+                    { 2, 11, 2 },
+                    { 3, 8, 400 },
+                    { 2, 15, 75 },
+                    { 2, 8, 230 },
+                    { 1, 12, 50 },
+                    { 1, 11, 1 },
+                    { 1, 10, 250 },
+                    { 1, 9, 30 },
+                    { 1, 8, 300 },
+                    { 2, 9, 410 }
                 });
 
             migrationBuilder.InsertData(
@@ -124,13 +137,21 @@ namespace WastedAPI.Migrations
                 columns: new[] { "Id", "EnergyValue", "MeasurementUnits", "Name", "Type" },
                 values: new object[,]
                 {
+                    { 10, 175.12450000000001, "ml", "Milk", "Dairy" },
+                    { 15, 175.12450000000001, "g", "Cocoa", "idk" },
+                    { 14, 175.12450000000001, "g", "Vanilla extract", "Spice" },
+                    { 13, 175.12450000000001, "g", "Salt", "Spice" },
+                    { 12, 175.12450000000001, "g", "Butter", "Dairy" },
+                    { 11, 175.12450000000001, "unit(s)", "Eggs", "Dairy" },
+                    { 9, 175.12450000000001, "g", "Sugar", "idk" },
+                    { 2, 284.54599999999999, "kg", "Troat", "Fish" },
                     { 7, 175.12450000000001, "l", "Buttermilk", "Dairy" },
                     { 6, 271.745, "kg", "Bass", "Fish" },
-                    { 4, 262.178, "kg", "Blackberry", "Berry" },
                     { 5, 352.69799999999998, "kg", "Cheese", "Dairy" },
-                    { 2, 284.54599999999999, "kg", "Troat", "Fish" },
+                    { 4, 262.178, "kg", "Blackberry", "Berry" },
+                    { 3, 120.69199999999999, "g", "Orange", "Fruit" },
                     { 1, 158.48699999999999, "kg", "Apple", "Fruit" },
-                    { 3, 120.69199999999999, "g", "Orange", "Fruit" }
+                    { 8, 175.12450000000001, "g", "Flour", "Grain" }
                 });
 
             migrationBuilder.InsertData(
