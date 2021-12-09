@@ -1,42 +1,41 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using System.IO;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 using Serilog;
-using System.Net.Http;
-using System.Net.Http.Headers;
 
 namespace Wasted.Data
 {
     public class RecipeCalcService
     {
-        private JsonFileService _jsonFileService;
         private readonly HttpHelper _httpHelper;
         public string MsgToUser;
         public string ExpiredListTooLong = "More than 2 of your products have expired, consider removing them from your list!";
 
-        public RecipeCalcService(JsonFileService jsonFileService, HttpHelper httpHelper)
+        public RecipeCalcService(HttpHelper httpHelper)
         {
-             _jsonFileService = jsonFileService;
              _httpHelper = httpHelper;
         }
 
-        public async Task<List<RecipeItemModel>> GetProducts()
+        public async Task<List<RecipeItemModel>> GetFridgeItems(int userId)
         {
-            var products =  new List<RecipeItemModel>();
-            var filepath =  "RecipeProductList.json";
+            List<FridgeItem> fridgeItems = new List<FridgeItem>();
+            List<RecipeItemModel> products = new List<RecipeItemModel>();
             try 
             {
-                await Task.Delay(1000);
-                Log.Information("Started reading RecipeProductList");
-                products = JsonConvert.DeserializeObject<List<RecipeItemModel>>(_jsonFileService.ReadJsonFromFile(filepath));
-                Log.Information("Finished reading RecipeProductList");
-            }
-            catch(FileNotFoundException e)
-            {
-                Log.Error(e.Message);
+                Log.Information("Starting to read FridgeItems");
+                fridgeItems =  new List<FridgeItem>(await _httpHelper.GetList<FridgeItem>("fridge/"+ userId.ToString()));
+                Log.Information("Finished reading FridgeItems");
+                foreach (var fridgeItem in fridgeItems)
+                {
+                    RecipeItemModel newProduct = new RecipeItemModel();
+                    newProduct.Item = fridgeItem.Name;
+                    newProduct.Amount = Int32.Parse(fridgeItem.Amount);
+                    newProduct.Unit = fridgeItem.MeasurementUnits;
+                    newProduct.Date = fridgeItem.Date;
+                    newProduct = await ChangeMeasurements(newProduct);
+                    products.Add(newProduct);
+                }
             }
             catch (Exception e)
             {
@@ -44,34 +43,13 @@ namespace Wasted.Data
             }
             return products;
         }
-        public Task<List<RecipeItemModel>> SaveProducts(List<RecipeItemModel> products)
-        {
-            var filePath = "RecipeProductList.json";
-            foreach(var product in products)
-            {
-                ChangeMeasurements(product);
-            } 
-            try 
-            {
-                Log.Information("Starting writing RecipeProductList");
-                _jsonFileService.WriteJsonToFile(JsonConvert.SerializeObject(products, Formatting.Indented),filePath);
-                Log.Information("Finished writing RecipeProductlist");
-            }
-            catch (Exception e)
-            {
-                Log.Error("Exception caught: {0}",e);
-            }
-            return Task.FromResult(products);
-        }
-
         public async Task<DishModel> AddRecipe(DishModel recipe)
         {
-            var filePath = "Recipes.json";
             try 
             {
                 Log.Information("Starting writing recipe");
-                var dish = await _httpHelper.Post<DishModel>(recipe, "dish");
-                _jsonFileService.WriteJsonToFile(JsonConvert.SerializeObject(recipe, Formatting.Indented),filePath);
+                int newDishId = await _httpHelper.Post<DishModel>(recipe, "dish");
+                await _httpHelper.Post<List<RecipeItemModel>>(recipe.Ingredients, "ingredient/" + newDishId.ToString());
                 Log.Information("Finished writing recipe");
             }
             catch (Exception e)

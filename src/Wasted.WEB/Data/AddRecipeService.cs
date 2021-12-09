@@ -1,12 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using System.IO;
 using System.Collections.Generic;
-using Newtonsoft.Json;
-using Serilog;
-using System.Net.Http;
-using System.Net.Http.Headers;
 
 namespace Wasted.Data
 {
@@ -14,7 +9,6 @@ namespace Wasted.Data
     {
         private readonly HttpHelper _httpHelper;
         public string MsgToUser;
-        public string ExpiredListTooLong = "More than 2 of your products have expired, consider removing them from your list!";
 
         public AddRecipeService(JsonFileService jsonFileService, HttpHelper httpHelper)
         {

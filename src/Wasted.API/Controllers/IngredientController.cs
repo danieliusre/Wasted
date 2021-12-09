@@ -5,6 +5,7 @@ using Wasted.API.Data;
 using Wasted.API.Dtos;
 using Wasted.API.Models;
 using System.Collections.Generic;
+using System;
 
 namespace Wasted.API.Controllers
 {
@@ -13,11 +14,14 @@ namespace Wasted.API.Controllers
     public class IngredientController : ControllerBase
     {
         private readonly IIngredientRepo _repository;
+        private readonly IProductRepo _productRepository;
+
         private readonly IMapper _mapper;
 
-        public IngredientController(IIngredientRepo repository, IMapper mapper)
+        public IngredientController(IIngredientRepo repository, IProductRepo productRepository, IMapper mapper)
         {
             _repository = repository;
+            _productRepository = productRepository;
             _mapper = mapper;
         }
 
@@ -45,13 +49,29 @@ namespace Wasted.API.Controllers
             return NotFound();
         }
 
-        //POST api/ingredient
-        [HttpPost]
-        public ActionResult <IngredientReadDto> CreateNewIngredient(IEnumerable<IngredientCreateDto> ingredientCreate)
+        //POST api/ingredient/{dishId}
+        [HttpPost("{dishId}")]
+        public ActionResult <List<IngredientWEB>> CreateNewIngredient(int dishId, List<IngredientWEB> ingredients)
         {
-            var ingredientList = _mapper.Map<IEnumerable<Ingredient>>(ingredientCreate);
+            List<Ingredient> newList = new List<Ingredient>();
 
-            _repository.CreateNewIngredient(ingredientList);
+            foreach (var ingredient in ingredients)
+            {
+                Ingredient newIngredient = new Ingredient();
+                newIngredient.DishId = dishId;
+                IEnumerable<Product> products = _productRepository.GetProductList();
+                foreach (var product in products)
+                {
+                    if(product.Name == ingredient.Item)
+                    {
+                        newIngredient.ProductId = product.Id;
+                    }
+                }
+                newIngredient.Amount = ingredient.Amount;
+                newList.Add(newIngredient);
+            }
+
+            _repository.CreateNewIngredient(newList);
             _repository.SaveChanges();
 
             return CreatedAtRoute(1,1);
@@ -74,8 +94,8 @@ namespace Wasted.API.Controllers
             return NoContent();
         }
 
-        //DELETE api/ingredient/{id}
-        [HttpDelete("{id}")]
+        //DELETE api/ingredient/{dishId}
+        [HttpDelete("{dishId}")]
         public ActionResult DeleteIngredient(int dishId)
         {
             var ingredientModelFromRepo = _repository.GetIngredientListByDishId(dishId);

@@ -29,13 +29,13 @@ namespace Wasted.API.Data
             return _context.Ingredients.Where(p => p.DishId == DishId).ToList();
         }
 
-        public void CreateNewIngredient(IEnumerable<Ingredient> ingredient)
+        public void CreateNewIngredient(List<Ingredient> ingredients)
         {
-            if (ingredient == null){
-                throw new ArgumentException(nameof(ingredient));
+            if (ingredients == null){
+                throw new ArgumentException(nameof(ingredients));
             }
 
-            _context.Ingredients.AddRange(ingredient);
+            _context.Ingredients.AddRange(ingredients);
         }
 
         public void UpdateIngredient(IEnumerable<Ingredient> ingredient)
