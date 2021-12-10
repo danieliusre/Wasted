@@ -9,7 +9,7 @@ using Wasted.API.Data;
 namespace WastedAPI.Migrations
 {
     [DbContext(typeof(WastedContext))]
-    [Migration("20211207125227_initial")]
+    [Migration("20211210141733_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -65,6 +65,20 @@ namespace WastedAPI.Migrations
                             Name = "Waffles",
                             Type = "All",
                             numberOfIngredients = 7
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Brownies",
+                            Type = "Baked",
+                            numberOfIngredients = 6
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Apple Pie",
+                            Type = "Baked",
+                            numberOfIngredients = 6
                         });
                 });
 
@@ -200,6 +214,78 @@ namespace WastedAPI.Migrations
                             DishId = 3,
                             ProductId = 14,
                             Amount = 5
+                        },
+                        new
+                        {
+                            DishId = 4,
+                            ProductId = 8,
+                            Amount = 150
+                        },
+                        new
+                        {
+                            DishId = 4,
+                            ProductId = 12,
+                            Amount = 180
+                        },
+                        new
+                        {
+                            DishId = 4,
+                            ProductId = 15,
+                            Amount = 30
+                        },
+                        new
+                        {
+                            DishId = 4,
+                            ProductId = 9,
+                            Amount = 150
+                        },
+                        new
+                        {
+                            DishId = 4,
+                            ProductId = 11,
+                            Amount = 3
+                        },
+                        new
+                        {
+                            DishId = 4,
+                            ProductId = 16,
+                            Amount = 200
+                        },
+                        new
+                        {
+                            DishId = 5,
+                            ProductId = 1,
+                            Amount = 2
+                        },
+                        new
+                        {
+                            DishId = 5,
+                            ProductId = 17,
+                            Amount = 15
+                        },
+                        new
+                        {
+                            DishId = 5,
+                            ProductId = 12,
+                            Amount = 100
+                        },
+                        new
+                        {
+                            DishId = 5,
+                            ProductId = 8,
+                            Amount = 100
+                        },
+                        new
+                        {
+                            DishId = 5,
+                            ProductId = 9,
+                            Amount = 5
+                        },
+                        new
+                        {
+                            DishId = 5,
+                            ProductId = 11,
+                            Amount = 1
                         });
                 });
 
@@ -238,7 +324,7 @@ namespace WastedAPI.Migrations
                             Id = 1,
                             EnergyValue = 158.48699999999999,
                             MeasurementUnits = "kg",
-                            Name = "Apple",
+                            Name = "Apples",
                             Type = "Fruit"
                         },
                         new
@@ -352,6 +438,22 @@ namespace WastedAPI.Migrations
                             MeasurementUnits = "g",
                             Name = "Cocoa",
                             Type = "idk"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            EnergyValue = 175.12450000000001,
+                            MeasurementUnits = "g",
+                            Name = "Dark Chocolate",
+                            Type = "idk"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            EnergyValue = 175.12450000000001,
+                            MeasurementUnits = "g",
+                            Name = "Cinnamon",
+                            Type = "Spice"
                         });
                 });
 
