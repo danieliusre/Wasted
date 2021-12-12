@@ -22,6 +22,20 @@ namespace WastedAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "FridgeItems",
+                columns: table => new
+                {
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    Date = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    Amount = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FridgeItems", x => new { x.UserId, x.ProductId });
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Ingredients",
                 columns: table => new
                 {
@@ -146,6 +160,9 @@ namespace WastedAPI.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Dishes");
+
+            migrationBuilder.DropTable(
+                name: "FridgeItems");
 
             migrationBuilder.DropTable(
                 name: "Ingredients");
