@@ -12,7 +12,7 @@
 
 <p class = "p">The best way to predict the future is to create it!</p>
 <hr><hr>
-
+<div class="paragraphBlock">
 @foreach(var tips in allTips)
 		{
 			if(tips.AdminApproved == true)
@@ -41,6 +41,7 @@
 				<br>
 			}
 		}
+		</div>
 		<hr><hr>
 		<p class = "p">Add your own helpful tip!</p>
 		<div> 
@@ -65,14 +66,14 @@
 
 @code{
 	public static List<string> ErrorMessages = new List<string>();
-	private List<Tip> allTips = new ();
+	public List<Tip> allTips = new ();
 	public int number = 1;
 	public int tipNr = 0;
 	public int clickLikeCount;
 	public int clickDislikeCount;
 	string message;
-
 	public Tip newTip = new Tip();
+	public Tip newTip2 = new Tip();
 
   	protected override async Task OnInitializedAsync()
     {
@@ -90,25 +91,26 @@
         allTips.Add(newTip);
         newTip = new Tip();
     }
-	public void LikePressed(int nr)
-    {
-		if (number != nr){
+
+	public void  LikePressed(int Id)
+  	{
+		if (number != Id){
 			{
 			clickLikeCount = 0;
 			}
 		}
-		number = nr;
+		number = Id;
 		if (clickLikeCount == 0)
 		{
 			clickLikeCount++;
-			TipsService.Like(allTips, nr, clickLikeCount);
+			TipsService.Like(allTips, newTip, Id);
 		}
 		else
 		{
 			clickLikeCount--;
-			TipsService.UnLike(allTips, nr, clickLikeCount);
+			TipsService.UnLike(allTips, Id);
 		}
-    }
+  	}
 	public void DislikePressed(int nr)
     {
 			if (number != nr){

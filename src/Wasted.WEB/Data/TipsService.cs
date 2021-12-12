@@ -68,25 +68,54 @@ namespace Wasted.Data
                 Log.Error("Exception caught: {0}",e);
             }
         }
-        public void Like(List<Tip> allTips, int nr, int clickLikeCount)
+        public void Like(List<Tip> allTips,Tip newTip, int tipId)
         {
             foreach(var tips in allTips)
             {
-                if (tips.TipId == nr)
+                if (tips.TipId == tipId)
                 { 
                     tips.TipLikes++; 
                 }
             }
+            try 
+            {
+                Log.Information("Started updateing TipList");
+                // _httpHelper.Put <List<Tip>>(allTips.Where(x => x.TipId == tipId),"tip/"+ newTip.TipId.ToString());
+                Log.Information("Finished updateing TipList");
+            }
+            catch(FileNotFoundException e)
+            {
+                Log.Error(e.Message);
+            }
+            catch (Exception e)
+            {
+                Log.Error("Exception caught: {0}",e);
+            }
         }
 
-         public void UnLike(List<Tip> allTips, int nr, int clickLikeCount)
+        public void UnLike(List<Tip> allTips, int tipId)
         {
+            
             foreach(var tips in allTips)
             {
-                if (tips.TipId == nr)
+                if (tips.TipId == tipId)
                 { 
                     tips.TipLikes--; 
                 }
+            }
+            try 
+            {
+                Log.Information("Started updateing TipList");
+                // _httpHelper.Put <List<Tip>>(allTips.Where(x => x.TipId == tipId),"tip/"+ newTip.TipId.ToString());
+                Log.Information("Finished updateing TipList");
+            }
+            catch(FileNotFoundException e)
+            {
+                Log.Error(e.Message);
+            }
+            catch (Exception e)
+            {
+                Log.Error("Exception caught: {0}",e);
             }
         }
 
@@ -99,6 +128,20 @@ namespace Wasted.Data
                     tips.TipDislikes++; 
                 }
             }
+            try 
+            {
+                Log.Information("Started updateing TipList");
+                // _httpHelper.Put <List<Tip>>(allTips.Where(x => x.TipId == tipId),"tip/"+ newTip.TipId.ToString());
+                Log.Information("Finished updateing TipList");
+            }
+            catch(FileNotFoundException e)
+            {
+                Log.Error(e.Message);
+            }
+            catch (Exception e)
+            {
+                Log.Error("Exception caught: {0}",e);
+            }
         }
 
         public void UnDislike(List<Tip> allTips, int nr, int clickDislikeCount)
@@ -109,6 +152,20 @@ namespace Wasted.Data
                 { 
                     tips.TipDislikes--; 
                 }
+            }
+            try 
+            {
+                Log.Information("Started updateing TipList");
+                // _httpHelper.Put <List<Tip>>(allTips.Where(x => x.TipId == tipId),"tip/"+ newTip.TipId.ToString());
+                Log.Information("Finished updateing TipList");
+            }
+            catch(FileNotFoundException e)
+            {
+                Log.Error(e.Message);
+            }
+            catch (Exception e)
+            {
+                Log.Error("Exception caught: {0}",e);
             }
         }
 
