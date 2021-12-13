@@ -126,6 +126,26 @@ namespace Wasted.Data
             return false;
         }
 
+        public bool fewIngredientsShort(List<RecipeItemModel> products, DishModel recipe)
+        {
+            int have = 0;
+            foreach (var product in products)
+            {
+                for(int i = 0; i < recipe.numberOfIngredients; i++)
+                {
+                    if(string.Equals(product.Item, recipe.Ingredients[i].Item, StringComparison.OrdinalIgnoreCase) && product.Amount >= recipe.Ingredients[i].Amount)
+                    {
+                        have++;
+                    }
+                }
+            }
+            if(have + 2 >= recipe.numberOfIngredients && have != recipe.numberOfIngredients)
+            {
+                return true;
+            }
+            return false;
+        }
+
         public async Task<List<DishModel>> FindRecipe(List<RecipeItemModel> products, CanMakeDish makeable)
         {
             List<DishModel> dishesAbleToMake = new List<DishModel>();
@@ -135,6 +155,25 @@ namespace Wasted.Data
                 Log.Information("Starting to search for recipes");
                 var recipes = await GetRecipes();
                 dishesAbleToMake = recipes.Where(recipe => haveEnoughIngredients(products, recipe) == true).ToList();
+                Log.Information("Finished finding all recipes");
+            }
+            catch (Exception e)
+            {
+                Log.Error("Exception caught: {0}",e);
+            }
+            dishesAbleToMake.Sort();
+            return dishesAbleToMake;
+        }
+
+        public async Task<List<DishModel>> FindRecipeShort(List<RecipeItemModel> products)
+        {
+            List<DishModel> dishesAbleToMake = new List<DishModel>();
+            try 
+            {
+                await Task.Delay(1);
+                Log.Information("Starting to search for recipes");
+                var recipes = await GetRecipes();
+                dishesAbleToMake = recipes.Where(recipe => fewIngredientsShort(products, recipe) == true).ToList();
                 Log.Information("Finished finding all recipes");
             }
             catch (Exception e)

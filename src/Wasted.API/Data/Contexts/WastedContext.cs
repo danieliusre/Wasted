@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Wasted.API.Models;
 
 namespace Wasted.API.Data
@@ -21,7 +21,7 @@ namespace Wasted.API.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Product>().HasData(
-                new Product { Id = 1, Name = "Apple", Type = "Fruit", MeasurementUnits = "kg", EnergyValue = 158.487},
+                new Product { Id = 1, Name = "Apples", Type = "Fruit", MeasurementUnits = "kg", EnergyValue = 158.487},
                 new Product { Id = 2, Name = "Troat", Type = "Fish", MeasurementUnits = "kg", EnergyValue = 284.546},
                 new Product { Id = 3, Name = "Orange", Type = "Fruit", MeasurementUnits = "g", EnergyValue = 120.692},
                 new Product { Id = 4, Name = "Blackberry", Type = "Berry", MeasurementUnits = "kg", EnergyValue = 262.178},
@@ -36,13 +36,17 @@ namespace Wasted.API.Data
                 new Product { Id = 12, Name = "Butter", Type = "Dairy", MeasurementUnits = "g", EnergyValue = 175.1245},
                 new Product { Id = 13, Name = "Salt", Type = "Spice", MeasurementUnits = "g", EnergyValue = 175.1245},
                 new Product { Id = 14, Name = "Vanilla extract", Type = "Spice", MeasurementUnits = "g", EnergyValue = 175.1245},
-                new Product { Id = 15, Name = "Cocoa", Type = "idk", MeasurementUnits = "g", EnergyValue = 175.1245}
+                new Product { Id = 15, Name = "Cocoa", Type = "idk", MeasurementUnits = "g", EnergyValue = 175.1245},
+                new Product { Id = 16, Name = "Dark Chocolate", Type = "idk", MeasurementUnits = "g", EnergyValue = 175.1245},
+                new Product { Id = 17, Name = "Cinnamon", Type = "Spice", MeasurementUnits = "g", EnergyValue = 175.1245}
                 );
 
             modelBuilder.Entity<Dish>().HasData(
                 new Dish { Id = 1, Name =  "Pancakes", numberOfIngredients = 5, Type =  "Baked"},
                 new Dish { Id = 2, Name = "Chocolate Cake", numberOfIngredients = 4, Type = "Baked"},
-                new Dish { Id = 3, Name = "Waffles", numberOfIngredients = 7, Type = "All"}
+                new Dish { Id = 3, Name = "Waffles", numberOfIngredients = 7, Type = "All"},
+                new Dish { Id = 4, Name = "Brownies", numberOfIngredients = 6, Type = "Baked"},
+                new Dish { Id = 5, Name = "Apple Pie", numberOfIngredients = 6, Type = "Baked"}
               );
 
             modelBuilder.Entity<Ingredient>().HasKey(c => new { c.DishId, c.ProductId });
@@ -65,7 +69,21 @@ namespace Wasted.API.Data
                 new Ingredient { DishId = 3, ProductId =  11, Amount =  2 },
                 new Ingredient { DishId = 3, ProductId =  10, Amount =  300 },
                 new Ingredient { DishId = 3, ProductId =  12, Amount =  100 },
-                new Ingredient { DishId = 3, ProductId =  14, Amount =  5 }
+                new Ingredient { DishId = 3, ProductId =  14, Amount =  5 },
+
+                new Ingredient { DishId = 4, ProductId =  8, Amount =  150 },
+                new Ingredient { DishId = 4, ProductId =  12, Amount =  180 },
+                new Ingredient { DishId = 4, ProductId =  15, Amount =  30 },
+                new Ingredient { DishId = 4, ProductId =  9, Amount =  150 },
+                new Ingredient { DishId = 4, ProductId =  11, Amount =  3 },
+                new Ingredient { DishId = 4, ProductId =  16, Amount =  200 },
+
+                new Ingredient { DishId = 5, ProductId =  1, Amount =  2 },
+                new Ingredient { DishId = 5, ProductId =  17, Amount =  15 },
+                new Ingredient { DishId = 5, ProductId =  12, Amount =  100 },
+                new Ingredient { DishId = 5, ProductId =  8, Amount =  100 },
+                new Ingredient { DishId = 5, ProductId =  9, Amount =  5 },
+                new Ingredient { DishId = 5, ProductId =  11, Amount =  1 }
               );
 
 
