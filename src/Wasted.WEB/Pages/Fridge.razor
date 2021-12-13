@@ -1,6 +1,7 @@
 ﻿@page "/fridge/{email}"
 
 @using Wasted.Data
+@using Wasted.WEB.Wrapped
 @inject ProductService ProductService
 @inject ExportService exportService
 @inject Microsoft.JSInterop.IJSRuntime JS
@@ -91,6 +92,7 @@
     private DateTime newDate { get; set; }
 
     public FridgeItem newFridgeItem = new FridgeItem();
+    public static PagedResponse<List<Product>> response {get; set;}
     
      public bool IsVisible(FridgeItem fridgeItem)
     {
@@ -101,9 +103,10 @@
     }
     protected override async Task OnInitializedAsync()
     {
+        response = await ProductService.GetResponse();
         UserId = await RegistrationService.GetUserId(Email);
         fridgeItems = (await FridgeService.GetFridgeItems(UserId)).OrderBy(o => o.Date).ToList();
-        products = await ProductService.GetProducts();
+        products = await ProductService.GetAllProducts(response.TotalRecords);
         newDate = DateTime.Now;
     }
     public async Task addFridgeItem()

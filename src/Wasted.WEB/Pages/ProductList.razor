@@ -5,6 +5,7 @@
 @inject ExportService exportService
 @inject Microsoft.JSInterop.IJSRuntime JS
 @using Microsoft.AspNetCore.Components.Authorization
+@using Wasted.WEB.Wrapped
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @using  System.IO
 @inject Admins Admins
@@ -36,7 +37,7 @@
                     <th scope="col">Add to shopping list</th>
                     @if(Admins.IsAdmin(context.User.Claims))
                     {
-                        <th scope="col"></th>
+                        <th scope="col">Delete from database</th>
                     }
                    
                 </tr>
@@ -67,6 +68,26 @@
                 
             </tbody>
         </table>
+        <div class="container">
+            <ul class="pagination pagination-sm no-margin justify-content-center">
+                @for(int i = 1; i <= response.TotalPages; i++)
+                {
+                    var temp = i;
+                    @if(temp == response.PageNumber)
+                    {
+                        <li><a class="btn" style="background-color:#530e64; color:white; text-decoration:underline" 
+                                @onclick="() => changeProducts(temp)">@(temp)</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li><a class="btn" style="background-color:#530e64a6; color:white"
+                                @onclick="() => changeProducts(temp)">@(temp)</a>
+                        </li>
+                    }
+                }
+            </ul>
+        </div>
         @if(shoppingList.Any())
         {
             <h1>Shopping list:</h1>
@@ -117,8 +138,16 @@
     </Authorized>
 </AuthorizeView>
 @code {
-    public int index { get; set; }
+    public async Task changeProducts(int i)
+    {
+        products.Clear();
+        string link = "product?pageNumber=" + i +"&pageSize=" + response.PageSize;
+        products = await ProductService.GetProducts(link);
+        response = await ProductService.GetResponse(link);
+    }
     
+    public static PagedResponse<List<Product>> response {get; set;}
+
     private List<Product> products { get; set; }
 
     public Product newProduct = new Product();
@@ -142,7 +171,7 @@
     protected override async Task OnInitializedAsync()
     {
         products = await ProductService.GetProducts();
-        
+        response = await ProductService.GetResponse();
     }
     public delegate bool CheckValidity (Product product);
     public bool IsVisible(Product product)

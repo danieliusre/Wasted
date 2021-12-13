@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Serilog;
 using System.Collections.Generic;
-
+using Wasted.WEB.Wrapped;
 
 namespace Wasted.Data
 {
@@ -22,7 +22,40 @@ namespace Wasted.Data
             try 
             {
                 Log.Information("Starting to read ProductList");
-                products =  new List<Product>(await _httpHelper.GetList<Product>("product"));
+                products =  new List<Product>(await _httpHelper.GetProductList<Product>("product"));
+                Log.Information("Finished reading Productlist");
+                
+            }
+            catch (Exception e)
+            {
+                Log.Error("Exception caught: {0}",e);
+            }
+            return products;
+        }
+        public async Task<List<Product>> GetProducts(string link)
+        {
+            List<Product> products = null;
+            try 
+            {
+                Log.Information("Starting to read ProductList");
+                products =  new List<Product>(await _httpHelper.GetProductList<Product>(link));
+                Log.Information("Finished reading Productlist");
+                
+            }
+            catch (Exception e)
+            {
+                Log.Error("Exception caught: {0}",e);
+            }
+            return products;
+        }
+        public async Task<List<Product>> GetAllProducts(int totalRecords)
+        {
+            List<Product> products = null;
+            try 
+            {
+                Log.Information("Starting to read ProductList");
+                string link = "product?pageNumber=1&pageSize=" + totalRecords;
+                products =  new List<Product>(await _httpHelper.GetProductList<Product>(link));
                 Log.Information("Finished reading Productlist");
                 
             }
@@ -61,6 +94,17 @@ namespace Wasted.Data
             {
                 Log.Error("Exception caught: {0}",e);
             }
+        }
+        public async Task<PagedResponse<List<Product>>> GetResponse()
+        {
+            var result =  await _httpHelper.GetPageResponse("product");
+            return result;
+        }
+
+        public async Task<PagedResponse<List<Product>>> GetResponse(string link)
+        {
+            var result =  await _httpHelper.GetPageResponse(link);
+            return result;
         }
     }
 }
