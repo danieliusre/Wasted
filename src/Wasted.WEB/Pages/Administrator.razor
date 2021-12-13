@@ -260,6 +260,7 @@
     acceptPressed = false;
     initializeUsers = false;
     initializeRoles = true;
+    addRecipe = false;
     users = await AdminService.GetUserList();@*adminService.Value.GetUserList().Result;*@
   }
 
@@ -268,6 +269,7 @@
     acceptPressed = false;
     initializeRoles = false;
     initializeUsers = true;
+    addRecipe = false;
     users = await AdminService.GetUserList();
   }
 
@@ -290,6 +292,7 @@
     acceptPressed = true;
     initializeRoles = false;
     initializeUsers = false;
+    addRecipe = false;
   }
 
   public void AddRecipePressed()
