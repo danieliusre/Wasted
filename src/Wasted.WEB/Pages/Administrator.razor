@@ -25,8 +25,12 @@
 
   @if(acceptPressed)
   {
+    <div class="paragraphBlock">
+    <h2 style="text-align:center">REMOVE TIPS</h2>
     @foreach(var tips in allTips)
     {
+      if (tips.AdminApproved)
+      {
       tipNr = tips.TipId;
       <h2 class = "h2"><br>@tips.TipName
         <i  class="fa fa-thumbs-up">
@@ -58,6 +62,44 @@
     <br>
 		<div id = "vertically-aligned-block"class="flex float">
     </div>
+  }
+  </div>
+  <br>
+    <div class="paragraphBlock">
+    <h2 style="text-align:center">APPROVE TIPS</h2>
+    @foreach(var tips in allTips)
+    {
+      if (!tips.AdminApproved)
+      {
+      tipNr = tips.TipId;
+      <h2 class = "h2"><br>@tips.TipName
+        <i  class="fa fa-thumbs-up">
+          @tips.TipLikes
+        </i>
+        <i  class="fa fa-thumbs-down">
+           @tips.TipDislikes
+        </i>
+        <button class="btn btn-success" @onclick="() => AcceptPressed(tips.TipId)" > APPROVE </button>
+      </h2>
+      <br> 
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" aria-valuenow="70"
+             aria-valuemin="0" aria-valuemax="100" style="width:@tips.TipLikes%">
+           <span class="sr-only">Complete</span>
+          </div>
+        </div>
+      <br>
+      <p class = "p">@tips.Name</p> 
+      <button class="learnmore" onclick=" window.open('@tips.Link','_blank');">
+        I want to learn more
+      </button>
+      <br>		
+      }
+      <br>
+      <div id = "vertically-aligned-block"class="flex float">
+      </div>
+      }
+      </div>
   }
 
   @if(addRecipe)
