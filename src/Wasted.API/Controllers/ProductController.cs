@@ -51,9 +51,7 @@ namespace Wasted.API.Controllers
             var productModelFromRepo = _repository.GetProductById(id);
             if (productModelFromRepo != null)
             {
-                // return Ok(_mapper.Map<ProductReadDto>(productModelFromRepo));
-                var product =  _mapper.Map<ProductReadDto>(productModelFromRepo);
-            return Ok(new Response<ProductReadDto>(product));
+                 return Ok(_mapper.Map<ProductReadDto>(productModelFromRepo));
             }
             return NotFound();
         }    
