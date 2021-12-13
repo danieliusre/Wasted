@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using Serilog;
 using System.Net.Http;
 using System.Collections.Generic;
@@ -7,7 +6,7 @@ using Newtonsoft.Json;
 using System.Threading.Tasks;
 using System.Net;
 using System.Net.Http.Json;
-
+using Wasted.WEB.Wrapped;
 namespace Wasted.Data
 {
     
@@ -72,6 +71,34 @@ namespace Wasted.Data
             {
                 Log.Error("Exception caught: {0}", e);
             }
+        }
+        public async Task<List<T>> GetProductList<T>(string endpoint)
+        {
+            try
+            {
+                return JsonConvert.DeserializeObject<PagedResponse<List<T>>>(
+                       await client.GetStringAsync(ApiUrl+endpoint)
+                ).Data;
+            }
+            catch (Exception e)
+            {
+                Log.Error("Exception caught: {0}", e);
+                return default(List<T>);
+            } 
+        }
+        public async Task<PagedResponse<List<Product>>> GetPageResponse(string endpoint)
+        {
+            try
+            {
+                return JsonConvert.DeserializeObject<PagedResponse<List<Product>>>(
+                       await client.GetStringAsync(ApiUrl+endpoint)
+                );
+            }
+            catch (Exception e)
+            {
+                Log.Error("Exception caught: {0}", e);
+                return default(PagedResponse<List<Product>>);
+            } 
         }
         public async Task<List<T>> GetList<T>(string endpoint)
         {
