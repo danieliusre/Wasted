@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using Newtonsoft.Json.Serialization;
 using Serilog;
+using Wasted.API.Services;
+using Microsoft.AspNetCore.Http;
 
 namespace Wasted.API
 {
@@ -28,12 +30,24 @@ namespace Wasted.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<WastedContext>(opt => opt.UseSqlServer
-                (Configuration.GetConnectionString("Wasted.API")));
-
             services.AddControllers().AddNewtonsoftJson(s => {
                 s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             });
+
+            
+            services.AddDbContext<WastedContext>(options =>
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("Wasted.API"),
+                    b => b.MigrationsAssembly(typeof(WastedContext).Assembly.FullName)));
+            services.AddHttpContextAccessor();
+            services.AddSingleton<IUriService>(o =>
+            {
+                var accessor = o.GetRequiredService<IHttpContextAccessor>();
+                var request = accessor.HttpContext.Request;
+                var uri = string.Concat(request.Scheme, "://", request.Host.ToUriComponent());
+                return new UriService(uri);
+            });
+
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
