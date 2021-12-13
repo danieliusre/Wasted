@@ -11,6 +11,8 @@
 </h1>
 
 <p class = "p">The best way to predict the future is to create it!</p>
+<hr><hr>
+<div class="paragraphBlock">
 <hr>
 
 @foreach(var tips in allTips)
@@ -41,6 +43,7 @@
 				<br>
 			}
 		}
+		</div>
 		<hr><hr>
 		<p class = "p">Add your own helpful tip!</p>
 		<div> 
@@ -101,12 +104,12 @@
 		if (clickLikeCount == 0)
 		{
 			clickLikeCount++;
-			TipsService.Like(allTips, nr, clickLikeCount);
+			TipsService.Like(allTips, nr);
 		}
 		else
 		{
 			clickLikeCount--;
-			TipsService.UnLike(allTips, nr, clickLikeCount);
+			TipsService.UnLike(allTips, nr);
 		}
     }
 	public void DislikePressed(int nr)
@@ -117,12 +120,12 @@
 			if (clickDislikeCount == 0)
 			{
 				clickDislikeCount++;
-				TipsService.Dislike(allTips, nr, clickDislikeCount);
+				TipsService.Dislike(allTips, nr);
 			}
 			else
 			{
 				clickDislikeCount--;
-				TipsService.UnDislike(allTips, nr, clickDislikeCount);
+				TipsService.UnDislike(allTips, nr);
 			}
 		}	
 }
