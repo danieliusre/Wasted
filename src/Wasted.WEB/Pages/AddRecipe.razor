@@ -1,6 +1,7 @@
 @page "/addrecipe"
 @using System.IO
 @using Wasted.Data
+@using Wasted.WEB.Wrapped
 @inject RecipeCalcService RecipeCalcService 
 @inject ProductService ProductService
 @inject AddRecipeService AddRecipeService
@@ -15,10 +16,12 @@
     private List<DishModel> recipes { get; set; }
 
     List<RecipeItemModel> ingredients = new List<RecipeItemModel>();
+    public static PagedResponse<List<Product>> response {get; set;}
 
     protected override async Task OnInitializedAsync()
     {
-        products = await ProductService.GetProducts();
+        response = await ProductService.GetResponse();
+        products = await ProductService.GetAllProducts(response.TotalRecords);
         recipes = await RecipeCalcService.GetRecipes();
     }
     
