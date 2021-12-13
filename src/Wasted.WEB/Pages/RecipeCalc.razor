@@ -201,7 +201,8 @@
     }
 </div>
 <br>
-<div class="paragraphBlock">
+<div class="container">
+<div class="paragraphBlock expired"  style="margin-right:3%">
     @if(!FindRecipePressed)
     {
         <button class="learnmore" @onclick="FindRecipe">Find a recipe!</button>
@@ -218,6 +219,7 @@
             </div>
         <h1><font style="color:#3a0647;font-size:20px">(Showing @dishFilter)</font></h1>
     }
+
 
     @if(dishes.Any())
     {
@@ -238,9 +240,11 @@
             }
         </dl> 
     }
+</div>
 
     @if(dishesShort.Any())
     {
+        <div class="paragraphBlock expired" >
         <dl class="Recipes" >
             <h1><font color=#3a0647>Here's what you can ALMOST make:</font></h1>
             @foreach (var dish in dishesShort) 
@@ -271,7 +275,9 @@
                 
             }
         </dl> 
+        </div>
     }
+
 </div>
 <br>
 

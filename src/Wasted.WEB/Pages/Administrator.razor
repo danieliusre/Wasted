@@ -1,6 +1,7 @@
 @page "/admin"
 @using Wasted.Data
 @using System.Collections.Generic
+@using Wasted.WEB.Wrapped
 @inject TipsService TipsService
 @inject AdminService AdminService
 @inject RecipeCalcService RecipeCalcService 
@@ -211,6 +212,7 @@
   Boolean acceptPressed = false;
   Boolean addRecipe = false;
   public Tip newTip = new Tip();
+  public static PagedResponse<List<Product>> response {get; set;}
   public async Task RoleChangePressed ()
   {
     acceptPressed = false;
@@ -236,7 +238,8 @@
   protected override async Task OnInitializedAsync()
   {
 		allTips = await TipsService.GetTips();
-    products = await ProductService.GetProducts();
+    response = await ProductService.GetResponse();
+    products = await ProductService.GetAllProducts(response.TotalRecords); 
     recipes = await RecipeCalcService.GetRecipes();
   }
 

@@ -43,6 +43,7 @@ input[type=number]{
     padding: 2%;
     font-size: 25px;
     vertical-align: middle;
+    width: 47%;
 }
 .msgtouser{
     outline: 3px solid red;
