@@ -10,6 +10,9 @@ using Newtonsoft.Json.Serialization;
 using Serilog;
 using Wasted.API.Services;
 using Microsoft.AspNetCore.Http;
+using Microsoft.OpenApi.Models;
+using System.Reflection;
+using System.IO;
 
 namespace Wasted.API
 {
@@ -34,7 +37,30 @@ namespace Wasted.API
                 s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             });
 
-            
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "Wasted",
+                    Description = "Prayers",
+                    TermsOfService = new Uri("https://www.google.com/"),
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Contact",
+                        Url = new Uri("https://www.google.com/")
+                    },
+                    License = new OpenApiLicense
+                    {
+                        Name = "License",
+                        Url = new Uri("https://www.google.com/")
+                    }
+                });
+
+                // var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                // options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+            });
+
             services.AddDbContext<WastedContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("Wasted.API"),
@@ -58,6 +84,7 @@ namespace Wasted.API
             services.AddScoped<IIngredientRepo, SqlIngredientRepo>();
             services.AddScoped<IDishRepo, SqlDishRepo>();
             services.AddScoped<ITipRepo, SqlTipRepo>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -69,17 +96,14 @@ namespace Wasted.API
                     .AllowAnyOrigin()
                     .AllowAnyMethod()
                     .AllowAnyHeader());
-
-                app.UseHttpsRedirection(); 
                 
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
 
             app.UseRouting();
-
-            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
