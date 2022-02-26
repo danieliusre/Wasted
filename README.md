@@ -1,5 +1,8 @@
 # Wasted
 
+[API](https://wastedapi.azurewebsites.net/swagger/index.html)
+[Web Application](https://wastedapp.azurewebsites.net/)
+
 ## For collaborators:
 
 Project is built using .NET and Blazor (ASP.NET), both using C# as main programming language.
