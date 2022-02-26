@@ -1,6 +1,7 @@
 # Wasted
 
 [API](https://wastedapi.azurewebsites.net/swagger/index.html)
+
 [Web Application](https://wastedapp.azurewebsites.net/)
 
 ## For collaborators:
