@@ -20,26 +20,29 @@ namespace Wasted.Data
         public List<string> ErrMsg = new List<string>();
         public async Task<List<string>> AddUserData(string NameBox, string LastNameBox, string EmailBox, string PasswordBox)
         {
-            List<User> users = new();
+            List<User> users = new List<User>(await _httpHelper.GetList<User>("user")); ;
             try
             {
                 Log.Information("Starting to Registration service");
                 if( dataValid (NameBox, LastNameBox, EmailBox, PasswordBox))
                 {
-                    if(newEmail(EmailBox, users) && emailValid(EmailBox))
+                    if (emailValid(EmailBox))
                     {
-                        users = await GetUserList();
-                        User user = new ();
-                       
+                        if (newEmail(EmailBox, users))
+                        {
+                            //users = await GetUserList();
+                            User user = new();
+
                             user.FirstName = NameBox;
                             user.Lastname = LastNameBox;
                             user.Email = EmailBox;
                             user.Password = PasswordBox;
                             user.Role = "user";
-                       
-                        var id =  await _httpHelper.Post<User>(user,"user");
-                        ErrMsg.Clear();
-                        ErrMsg.Add("Success! Welcome to the Wasted family!");
+
+                            var id = await _httpHelper.Post<User>(user, "user");
+                            ErrMsg.Clear();
+                            ErrMsg.Add("Success! Welcome to the Wasted family!");
+                        }
                     }
                     else
                     {
@@ -58,24 +61,25 @@ namespace Wasted.Data
 
         public bool newEmail(string email, List<User> users1)
         {
-            try
-            {
                 Log.Information("Starting to newEmail check");
-                foreach(User regUser in users1)
+                var usedEmail = users1.Where(x => x.Email == email).FirstOrDefault();
+                if (usedEmail == null)
                 {
-                    if(String.Equals(email, regUser.Email))
-                    {
-                        return false;
-                    }
+                    Console.WriteLine(usedEmail);
+                    foreach (User u in users1)
+                {
+                    Log.Information(u.FirstName, u.Email);
+                }    
+                    Log.Information("Finished email checking {usedEmail}");
+                    return true;
                 }
-                Log.Information("Finished email checking");
-                return true;
-            }
-            catch (Exception e)
-            {
-                Log.Error("Exception caught {0}", e);
+                else
+                {
+                    Log.Error("Email is already in use");
+                ErrMsg.Clear();
+                ErrMsg.Add("A user with given email address already exists!");
                 return false;
-            }
+                }
         }
 
 
