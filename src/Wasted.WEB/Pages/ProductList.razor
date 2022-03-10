@@ -127,10 +127,10 @@
                         <select @bind="newProduct.MeasurementUnits">
                             @foreach (String unit in measurementUnits)
                             {
-                                <option value="@unit">
-                                </option>
+                                <option value="@unit">@unit</option>
                             }
                         </select>
+
                         <div class="col">
                             <input type="text" class="form-control" placeholder="Energy value" aria-label="Energy value" @bind="@newProduct.EnergyValue">
                         </div>
