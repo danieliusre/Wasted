@@ -20,7 +20,7 @@ namespace Wasted.Data
             set => _type = value;
         }
 
-        public string MeasurementUnits { 
+        public string MeasurementUnits{ 
             get { return _measurementUnits; }
             set { _measurementUnits = value; }
         }

@@ -32,6 +32,20 @@ namespace Wasted.Data
             }
             return products;
         }
+
+        public List<String> GetMeasurementUnits()
+        {
+            List<String> measurementUnits = new List<String>
+            {
+                "Grams(g)",
+                "Kilogram (kg)",
+                "Litre(l)",
+                "Mililitre(ml)",
+                "Unit(s)"
+            };
+
+            return measurementUnits;
+        }
         public async Task<List<Product>> GetProducts(string link)
         {
             List<Product> products = null;

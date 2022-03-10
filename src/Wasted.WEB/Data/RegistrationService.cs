@@ -44,11 +44,6 @@ namespace Wasted.Data
                             ErrMsg.Add("Success! Welcome to the Wasted family!");
                         }
                     }
-                    else
-                    {
-                        ErrMsg.Clear();
-                        ErrMsg.Add("A user with given email address already exists!");
-                    }
                 }
                 Log.Information("Finished Registration service");
             }
@@ -76,8 +71,8 @@ namespace Wasted.Data
                 else
                 {
                     Log.Error("Email is already in use");
-                ErrMsg.Clear();
-                ErrMsg.Add("A user with given email address already exists!");
+                    ErrMsg.Clear();
+                    ErrMsg.Add("A user with given email address already exists!");
                 return false;
                 }
         }
