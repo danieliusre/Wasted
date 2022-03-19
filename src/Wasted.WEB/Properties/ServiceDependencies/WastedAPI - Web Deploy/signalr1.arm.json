@@ -12,7 +12,7 @@
     },
     "resourceGroupLocation": {
       "type": "string",
-      "defaultValue": "germanywestcentral",
+      "defaultValue": "southcentralus",
       "metadata": {
         "_parameterType": "location",
         "description": "Location of the resource group. Resource groups could have different location than resources."
@@ -36,7 +36,7 @@
     },
     {
       "type": "Microsoft.Resources/deployments",
-      "name": "[concat(parameters('resourceGroupName'), 'Deployment', uniqueString(concat('WastedAPIvault', subscription().subscriptionId)))]",
+      "name": "[concat(parameters('resourceGroupName'), 'Deployment', uniqueString(concat('WastedServiceeeeeeeeeeeeeeeeeeeeeee', subscription().subscriptionId)))]",
       "resourceGroup": "[parameters('resourceGroupName')]",
       "apiVersion": "2019-10-01",
       "dependsOn": [
@@ -49,21 +49,16 @@
           "contentVersion": "1.0.0.0",
           "resources": [
             {
-              "name": "WastedAPIvault",
-              "type": "Microsoft.KeyVault/vaults",
-              "location": "[parameters('resourceLocation')]",
-              "properties": {
-                "sku": {
-                  "family": "A",
-                  "name": "Standard"
-                },
-                "tenantId": "84418c4f-7826-44ea-95df-871a04adfb25",
-                "accessPolicies": [],
-                "enabledForDeployment": true,
-                "enabledForDiskEncryption": true,
-                "enabledForTemplateDeployment": true
+              "sku": {
+                "name": "Standard_S1",
+                "tier": "Standard",
+                "size": "S1",
+                "capacity": 1
               },
-              "apiVersion": "2016-10-01"
+              "location": "[parameters('resourceLocation')]",
+              "name": "WastedServiceeeeeeeeeeeeeeeeeeeeeee",
+              "type": "Microsoft.SignalRService/SignalR",
+              "apiVersion": "2018-10-01"
             }
           ]
         }
@@ -71,6 +66,6 @@
     }
   ],
   "metadata": {
-    "_dependencyType": "secrets.keyVault"
+    "_dependencyType": "signalr.azure"
   }
 }

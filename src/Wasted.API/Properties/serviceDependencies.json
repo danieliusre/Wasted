@@ -1,6 +1,9 @@
 {
   "dependencies": {
-    "mssql2": {
+    "apis1": {
+      "type": "apis"
+    },
+    "mssql1": {
       "type": "mssql",
       "connectionId": "ConnectionStrings:Wasted.API"
     },
