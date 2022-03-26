@@ -137,6 +137,7 @@ namespace Wasted.Data
                 "Fish",
                 "Fruit",
                 "Grain",
+                "Vegetable",
                 "Seasonings"
             };
 
@@ -154,8 +155,6 @@ namespace Wasted.Data
                     newProduct.MeasurementUnits = product.MeasurementUnits;
                     newProduct.EnergyValue = product.EnergyValue;
                     newProduct.AdminApproved = true;
-
-                    
                 }
             }
             newProduct.Id = await AddProduct(newProduct);
