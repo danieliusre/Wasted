@@ -48,6 +48,8 @@
                     {
                         if (!IsVisible(product))
                             continue;
+                        if (product.AdminApproved)
+                        {
                         <tr>
                             <td>@product.Name</td>
                             <td>@product.Type</td>
@@ -63,9 +65,10 @@
                                 </td>
                             }
                         </tr>
+                            }
+                        }
                     }
-                }
-                
+                 
             </tbody>
         </table>
         <div class="container">
@@ -112,8 +115,6 @@
             </table>
             <button class="btn btn-primary mg-50" @onclick="ExportToPdf">Export to PDF</button>
         }
-        @if(Admins.IsAdmin(context.User.Claims))
-        {
             <h3>Add products</h3>
             <div class="row g-3 mg-50">
                 <div class="col">
@@ -138,7 +139,7 @@
                     <button type="submit" class="btn btn-success" @onclick="async () => await addProduct()">Add</button>
                 </div>
             </div>
-        }
+
 
     }
     </Authorized>

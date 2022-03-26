@@ -18,13 +18,17 @@ namespace Wasted.Data
 
         public async Task<List<Product>> GetProducts()
         {
-            List<Product> products = null;
+            var products = new List<Product>();
             try
             {
                 Log.Information("Starting to read ProductList");
                 products = new List<Product>(await _httpHelper.GetProductList<Product>("product"));
                 Log.Information("Finished reading Productlist");
 
+            }
+            catch (FileNotFoundException e)
+            {
+                Log.Error(e.Message);
             }
             catch (Exception e)
             {
@@ -34,7 +38,7 @@ namespace Wasted.Data
         }
         public async Task<List<Product>> GetProducts(string link)
         {
-            List<Product> products = null;
+            List<Product> products = new List<Product>();
             try
             {
                 Log.Information("Starting to read ProductList");
@@ -50,7 +54,7 @@ namespace Wasted.Data
         }
         public async Task<List<Product>> GetAllProducts(int totalRecords)
         {
-            List<Product> products = null;
+            List<Product> products = new List<Product>();
             try
             {
                 Log.Information("Starting to read ProductList");
@@ -137,6 +141,27 @@ namespace Wasted.Data
             };
 
             return types;
+        }
+
+        public async void  ApproveProduct (List<Product> allProducts, Product newProduct, int nr)
+        {
+            foreach (var product in allProducts)
+            {
+                if (product.Id == nr)
+                {
+                    newProduct.Name = product.Name;
+                    newProduct.Type = product.Type;
+                    newProduct.MeasurementUnits = product.MeasurementUnits;
+                    newProduct.EnergyValue = product.EnergyValue;
+                    newProduct.AdminApproved = true;
+
+                    
+                }
+            }
+            newProduct.Id = await AddProduct(newProduct);
+            DeleteProduct(nr);
+            allProducts.RemoveAll(item => item.Id == nr);
+            allProducts.Add(newProduct);
         }
     }
 }

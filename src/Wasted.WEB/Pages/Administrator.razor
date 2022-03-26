@@ -21,6 +21,7 @@
             <button class="buttonSub2"  @onclick="RoleChangePressed">Change roles </button>
             <button class="buttonSub2"  @onclick="LoadRemovableList">Remove users </button>
             <button class="buttonSub2"  @onclick="AcceptTipsPressed">Accept tips </button>
+            <button class="buttonSub2"  @onclick="AcceptProductsPressed">Accept products </button>
             <button class="buttonSub2"  @onclick="AddRecipePressed">Add a recipe </button>
         </div>
 
@@ -185,9 +186,46 @@
         </tbody>
       </table>
   }
-  @if(initializeRoles)
+
+  @if (acceptNewProductsPressed)
   {
-    i = 0;
+     <h2 style="text-align:center">APPROVE PRODUCTS</h2>
+         <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Measurement Units</th>
+                        <th scope="col">Energy Value</th>
+                        <th scope="col">Admin App</th>
+                    </tr>
+                </thead>
+
+         <tbody>
+     @foreach (var product in products)
+     {
+         if (product.AdminApproved == false)
+         {
+             productNr = product.Id;
+             <tr> 
+                 <th scope="row">@productNr</th>
+                 <td>@product.Name</td>
+                 <td>@product.Type</td>
+                 <td>@product.MeasurementUnits</td>
+                 <td>@product.EnergyValue</td>
+                 <td>@product.AdminApproved</td>
+                 <button class="btn btn-success" @onclick="() => ApproveProductPressed(product.Id)"> APPROVE </button>
+                 </tr>
+         }
+     }
+             </tbody>
+         </table>
+  }
+
+  @if (initializeRoles)
+  {
+      i = 0;
     <br/>
     <h1>Manage roles:</h1>
       <table class="table table-striped">
@@ -242,112 +280,145 @@
 
     </NotAuthorized>
 </AuthorizeView>
+
 @code
 {
   List<User> users = new List<User>();
   List<Tip> allTips = new();
-  int i;
-  public int number = 1;
-  int tipNr;
-  Boolean initializeRoles = false;
-  Boolean initializeUsers = false;
-  Boolean acceptPressed = false;
-  Boolean addRecipe = false;
-  public Tip newTip = new Tip();
-  public static PagedResponse<List<Product>> response {get; set;}
-  public async Task RoleChangePressed ()
-  {
+  private List<Product> allProducts { get; set; }
+  public static PagedResponse<List<Product>> response1 {get;set;}
+        int i;
+        public int number = 1;
+        public int num = 1;
+        int tipNr;
+        int productNr;
+
+        Boolean initializeRoles = false;
+        Boolean initializeUsers = false;
+        Boolean acceptPressed = false;
+        Boolean addRecipe = false;
+        Boolean acceptNewProductsPressed = false;
+
+        public Tip newTip = new Tip();
+        public Product newProduct = new Product();
+        public static PagedResponse<List<Product>> response {get; set;}
+    public async Task RoleChangePressed ()
+    {
     acceptPressed = false;
     initializeUsers = false;
     initializeRoles = true;
     addRecipe = false;
+    acceptNewProductsPressed = false;
     users = await AdminService.GetUserList();@*adminService.Value.GetUserList().Result;*@
-  }
+    }
 
-  public async Task LoadRemovableList()
-  {
+    public async Task LoadRemovableList()
+    {
     acceptPressed = false;
     initializeRoles = false;
     initializeUsers = true;
     addRecipe = false;
+    acceptNewProductsPressed = false;
     users = await AdminService.GetUserList();
-  }
-
-  public void deleteTip(int Id)
-    {
-        TipsService.DeleteTip(Id);
-        allTips.RemoveAll(item => item.TipId == Id);
     }
-  
-  protected override async Task OnInitializedAsync()
-  {
-		allTips = await TipsService.GetTips();
-    response = await ProductService.GetResponse();
-    products = await ProductService.GetAllProducts(response.TotalRecords); 
-    recipes = await RecipeCalcService.GetRecipes();
-  }
 
-  public void AcceptTipsPressed()
-  {
+    public void deleteTip(int Id)
+    {
+    TipsService.DeleteTip(Id);
+    allTips.RemoveAll(item => item.TipId == Id);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+    allTips = await TipsService.GetTips();
+    response1 = await ProductService.GetResponse();
+    response = await ProductService.GetResponse();
+    products = await ProductService.GetAllProducts(response.TotalRecords);
+    allProducts = await ProductService.GetAllProducts(response1.TotalRecords);
+    recipes = await RecipeCalcService.GetRecipes();
+    }
+
+    public void AcceptTipsPressed()
+    {
     acceptPressed = true;
     initializeRoles = false;
     initializeUsers = false;
     addRecipe = false;
-  }
+    acceptNewProductsPressed = false;
+    }
 
-  public void AddRecipePressed()
-  {
+    public void AcceptProductsPressed()
+    {
+    acceptPressed = false;
+    initializeRoles = false;
+    initializeUsers = false;
+    addRecipe = false;
+    acceptNewProductsPressed = true;
+    }
+
+
+    public void AddRecipePressed()
+    {
     acceptPressed = false;
     initializeRoles = false;
     initializeUsers = false;
     addRecipe = true;
-  }
+    acceptNewProductsPressed = false;
+    }
 
-  public async Task AcceptPressed(int nr)
-  {
-		number= nr;
-		TipsService.Approve(allTips,newTip, nr);
+    public async Task AcceptPressed(int nr)
+    {
+    number= nr;
+    TipsService.Approve(allTips,newTip, nr);
     newTip.TipId = await TipsService.AddTip(newTip);
     TipsService.DeleteTip(nr);
     allTips.RemoveAll(item => item.TipId == nr);
     allTips.Add(newTip);
     newTip = new Tip();
-  }
+    }
 
-  public void UserRemovePressed(int id)
-  {
+    public async Task ApproveProductPressed(int nr1)
+    {
+    num = nr1;
+    ProductService.ApproveProduct(allProducts,newProduct, nr1);
+    products.RemoveAll(item => item.Id == nr1);
+    newProduct = new Product();
+    }
+
+    public void UserRemovePressed(int id)
+    {
     AdminService.removeUser(id);
     users.RemoveAll(user => user.Id == id);
-  }  
-//----------------- recipe
-public int numberOfIngredients = 0;
+    }
+    //----------------- recipe
+    public int numberOfIngredients = 0;
     private List<Product> products { get; set; }
     private List<DishModel> recipes { get; set; }
 
     List<RecipeItemModel> ingredients = new List<RecipeItemModel>();
-    
-    int selectedProductID = 0;
-    string prodID = "";
-    string dishName = "";
-    string ingredientAmount = "";
-    string dishType = "";
 
-    public async Task AddIngredient()
-    {
-        selectedProductID = Int32.Parse(prodID);
-        ingredients = await AddRecipeService.AddIngredient(ingredients, selectedProductID, ingredientAmount);
-        numberOfIngredients++;
-    }
+                    int selectedProductID = 0;
+                    string prodID = "";
+                    string dishName = "";
+                    string ingredientAmount = "";
+                    string dishType = "";
 
-    public async Task AddNewRecipe()
-    {
-        DishModel recipe = new DishModel();
-        recipe = await AddRecipeService.CreateRecipe(ingredients, dishName, dishType, numberOfIngredients);
-        await RecipeCalcService.AddRecipe(recipe);
-        dishName = "";
-        ingredientAmount = "";
-        dishType = "";
-        ingredients.Clear();
-        numberOfIngredients = 0;
-    }
-}
+                    public async Task AddIngredient()
+                    {
+                    selectedProductID = Int32.Parse(prodID);
+                    ingredients = await AddRecipeService.AddIngredient(ingredients, selectedProductID, ingredientAmount);
+                    numberOfIngredients++;
+                    }
+
+                    public async Task AddNewRecipe()
+                    {
+                    DishModel recipe = new DishModel();
+                    recipe = await AddRecipeService.CreateRecipe(ingredients, dishName, dishType, numberOfIngredients);
+                    await RecipeCalcService.AddRecipe(recipe);
+                    dishName = "";
+                    ingredientAmount = "";
+                    dishType = "";
+                    ingredients.Clear();
+                    numberOfIngredients = 0;
+                    }
+                    }

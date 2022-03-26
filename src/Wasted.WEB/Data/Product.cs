@@ -9,6 +9,7 @@ namespace Wasted.Data
         private string _type;
         private string _measurementUnits;
         private double _energyValue;
+        public Boolean AdminApproved { get; set; }
 
         public string Name { 
             get { return _name; }
