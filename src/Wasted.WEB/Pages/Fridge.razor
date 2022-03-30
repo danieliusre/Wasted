@@ -93,34 +93,34 @@
 
     public FridgeItem newFridgeItem = new FridgeItem();
     public static PagedResponse<List<Product>> response {get; set;}
-    
-     public bool IsVisible(FridgeItem fridgeItem)
+
+    public bool IsVisible(FridgeItem fridgeItem)
     {
-        return  string.IsNullOrEmpty(Filter) ||
-                fridgeItem.Name.Contains(Filter, StringComparison.OrdinalIgnoreCase) ||
-                fridgeItem.Type.Contains(Filter, StringComparison.OrdinalIgnoreCase);    
-            
+    return  string.IsNullOrEmpty(Filter) ||
+    fridgeItem.Name.Contains(Filter, StringComparison.OrdinalIgnoreCase) ||
+    fridgeItem.Type.Contains(Filter, StringComparison.OrdinalIgnoreCase);
+
     }
     protected override async Task OnInitializedAsync()
     {
-        response = await ProductService.GetResponse();
-        UserId = await RegistrationService.GetUserId(Email);
-        fridgeItems = (await FridgeService.GetFridgeItems(UserId)).OrderBy(o => o.Date).ToList();
-        products = await ProductService.GetAllProducts(response.TotalRecords);
-        newDate = DateTime.Now;
+    response = await ProductService.GetResponse();
+    UserId = await RegistrationService.GetUserId(Email);
+    fridgeItems = (await FridgeService.GetFridgeItems(UserId)).OrderBy(o => o.Date).ToList();
+    products = (await ProductService.GetAllProducts(response.TotalRecords)).OrderBy(x => x.Name).ToList();
+    newDate = DateTime.Now;
     }
     public async Task addFridgeItem()
     {
-        newFridgeItem.Date= newDate.ToShortDateString();
-        await FridgeService.AddFridgeItem(newFridgeItem, UserId);
-        fridgeItems = await FridgeService.GetFridgeItems(UserId);
-        newFridgeItem = new FridgeItem();
-        newDate = DateTime.Now;
+    newFridgeItem.Date= newDate.ToShortDateString();
+    await FridgeService.AddFridgeItem(newFridgeItem, UserId);
+    fridgeItems = await FridgeService.GetFridgeItems(UserId);
+    newFridgeItem = new FridgeItem();
+    newDate = DateTime.Now;
     }
 
     public void deleteFridgeItem(int productId)
     {
-        FridgeService.DeleteFridgeItem(productId, UserId);
-        fridgeItems.RemoveAll(item => item.ProductId == productId);
+    FridgeService.DeleteFridgeItem(productId, UserId);
+    fridgeItems.RemoveAll(item => item.ProductId == productId);
     }
-}
+    }

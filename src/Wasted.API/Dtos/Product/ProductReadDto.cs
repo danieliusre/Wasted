@@ -10,5 +10,6 @@ namespace Wasted.API.Dtos
         public string Type { get; set; }
         public string MeasurementUnits { get; set; }
         public double EnergyValue { get; set; }
+        public Boolean AdminApproved { get; set; }
     }
 }

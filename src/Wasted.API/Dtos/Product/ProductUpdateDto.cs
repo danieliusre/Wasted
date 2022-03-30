@@ -16,5 +16,8 @@ namespace Wasted.API.Dtos
 
         [Required]
         public double EnergyValue { get; set; }
+
+        [Required]
+        public Boolean AdminApproved { get; set; }
     }
 }
