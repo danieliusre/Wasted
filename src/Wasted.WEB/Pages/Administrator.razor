@@ -216,6 +216,7 @@
                  <td>@product.EnergyValue</td>
                  <td>@product.AdminApproved</td>
                  <button class="btn btn-success" @onclick="() => ApproveProductPressed(product.Id)"> APPROVE </button>
+                 <button class="btn btn-danger"  @onclick="() => DeleteProductPressed(product.Id)">  DELETE </button>
                  </tr>
          }
      }
@@ -301,7 +302,8 @@
 
         public Tip newTip = new Tip();
         public Product newProduct = new Product();
-        public static PagedResponse<List<Product>> response {get; set;}
+        public static PagedResponse<List<Product>
+    > response {get; set;}
     public async Task RoleChangePressed ()
     {
     acceptPressed = false;
@@ -385,6 +387,12 @@
     newProduct = new Product();
     }
 
+    public async Task DeleteProductPressed(int nr)
+    {
+    ProductService.DeleteProduct(nr);
+    products.RemoveAll(item => item.Id == nr);
+    }
+
     public void UserRemovePressed(int id)
     {
     AdminService.removeUser(id);
@@ -392,10 +400,14 @@
     }
     //----------------- recipe
     public int numberOfIngredients = 0;
-    private List<Product> products { get; set; }
-    private List<DishModel> recipes { get; set; }
+    private List<Product>
+        products { get; set; }
+        private List<DishModel>
+            recipes { get; set; }
 
-    List<RecipeItemModel> ingredients = new List<RecipeItemModel>();
+            List<RecipeItemModel>
+                ingredients = new List<RecipeItemModel>
+                    ();
 
                     int selectedProductID = 0;
                     string prodID = "";
