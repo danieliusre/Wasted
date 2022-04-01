@@ -302,8 +302,7 @@
 
         public Tip newTip = new Tip();
         public Product newProduct = new Product();
-        public static PagedResponse<List<Product>
-    > response {get; set;}
+        public static PagedResponse<List<Product>> response {get; set;}
     public async Task RoleChangePressed ()
     {
     acceptPressed = false;
@@ -402,12 +401,9 @@
     public int numberOfIngredients = 0;
     private List<Product>
         products { get; set; }
-        private List<DishModel>
-            recipes { get; set; }
+        private List<DishModel> recipes { get; set; }
 
-            List<RecipeItemModel>
-                ingredients = new List<RecipeItemModel>
-                    ();
+            List<RecipeItemModel>ingredients = new List<RecipeItemModel>();
 
                     int selectedProductID = 0;
                     string prodID = "";
