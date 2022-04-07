@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wasted", "Wasted.csproj", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WastedAPI", "..\Wasted.API\WastedAPI.csproj", "{AA67D776-E08C-4BF4-822A-48DDE02B216D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "..\Tests\Tests.csproj", "{074826B1-4F76-4A6C-A952-A38E8A9D0CA7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{AA67D776-E08C-4BF4-822A-48DDE02B216D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AA67D776-E08C-4BF4-822A-48DDE02B216D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AA67D776-E08C-4BF4-822A-48DDE02B216D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{074826B1-4F76-4A6C-A952-A38E8A9D0CA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{074826B1-4F76-4A6C-A952-A38E8A9D0CA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{074826B1-4F76-4A6C-A952-A38E8A9D0CA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{074826B1-4F76-4A6C-A952-A38E8A9D0CA7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
