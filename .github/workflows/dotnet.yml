@@ -20,6 +20,6 @@ jobs:
     - name: Restore dependencies
       run: cd src/Wasted.API && dotnet restore
     - name: Build
-      run: dotnet build --no-restore
+      run: cd src/Wasted.API && dotnet build --no-restore
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: cd src/Tests &&  dotnet test --no-build --verbosity normal
